@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emily Wang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+:root{
+  --bg:#ffffff;
+  --ink:#141414;
+  --muted:#7b7d78;
+  --faint:#a9aba5;
+  --rule:#ececea;
+  --leaf:#7f9b63;
+  --lime:#c9e04a;
+  --glow1:#ffd6df; --glow2:#fff1d6; --glow3:#d8e9ff; --glow4:#dcf5dc;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#121311; --ink:#ecece8; --muted:#9a9c96; --faint:#6c6e69; --rule:#262824;
+    --leaf:#9bb97d; --lime:#b8cf3e;
+    --glow1:#3a1f28; --glow2:#352c1c; --glow3:#1c2838; --glow4:#1c3322;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#121311; --ink:#ecece8; --muted:#9a9c96; --faint:#6c6e69; --rule:#262824;
+  --leaf:#9bb97d; --lime:#b8cf3e;
+  --glow1:#3a1f28; --glow2:#352c1c; --glow3:#1c2838; --glow4:#1c3322;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding-inline:24px}
+a{color:inherit}
+a:focus-visible{outline:2px solid var(--leaf);outline-offset:3px;border-radius:2px}
+
+/* nav */
+nav{display:flex;justify-content:space-between;align-items:center;padding-block:28px}
+.mark{font-weight:600;font-size:15px;text-decoration:none;letter-spacing:-.01em}
+.links{display:flex;gap:28px;font-size:14px}
+.links a{text-decoration:none;color:var(--muted)}
+.links a:hover{color:var(--ink)}
+
+/* hero */
+.hero{position:relative;padding-block:72px 110px}
+html,body{overflow-x:clip}
+.hero h1{font-weight:500;font-size:clamp(40px,7.2vw,84px);line-height:1.02;letter-spacing:-.035em;margin:0;text-wrap:balance}
+.hero h1 em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;border-bottom:2px dotted var(--faint);padding-bottom:2px}
+.hero h1 .l2{display:block;margin-top:.12em}
+.hero p{max-width:34em;margin:36px 0 0;font-size:clamp(17px,2vw,20px);line-height:1.5;color:var(--ink)}
+.hero p i{font-family:var(--serif);font-size:1.12em}
+.domains{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:28px;font-size:13px;color:var(--muted)}
+.domains span::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--leaf);margin-right:8px;vertical-align:2px}
+.glow{position:absolute;left:50%;width:110vw;transform:translateX(-50%);bottom:-40px;height:160px;z-index:-1;filter:blur(48px);opacity:.85;
+  background:linear-gradient(90deg,var(--glow1),var(--glow2) 30%,var(--glow3) 62%,var(--glow4));border-radius:50%}
+.hero{isolation:isolate}
+
+/* work */
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 28px;padding-top:28px;border-top:1px solid var(--rule)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:64px 56px;margin-bottom:96px}
+.card{display:flex;flex-direction:column}
+.art{aspect-ratio:3/2;max-width:100%;display:grid;place-items:center;margin-bottom:20px}
+.art svg{width:78%;height:auto;color:var(--ink);overflow:visible}
+.art svg .wob{transition:transform .5s cubic-bezier(.3,1.6,.5,1);transform-origin:50% 60%;transform-box:fill-box}
+.card:hover .art svg .wob{transform:rotate(-4deg) translateY(-3px)}
+.card h3{font-size:16px;font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
+.card p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.55;max-width:38em}
+.tags{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:12px;font-size:12px;color:var(--faint)}
+.ladder{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;padding:0;list-style:none;counter-reset:s}
+.ladder li{counter-increment:s;font-size:11.5px;color:var(--ink);border:1px solid var(--rule);border-radius:999px;padding:3px 10px 3px 8px;white-space:nowrap}
+.ladder li::before{content:counter(s);font-variant-numeric:tabular-nums;color:var(--leaf);font-weight:600;margin-right:6px}
+
+/* about */
+.about{display:grid;grid-template-columns:200px 1fr;gap:24px 56px;padding-block:28px 96px;border-top:1px solid var(--rule)}
+.about .eyebrow{border:0;padding:0;margin:4px 0 0}
+.about p{margin:0 0 16px;max-width:36em;font-size:17px}
+.about p:last-child{color:var(--muted);font-size:15px}
+footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+@media (max-width:720px){
+  .grid{grid-template-columns:1fr;gap:56px}
+  .about{grid-template-columns:1fr}
+  .hero{padding-block:40px 72px}
+  .links{gap:18px}
+  .wrap{padding-inline:18px}
+}
+@media (prefers-reduced-motion:reduce){.art svg .wob{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="mark" href="#top">Emily Wang</a>
+    <div class="links"><a href="#work">Work</a><a href="#about">About</a></div>
+  </nav>
+
+  <header class="hero" id="top">
+    <h1>Hello, I am <em>Emily Wang</em>.<span class="l2">A product manager who builds with AI.</span></h1>
+    <p>I work on product in <i>SaaS, fintech and AI</i>. Below are the things I've built on my own: an agent taken apart one layer at a time, and a handful of small apps I wanted to exist.</p>
+    <div class="domains"><span>SaaS</span><span>Fintech</span><span>AI</span></div>
+    <div class="glow" aria-hidden="true"></div>
+  </header>
+
+  <section id="work">
+    <h2 class="eyebrow">Selected work</h2>
+    <div class="grid">
+
+      <!-- I Ching -->
+      <article class="card">
+        <div class="art" aria-hidden="true">
+          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <g class="wob">
+              <path d="M88 38c14-1 38 1 62 0"/>
+              <path d="M88 52c10 1 18 0 26 0M126 52c8-1 16 0 24 0"/>
+              <path d="M88 66c14 1 38-1 62 0"/>
+              <path d="M88 80c9 0 18 1 26 0M126 80c8 0 17-1 24 0"/>
+              <path d="M88 94c9 1 18-1 26 0M126 94c9 0 17 1 24 0"/>
+              <path d="M88 108c15-1 38 1 62 0"/>
+            </g>
+            <circle cx="50" cy="118" r="15" fill="var(--leaf)" fill-opacity=".85"/>
+            <rect x="45" y="113" width="10" height="10" rx="1"/>
+            <circle cx="186" cy="60" r="14"/>
+            <rect x="181.5" y="55.5" width="9" height="9" rx="1"/>
+            <circle cx="196" cy="124" r="12"/>
+            <rect x="192" y="120" width="8" height="8" rx="1"/>
+            <path d="M40 40l4 6M58 34l-2 7M64 48l-6 2" stroke-width="1.6"/>
+          </svg>
+        </div>
+        <h3>I Ching</h3>
+        <p>An astrology app built on the I Ching. Toss three coins six times, get a hexagram, and AI turns the ancient text into a reading about your question.</p>
+        <div class="tags"><span>AI Product</span><span>Consumer</span><span>Chinese astrology</span></div>
+      </article>
+
+      <!-- Vantage -->
+      <article class="card">
+        <div class="art" aria-hidden="true">
+          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M40 132c50-2 110 1 164-1"/>
+            <path d="M96 131l10-58M140 131l-10-58M100 108h36M103 90h30"/>
+            <path d="M98 73h40l-4-12h-32z" fill="var(--leaf)" fill-opacity=".85"/>
+            <g class="wob">
+              <path d="M110 58l40-22 4 8-40 22z"/>
+              <path d="M150 36l10-5 5 9-11 5"/>
+              <path d="M118 62l-4 -10"/>
+            </g>
+            <circle cx="186" cy="30" r="6"/>
+            <path d="M178 22l-4-4M194 22l4-4M186 18v-6" stroke-width="1.6"/>
+            <path d="M44 56c6-6 16-6 20 0 6-3 13 1 12 7H40c-2-4 0-7 4-7z"/>
+          </svg>
+        </div>
+        <h3>Vantage</h3>
+        <p>An industry-level customer service agent for Deel, answering contractors outside the company and support teams inside it. I built a rough version end to end, then added one layer at a time wherever it fell short.</p>
+        <ol class="ladder">
+          <li>RAG</li><li>Grounding</li><li>Guardrails</li><li>Memory</li><li>MCP</li><li>LangChain</li><li>Evals</li><li>Tracing</li><li>Model comparison</li>
+        </ol>
+        <div class="tags"><span>Agentic AI</span><span>B2B</span><span>Payroll</span></div>
+      </article>
+
+      <!-- Cardi Maxxing -->
+      <article class="card">
+        <div class="art" aria-hidden="true">
+          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <g class="wob">
+              <rect x="104" y="30" width="32" height="50" rx="16" fill="var(--lime)"/>
+              <path d="M104 50h32M104 60h32" stroke-width="1.6"/>
+              <path d="M94 62c0 20 12 30 26 30s26-10 26-30"/>
+              <path d="M120 92v26M104 120h32"/>
+            </g>
+            <path d="M58 44l3 8 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z"/>
+            <path d="M184 36l2 5 5 1-4 3 1 5-4-3-5 3 2-5-4-3 5-1z"/>
+            <path d="M170 92c6-2 10 4 16 2M176 104c6-2 10 4 16 2M54 96c6 2 10-4 16-2" stroke-width="1.6"/>
+            <path d="M190 128c-4-8 2-14 8-10" stroke-width="1.6"/>
+          </svg>
+        </div>
+        <h3>Cardi Maxxing</h3>
+        <p>Tell it what you're going through. It reads your situation through ancient Chinese astrology, then writes you a rap song about it.</p>
+        <div class="tags"><span>AI Music</span><span>Consumer</span><span>Just for fun</span></div>
+      </article>
+
+      <!-- Flowy -->
+      <article class="card">
+        <div class="art" aria-hidden="true">
+          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M30 118c16-12 30-12 46 0s30 12 46 0 30-12 46 0 26 10 40 2" />
+            <path d="M40 134c14-8 26-8 40 0s26 8 40 0 26-8 40 0 22 6 34 1" stroke-width="1.6"/>
+            <g class="wob">
+              <path d="M70 34h64c8 0 12 4 12 12v18c0 8-4 12-12 12h-36l-14 12v-12H70c-8 0-12-4-12-12V46c0-8 4-12 12-12z"/>
+              <path d="M76 50h40M76 60h26" stroke-width="1.6"/>
+            </g>
+            <path d="M150 58h44c7 0 10 3 10 10v12c0 7-3 10-10 10h-6v10l-12-10h-26c-7 0-10-3-10-10V68c0-7 3-10 10-10z" fill="var(--leaf)" fill-opacity=".85"/>
+            <path d="M158 72h28M158 80h18" stroke-width="1.6"/>
+          </svg>
+        </div>
+        <h3>Flowy</h3>
+        <p>A language learning app. You learn by listening to and talking about the things you already care about, in your language and the one you're learning.</p>
+        <div class="tags"><span>Language learning</span><span>Consumer</span></div>
+      </article>
+
+      <!-- TikTok scripts -->
+      <article class="card">
+        <div class="art" aria-hidden="true">
+          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <g class="wob">
+              <rect x="70" y="20" width="58" height="112" rx="10"/>
+              <path d="M92 26h14" stroke-width="1.6"/>
+              <path d="M91 62l20 12-20 12z" fill="var(--lime)"/>
+              <path d="M80 108h30M80 116h20" stroke-width="1.6"/>
+            </g>
+            <path d="M150 44h50c4 0 6 2 6 6v70c0 4-2 6-6 6h-50c-4 0-6-2-6-6V50c0-4 2-6 6-6z"/>
+            <path d="M154 60h24M154 70h40M154 80h34M154 90h40M154 100h22" stroke-width="1.6"/>
+            <path d="M154 60h8" stroke="var(--leaf)" stroke-width="4"/>
+            <path d="M210 30l-24 40 -3 10 8-6 24-40z" fill="var(--bg)"/>
+          </svg>
+        </div>
+        <h3>TikTok Script Generator</h3>
+        <p>Pick the creators you love. It studies the structure of their viral scripts, the hook, the turn, the ending, and drafts yours in the same shape.</p>
+        <div class="tags"><span>AI Writing</span><span>Creator tools</span></div>
+      </article>
+
+      <!-- Camera vocab -->
+      <article class="card">
+        <div class="art" aria-hidden="true">
+          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <g class="wob">
+              <path d="M52 56h22l8-12h32l8 12h22c6 0 9 3 9 9v44c0 6-3 9-9 9H52c-6 0-9-3-9-9V65c0-6 3-9 9-9z"/>
+              <circle cx="98" cy="86" r="20"/>
+              <circle cx="98" cy="86" r="10" fill="var(--leaf)" fill-opacity=".85"/>
+              <path d="M134 68h6" stroke-width="3"/>
+            </g>
+            <path d="M178 98c0 14 4 22 14 22s14-8 14-22z"/>
+            <path d="M206 102c8 0 8 12 0 12"/>
+            <path d="M186 90c-2-4 2-6 0-10M196 90c-2-4 2-6 0-10" stroke-width="1.6"/>
+            <path d="M152 44c14-2 44-2 64 0 2 7 2 14 0 21-20 2-50 2-64 0-2-7-2-14 0-21z"/>
+            <text x="184" y="60" text-anchor="middle" font-family="var(--serif)" font-style="italic" font-size="15" fill="currentColor" stroke="none">la tasse</text>
+            <path d="M184 66l0 14" stroke-width="1.4" stroke-dasharray="2 4"/>
+          </svg>
+        </div>
+        <h3>Camera Vocabulary</h3>
+        <p>Point your camera at anything and it tells you the word in French. The model runs on your phone, so there's no account and no key.</p>
+        <div class="tags"><span>On-device AI</span><span>Language learning</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <h2 class="eyebrow">About</h2>
+    <div>
+      <p>I'm Emily, a product manager working across SaaS, fintech and AI. I like problems where money, rules and people all meet, and I like to learn a new tool by building something real with it.</p>
+      <p>Everything on this page was built by me, with AI doing a lot of the typing. If any of it interests you, I'd love to talk.</p>
+    </div>
+  </section>
+
+  <footer><span>© 2026 Emily Wang</span><span>Built with AI, one step at a time.</span></footer>
+</div>
+
+</body>
+</html>
