@@ -95,6 +95,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
   .wrap{padding-inline:18px}
 }
 @media (prefers-reduced-motion:reduce){.art svg .wob{transition:none}}
+.art.photo img{width:66.667%;height:auto;aspect-ratio:1/1;object-fit:contain;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}.card:hover .art.photo img{transform:rotate(-4deg) translateY(-3px)}@media (prefers-reduced-motion:reduce){.art.photo img{transition:none}}
 </style>
 
 </head>
@@ -118,25 +119,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
 
       <!-- I Ching -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <g class="wob">
-              <path d="M88 38c14-1 38 1 62 0"/>
-              <path d="M88 52c10 1 18 0 26 0M126 52c8-1 16 0 24 0"/>
-              <path d="M88 66c14 1 38-1 62 0"/>
-              <path d="M88 80c9 0 18 1 26 0M126 80c8 0 17-1 24 0"/>
-              <path d="M88 94c9 1 18-1 26 0M126 94c9 0 17 1 24 0"/>
-              <path d="M88 108c15-1 38 1 62 0"/>
-            </g>
-            <circle cx="50" cy="118" r="15" fill="var(--leaf)" fill-opacity=".85"/>
-            <rect x="45" y="113" width="10" height="10" rx="1"/>
-            <circle cx="186" cy="60" r="14"/>
-            <rect x="181.5" y="55.5" width="9" height="9" rx="1"/>
-            <circle cx="196" cy="124" r="12"/>
-            <rect x="192" y="120" width="8" height="8" rx="1"/>
-            <path d="M40 40l4 6M58 34l-2 7M64 48l-6 2" stroke-width="1.6"/>
-          </svg>
-        </div>
+        <div class="art photo" aria-hidden="true"><img src="icons/pearl.png" alt="" loading="lazy"></div>
         <h3>I Ching Radio</h3>
         <p>Ask what's on your mind. It tosses three coins six times, reads the hexagram you land on from all 64 and their 384 changing lines, then writes you three songs from the reading.</p>
         <a class="try" href="i-ching/" target="_blank" rel="noopener">Try it live →</a>
@@ -145,21 +128,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
 
       <!-- Vantage -->
       <article class="card linked">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M40 132c50-2 110 1 164-1"/>
-            <path d="M96 131l10-58M140 131l-10-58M100 108h36M103 90h30"/>
-            <path d="M98 73h40l-4-12h-32z" fill="var(--leaf)" fill-opacity=".85"/>
-            <g class="wob">
-              <path d="M110 58l40-22 4 8-40 22z"/>
-              <path d="M150 36l10-5 5 9-11 5"/>
-              <path d="M118 62l-4 -10"/>
-            </g>
-            <circle cx="186" cy="30" r="6"/>
-            <path d="M178 22l-4-4M194 22l4-4M186 18v-6" stroke-width="1.6"/>
-            <path d="M44 56c6-6 16-6 20 0 6-3 13 1 12 7H40c-2-4 0-7 4-7z"/>
-          </svg>
-        </div>
+        <div class="art photo" aria-hidden="true"><img src="icons/cloud.png" alt="" loading="lazy"></div>
         <h3>Vantage</h3>
         <p>An industry-level customer service agent for Deel, answering contractors outside the company and support teams inside it. I built a rough version end to end, then added one layer at a time wherever it fell short.</p>
         <ol class="ladder">
@@ -171,20 +140,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
 
       <!-- Cardi Maxxing -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <g class="wob">
-              <rect x="104" y="30" width="32" height="50" rx="16" fill="var(--lime)"/>
-              <path d="M104 50h32M104 60h32" stroke-width="1.6"/>
-              <path d="M94 62c0 20 12 30 26 30s26-10 26-30"/>
-              <path d="M120 92v26M104 120h32"/>
-            </g>
-            <path d="M58 44l3 8 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z"/>
-            <path d="M184 36l2 5 5 1-4 3 1 5-4-3-5 3 2-5-4-3 5-1z"/>
-            <path d="M170 92c6-2 10 4 16 2M176 104c6-2 10 4 16 2M54 96c6 2 10-4 16-2" stroke-width="1.6"/>
-            <path d="M190 128c-4-8 2-14 8-10" stroke-width="1.6"/>
-          </svg>
-        </div>
+        <div class="art photo" aria-hidden="true"><img src="icons/pinkstar.png" alt="" loading="lazy"></div>
         <h3>Cardi Maxxing</h3>
         <p>Tell it what you're going through. It reads your situation through ancient Chinese astrology, then writes you a rap song about it.</p>
         <div class="tags"><span>AI Music</span><span>Consumer</span><span>Just for fun</span></div>
@@ -192,18 +148,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
 
       <!-- Flowy -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M30 118c16-12 30-12 46 0s30 12 46 0 30-12 46 0 26 10 40 2" />
-            <path d="M40 134c14-8 26-8 40 0s26 8 40 0 26-8 40 0 22 6 34 1" stroke-width="1.6"/>
-            <g class="wob">
-              <path d="M70 34h64c8 0 12 4 12 12v18c0 8-4 12-12 12h-36l-14 12v-12H70c-8 0-12-4-12-12V46c0-8 4-12 12-12z"/>
-              <path d="M76 50h40M76 60h26" stroke-width="1.6"/>
-            </g>
-            <path d="M150 58h44c7 0 10 3 10 10v12c0 7-3 10-10 10h-6v10l-12-10h-26c-7 0-10-3-10-10V68c0-7 3-10 10-10z" fill="var(--leaf)" fill-opacity=".85"/>
-            <path d="M158 72h28M158 80h18" stroke-width="1.6"/>
-          </svg>
-        </div>
+        <div class="art photo" aria-hidden="true"><img src="icons/dolphin.png" alt="" loading="lazy"></div>
         <h3>Flowy</h3>
         <p>A language learning app. You learn by listening to and talking about the things you already care about, in your language and the one you're learning.</p>
         <div class="tags"><span>Language learning</span><span>Consumer</span></div>
@@ -211,20 +156,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
 
       <!-- TikTok scripts -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <g class="wob">
-              <rect x="70" y="20" width="58" height="112" rx="10"/>
-              <path d="M92 26h14" stroke-width="1.6"/>
-              <path d="M91 62l20 12-20 12z" fill="var(--lime)"/>
-              <path d="M80 108h30M80 116h20" stroke-width="1.6"/>
-            </g>
-            <path d="M150 44h50c4 0 6 2 6 6v70c0 4-2 6-6 6h-50c-4 0-6-2-6-6V50c0-4 2-6 6-6z"/>
-            <path d="M154 60h24M154 70h40M154 80h34M154 90h40M154 100h22" stroke-width="1.6"/>
-            <path d="M154 60h8" stroke="var(--leaf)" stroke-width="4"/>
-            <path d="M210 30l-24 40 -3 10 8-6 24-40z" fill="var(--bg)"/>
-          </svg>
-        </div>
+        <div class="art photo" aria-hidden="true"><img src="icons/cat.png" alt="" loading="lazy"></div>
         <h3>TikTok Script Generator</h3>
         <p>Pick the creators you love. It studies the structure of their viral scripts, the hook, the turn, the ending, and drafts yours in the same shape.</p>
         <div class="tags"><span>AI Writing</span><span>Creator tools</span></div>
@@ -232,22 +164,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
 
       <!-- Camera vocab -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <g class="wob">
-              <path d="M52 56h22l8-12h32l8 12h22c6 0 9 3 9 9v44c0 6-3 9-9 9H52c-6 0-9-3-9-9V65c0-6 3-9 9-9z"/>
-              <circle cx="98" cy="86" r="20"/>
-              <circle cx="98" cy="86" r="10" fill="var(--leaf)" fill-opacity=".85"/>
-              <path d="M134 68h6" stroke-width="3"/>
-            </g>
-            <path d="M178 98c0 14 4 22 14 22s14-8 14-22z"/>
-            <path d="M206 102c8 0 8 12 0 12"/>
-            <path d="M186 90c-2-4 2-6 0-10M196 90c-2-4 2-6 0-10" stroke-width="1.6"/>
-            <path d="M152 44c14-2 44-2 64 0 2 7 2 14 0 21-20 2-50 2-64 0-2-7-2-14 0-21z"/>
-            <text x="184" y="60" text-anchor="middle" font-family="var(--serif)" font-style="italic" font-size="15" fill="currentColor" stroke="none">la tasse</text>
-            <path d="M184 66l0 14" stroke-width="1.4" stroke-dasharray="2 4"/>
-          </svg>
-        </div>
+        <div class="art photo" aria-hidden="true"><img src="icons/heart.png" alt="" loading="lazy"></div>
         <h3>Camera Vocabulary</h3>
         <p>Point your camera at anything and it tells you the word in French. The model runs on your phone, so there's no account and no key.</p>
         <div class="tags"><span>On-device AI</span><span>Language learning</span></div>
@@ -255,19 +172,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
 
       <!-- Origy -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <g class="wob">
-              <path d="M28 76c6-20 30-30 50-24 14 4 22-6 34 2 9 6 3 18 9 26 6 10-3 22-17 24-13 2-19 12-33 10-14-2-20-12-32-14-13-3-17-14-11-24z"/>
-              <circle cx="92" cy="80" r="3.5" fill="currentColor"/>
-            </g>
-            <path d="M180 34c7 5 9 12 6 20M188 62c2 13-6 25-17 33M162 102c-9 6-18 8-25 14" stroke-width="2.6"/>
-            <path d="M96 76c18-32 52-44 74-34" stroke-width="1.5" stroke-dasharray="2 6"/>
-            <circle cx="186" cy="118" r="13" fill="var(--leaf)" fill-opacity=".85"/>
-            <path d="M173 118c0 9 6 14 13 14s13-5 13-14"/>
-            <text x="120" y="146" text-anchor="middle" font-family="var(--serif)" font-style="italic" font-size="15" fill="currentColor" stroke="none">中 → 日</text>
-          </svg>
-        </div>
+        <div class="art photo" aria-hidden="true"><img src="icons/shell.png" alt="" loading="lazy"></div>
         <h3>Origy</h3>
         <p>Matcha, kanji, ramen, karate. Tap an emoji on Japan and watch it travel back to where it began in China, with the story of when and how it crossed the sea.</p>
         <a class="try" href="origy/" target="_blank" rel="noopener">Try it live →</a>
