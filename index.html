@@ -70,6 +70,11 @@ html,body{overflow-x:clip}
 .card:hover .art svg .wob{transform:rotate(-4deg) translateY(-3px)}
 .card h3{font-size:16px;font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
 .card p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.55;max-width:38em}
+.try{align-self:flex-start;margin-top:12px;font-size:13.5px;font-weight:500;color:var(--ink);text-decoration:none;border-bottom:1.5px solid var(--leaf);padding-bottom:1px}
+.try:hover{color:var(--leaf)}
+.card.linked{position:relative;cursor:pointer}
+.card.linked .try::after{content:"";position:absolute;inset:0}
+.card.linked:hover h3{color:var(--leaf)}
 .tags{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:12px;font-size:12px;color:var(--faint)}
 .ladder{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;padding:0;list-style:none;counter-reset:s}
 .ladder li{counter-increment:s;font-size:11.5px;color:var(--ink);border:1px solid var(--rule);border-radius:999px;padding:3px 10px 3px 8px;white-space:nowrap}
@@ -90,6 +95,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
   .wrap{padding-inline:18px}
 }
 @media (prefers-reduced-motion:reduce){.art svg .wob{transition:none}}
+.art.photo img{width:66.667%;height:auto;aspect-ratio:1/1;object-fit:contain;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}.card:hover .art.photo img{transform:rotate(-4deg) translateY(-3px)}@media (prefers-reduced-motion:reduce){.art.photo img{transition:none}}
 </style>
 
 </head>
@@ -113,137 +119,122 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
 
       <!-- I Ching -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <g class="wob">
-              <path d="M88 38c14-1 38 1 62 0"/>
-              <path d="M88 52c10 1 18 0 26 0M126 52c8-1 16 0 24 0"/>
-              <path d="M88 66c14 1 38-1 62 0"/>
-              <path d="M88 80c9 0 18 1 26 0M126 80c8 0 17-1 24 0"/>
-              <path d="M88 94c9 1 18-1 26 0M126 94c9 0 17 1 24 0"/>
-              <path d="M88 108c15-1 38 1 62 0"/>
-            </g>
-            <circle cx="50" cy="118" r="15" fill="var(--leaf)" fill-opacity=".85"/>
-            <rect x="45" y="113" width="10" height="10" rx="1"/>
-            <circle cx="186" cy="60" r="14"/>
-            <rect x="181.5" y="55.5" width="9" height="9" rx="1"/>
-            <circle cx="196" cy="124" r="12"/>
-            <rect x="192" y="120" width="8" height="8" rx="1"/>
-            <path d="M40 40l4 6M58 34l-2 7M64 48l-6 2" stroke-width="1.6"/>
-          </svg>
-        </div>
-        <h3>I Ching</h3>
-        <p>An astrology app built on the I Ching. Toss three coins six times, get a hexagram, and AI turns the ancient text into a reading about your question.</p>
+        <div class="art photo" aria-hidden="true"><img src="icons/pearl.png" alt="" loading="lazy"></div>
+        <h3>I Ching Radio</h3>
+        <p>Ask what's on your mind. It tosses three coins six times, reads the hexagram you land on from all 64 and their 384 changing lines, then writes you three songs from the reading.</p>
+        <a class="try" href="i-ching/" target="_blank" rel="noopener">Try it live →</a>
         <div class="tags"><span>AI Product</span><span>Consumer</span><span>Chinese astrology</span></div>
       </article>
 
       <!-- Vantage -->
-      <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M40 132c50-2 110 1 164-1"/>
-            <path d="M96 131l10-58M140 131l-10-58M100 108h36M103 90h30"/>
-            <path d="M98 73h40l-4-12h-32z" fill="var(--leaf)" fill-opacity=".85"/>
-            <g class="wob">
-              <path d="M110 58l40-22 4 8-40 22z"/>
-              <path d="M150 36l10-5 5 9-11 5"/>
-              <path d="M118 62l-4 -10"/>
-            </g>
-            <circle cx="186" cy="30" r="6"/>
-            <path d="M178 22l-4-4M194 22l4-4M186 18v-6" stroke-width="1.6"/>
-            <path d="M44 56c6-6 16-6 20 0 6-3 13 1 12 7H40c-2-4 0-7 4-7z"/>
-          </svg>
-        </div>
+      <article class="card linked">
+        <div class="art photo" aria-hidden="true"><img src="icons/cloud.png" alt="" loading="lazy"></div>
         <h3>Vantage</h3>
         <p>An industry-level customer service agent for Deel, answering contractors outside the company and support teams inside it. I built a rough version end to end, then added one layer at a time wherever it fell short.</p>
         <ol class="ladder">
           <li>RAG</li><li>Grounding</li><li>Guardrails</li><li>Memory</li><li>MCP</li><li>LangChain</li><li>Evals</li><li>Tracing</li><li>Model comparison</li>
         </ol>
+        <a class="try" href="vantage/" target="_blank" rel="noopener">Read the weekly PRD →</a>
         <div class="tags"><span>Agentic AI</span><span>B2B</span><span>Payroll</span></div>
       </article>
 
-      <!-- Cardi Maxxing -->
+      <!-- Fairyland -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <g class="wob">
-              <rect x="104" y="30" width="32" height="50" rx="16" fill="var(--lime)"/>
-              <path d="M104 50h32M104 60h32" stroke-width="1.6"/>
-              <path d="M94 62c0 20 12 30 26 30s26-10 26-30"/>
-              <path d="M120 92v26M104 120h32"/>
-            </g>
-            <path d="M58 44l3 8 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z"/>
-            <path d="M184 36l2 5 5 1-4 3 1 5-4-3-5 3 2-5-4-3 5-1z"/>
-            <path d="M170 92c6-2 10 4 16 2M176 104c6-2 10 4 16 2M54 96c6 2 10-4 16-2" stroke-width="1.6"/>
-            <path d="M190 128c-4-8 2-14 8-10" stroke-width="1.6"/>
-          </svg>
-        </div>
-        <h3>Cardi Maxxing</h3>
-        <p>Tell it what you're going through. It reads your situation through ancient Chinese astrology, then writes you a rap song about it.</p>
-        <div class="tags"><span>AI Music</span><span>Consumer</span><span>Just for fun</span></div>
+        <div class="art photo" aria-hidden="true"><img src="icons/pinkstar.png" alt="" loading="lazy"></div>
+        <h3>Fairyland</h3>
+        <p>Ten Japanese folktales, pinned to the places they come from. Tap a story on the map and read it as ten short pages, written for a five-year-old.</p>
+        <a class="try" href="fairyland/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>Interactive map</span><span>Kids</span><span>Storytelling</span></div>
       </article>
 
       <!-- Flowy -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M30 118c16-12 30-12 46 0s30 12 46 0 30-12 46 0 26 10 40 2" />
-            <path d="M40 134c14-8 26-8 40 0s26 8 40 0 26-8 40 0 22 6 34 1" stroke-width="1.6"/>
-            <g class="wob">
-              <path d="M70 34h64c8 0 12 4 12 12v18c0 8-4 12-12 12h-36l-14 12v-12H70c-8 0-12-4-12-12V46c0-8 4-12 12-12z"/>
-              <path d="M76 50h40M76 60h26" stroke-width="1.6"/>
-            </g>
-            <path d="M150 58h44c7 0 10 3 10 10v12c0 7-3 10-10 10h-6v10l-12-10h-26c-7 0-10-3-10-10V68c0-7 3-10 10-10z" fill="var(--leaf)" fill-opacity=".85"/>
-            <path d="M158 72h28M158 80h18" stroke-width="1.6"/>
-          </svg>
-        </div>
+        <div class="art photo" aria-hidden="true"><img src="icons/dolphin.png" alt="" loading="lazy"></div>
         <h3>Flowy</h3>
-        <p>A language learning app. You learn by listening to and talking about the things you already care about, in your language and the one you're learning.</p>
+  <p>Watch YouTube in the language you're learning. The video's transcript sits next to your own language, line by line, and every word you save keeps the sentence it came from.</p>
+  <a class="try" href="flowy/" target="_blank" rel="noopener">Try it →</a>
         <div class="tags"><span>Language learning</span><span>Consumer</span></div>
       </article>
 
       <!-- TikTok scripts -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <g class="wob">
-              <rect x="70" y="20" width="58" height="112" rx="10"/>
-              <path d="M92 26h14" stroke-width="1.6"/>
-              <path d="M91 62l20 12-20 12z" fill="var(--lime)"/>
-              <path d="M80 108h30M80 116h20" stroke-width="1.6"/>
-            </g>
-            <path d="M150 44h50c4 0 6 2 6 6v70c0 4-2 6-6 6h-50c-4 0-6-2-6-6V50c0-4 2-6 6-6z"/>
-            <path d="M154 60h24M154 70h40M154 80h34M154 90h40M154 100h22" stroke-width="1.6"/>
-            <path d="M154 60h8" stroke="var(--leaf)" stroke-width="4"/>
-            <path d="M210 30l-24 40 -3 10 8-6 24-40z" fill="var(--bg)"/>
-          </svg>
-        </div>
-        <h3>TikTok Script Generator</h3>
+        <div class="art photo" aria-hidden="true"><img src="icons/cat.png" alt="" loading="lazy"></div>
+        <h3>Table at Café de Flore</h3>
         <p>Pick the creators you love. It studies the structure of their viral scripts, the hook, the turn, the ending, and drafts yours in the same shape.</p>
+        <a class="try" href="table-at-cafe-de-flore/" target="_blank" rel="noopener">Take a seat →</a>
         <div class="tags"><span>AI Writing</span><span>Creator tools</span></div>
       </article>
 
-      <!-- Camera vocab -->
+      <!-- War Criminals Memorial Map -->
       <article class="card">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <g class="wob">
-              <path d="M52 56h22l8-12h32l8 12h22c6 0 9 3 9 9v44c0 6-3 9-9 9H52c-6 0-9-3-9-9V65c0-6 3-9 9-9z"/>
-              <circle cx="98" cy="86" r="20"/>
-              <circle cx="98" cy="86" r="10" fill="var(--leaf)" fill-opacity=".85"/>
-              <path d="M134 68h6" stroke-width="3"/>
-            </g>
-            <path d="M178 98c0 14 4 22 14 22s14-8 14-22z"/>
-            <path d="M206 102c8 0 8 12 0 12"/>
-            <path d="M186 90c-2-4 2-6 0-10M196 90c-2-4 2-6 0-10" stroke-width="1.6"/>
-            <path d="M152 44c14-2 44-2 64 0 2 7 2 14 0 21-20 2-50 2-64 0-2-7-2-14 0-21z"/>
-            <text x="184" y="60" text-anchor="middle" font-family="var(--serif)" font-style="italic" font-size="15" fill="currentColor" stroke="none">la tasse</text>
-            <path d="M184 66l0 14" stroke-width="1.4" stroke-dasharray="2 4"/>
-          </svg>
-        </div>
-        <h3>Camera Vocabulary</h3>
-        <p>Point your camera at anything and it tells you the word in French. The model runs on your phone, so there's no account and no key.</p>
-        <div class="tags"><span>On-device AI</span><span>Language learning</span></div>
+        <div class="art photo" aria-hidden="true"><img src="icons/heart.png" alt="" loading="lazy"></div>
+        <h3>Japan's War Criminals Memorial Map</h3>
+        <p>The shrines, temples and memorials in Japan that honor convicted WWII war criminals, on one map. Tap a site to see who is honored there, what they did, and who suffered.</p>
+        <a class="try" href="war-criminals-map/" target="_blank" rel="noopener">Explore the map →</a>
+        <div class="tags"><span>Interactive map</span><span>History</span><span>Travel</span></div>
+      </article>
+
+      <!-- Origy -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/shell.png" alt="" loading="lazy"></div>
+        <h3>Origy</h3>
+        <p>Matcha, kanji, ramen, karate. Tap an emoji on Japan and watch it travel back to where it began in China, with the story of when and how it crossed the sea.</p>
+        <a class="try" href="origy/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>Interactive map</span><span>Consumer</span><span>Culture &amp; history</span></div>
+      </article>
+
+      <!-- Minimalistic UI Slide Builder -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/flower.png" alt="" loading="lazy"></div>
+        <h3>Minimalistic UI Slide Builder</h3>
+        <p>A Claude skill that turns any content into a quiet, gallery-style interface: articles, case studies, app screens, AI screens. It stays black, white and grey until you show it a picture, then borrows the picture's colors.</p>
+        <a class="try" href="minimalistic-ui/" target="_blank" rel="noopener">See what it builds →</a>
+        <div class="tags"><span>Claude skill</span><span>Design system</span><span>Open source</span></div>
+      </article>
+
+      <!-- Mockmate -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/mockmate.png" alt="" loading="lazy"></div>
+        <h3>Mockmate</h3>
+        <p>One or two sentences about what Mockmate does.</p>
+        <a class="try" href="mockmate/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>Tag</span><span>Tag</span></div>
+      </article>
+
+      <!-- Manifest Maxxxing -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/manifest-maxxxing.png" alt="" loading="lazy"></div>
+        <h3>Manifest Maxxxing</h3>
+        <p>One or two sentences about what Manifest Maxxxing does.</p>
+        <a class="try" href="manifest-maxxxing/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>Tag</span><span>Tag</span></div>
+      </article>
+
+      <!-- coucou -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/coucou.png" alt="" loading="lazy"></div>
+        <h3>coucou</h3>
+        <p>One or two sentences about what coucou does.</p>
+        <a class="try" href="coucou/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>Tag</span><span>Tag</span></div>
+      </article>
+
+      <!-- Xtract -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/xtract.png" alt="" loading="lazy"></div>
+        <h3>Xtract</h3>
+        <p>One or two sentences about what Xtract does.</p>
+        <a class="try" href="xtract/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>Tag</span><span>Tag</span></div>
+      </article>
+
+      <!-- Quocci Cucci -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/quocci-cucci.png" alt="" loading="lazy"></div>
+        <h3>Quocci Cucci</h3>
+        <p>One or two sentences about what Quocci Cucci does.</p>
+        <a class="try" href="quocci-cucci/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>Tag</span><span>Tag</span></div>
       </article>
 
     </div>
