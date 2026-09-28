@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minimalistic UI Slide Builder · Emily Wang</title>
+<meta name="description" content="A Claude skill that turns any content into a quiet, monochrome, gallery-style interface.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f7f7f6; --band:#f3f2ef; --hair:#e6e6e4;
+  --ink:#111111; --ink-2:#3d3d3d; --muted:#6e6e6e; --faint:#a6a6a6; --on-ink:#ffffff;
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC",sans-serif;
+  --r-card:8px; --r-pill:10px;
+  --text-col:620px; --page:1080px; --gutter:clamp(16px,5vw,64px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0f0f;--surface:#171717;--band:#141413;--hair:#2a2a2a;--ink:#f2f2f2;--ink-2:#d0d0d0;--muted:#9a9a9a;--faint:#646464;--on-ink:#0f0f0f}}
+:root[data-theme="dark"]{--bg:#0f0f0f;--surface:#171717;--band:#141413;--hair:#2a2a2a;--ink:#f2f2f2;--ink-2:#d0d0d0;--muted:#9a9a9a;--faint:#646464;--on-ink:#0f0f0f}
+*{box-sizing:border-box}
+html,body{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--muted);font-family:var(--font);font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+a:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:2px}
+.wrap{max-width:var(--page);margin:0 auto;padding:0 var(--gutter)}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:28px 0;font-size:13px}
+nav a{text-decoration:none;color:var(--muted)} nav a:hover{color:var(--ink)}
+nav .home{color:var(--ink);font-weight:500;font-size:14px}
+
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);font-weight:500;margin:0 0 18px}
+h1{font-size:clamp(24px,3vw,32px);font-weight:500;color:var(--ink);letter-spacing:-.01em;line-height:1.25;margin:0 0 18px}
+h2{font-size:clamp(20px,2.2vw,24px);font-weight:500;color:var(--ink);letter-spacing:-.01em;line-height:1.3;margin:0 0 14px}
+.lede{max-width:var(--text-col);margin:0}
+.sec{padding-top:128px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1fr 280px;gap:48px;align-items:center;padding-top:88px}
+.hero img{width:100%;height:auto}
+.actions{display:flex;align-items:center;gap:22px;margin-top:32px;flex-wrap:wrap}
+.pill{display:inline-block;background:var(--ink);color:var(--on-ink);border-radius:var(--r-pill);padding:11px 20px;font-size:13px;font-weight:500;text-decoration:none}
+.pill:hover{opacity:.85}
+.text-btn{font-size:13px;color:var(--ink);text-decoration:none}
+.text-btn:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* numbered grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px;border-radius:var(--r-card);overflow:hidden}
+.grid.four{grid-template-columns:repeat(2,1fr)}
+.cell{background:var(--surface);padding:26px 26px 36px}
+.num{font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums}
+.cell h3{font-size:14px;font-weight:500;color:var(--ink);margin:14px 0 8px}
+.cell p{font-size:13px;line-height:1.65;margin:0}
+
+/* examples */
+.examples{display:flex;flex-direction:column;gap:88px;margin-top:56px}
+figure{margin:0}
+.shot{display:block;border:1px solid var(--hair);border-radius:var(--r-card);overflow:hidden;background:#fff}
+.shot img{display:block;width:100%;height:auto;aspect-ratio:1200/750;transition:transform .4s ease-out}
+.shot:hover img{transform:scale(1.01)}
+figcaption{display:grid;grid-template-columns:180px 1fr;gap:8px 32px;margin-top:18px;font-size:12px;line-height:1.6;color:var(--faint)}
+figcaption b{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:var(--faint)}
+figcaption span{max-width:520px}
+
+/* prompt */
+.prompts{margin-top:40px;border-top:1px solid var(--hair)}
+.prompt{display:grid;grid-template-columns:48px 1fr;padding:18px 0;border-bottom:1px solid var(--hair);font-size:14px}
+.prompt .num{padding-top:2px}
+.prompt p{margin:0;color:var(--ink)}
+
+/* color note band */
+.band{background:var(--band);margin-top:128px;padding:72px 0}
+.band .inner{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.swatches{display:flex;gap:18px}
+.sw{text-align:center;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);line-height:1.5}
+.sw i{display:block;width:48px;height:48px;border-radius:50%;margin:0 auto 10px;box-shadow:0 6px 14px -6px rgba(0,0,0,.25)}
+
+/* end */
+.end{text-align:left;padding:128px 0 0}
+footer{margin-top:128px;padding:28px 0 48px;border-top:1px solid var(--hair);font-size:12px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer a{text-decoration:none} footer a:hover{color:var(--ink)}
+
+@media (max-width:760px){
+  .hero{grid-template-columns:1fr;padding-top:48px;gap:24px}
+  .hero img{width:160px;order:-1}
+  .grid,.grid.four{grid-template-columns:1fr}
+  figcaption{grid-template-columns:1fr}
+  .examples{gap:64px}
+  .sec,.end{padding-top:88px}
+  .band{margin-top:88px;padding:56px 0}
+  .band .inner{grid-template-columns:1fr}
+  footer{margin-top:88px}
+}
+@media (prefers-reduced-motion:reduce){.shot img{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="home" href="../">Emily Wang</a>
+    <a href="https://github.com/wenyuew/gallery-minimal-ui" target="_blank" rel="noopener">GitHub →</a>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow">A Claude skill</p>
+      <h1>Minimalistic UI Slide Builder</h1>
+      <p class="lede">Give Claude your content and it comes back as a quiet, gallery-style interface. An article, a case study, a dashboard, a phone app, an AI screen. Lots of white space, tiny precise labels, and one thing on each screen that matters.</p>
+      <div class="actions">
+        <a class="pill" href="https://github.com/wenyuew/gallery-minimal-ui" target="_blank" rel="noopener">Get the skill</a>
+        <a class="text-btn" href="#examples">See examples ↓</a>
+      </div>
+    </div>
+    <img src="../icons/flower.png" alt="" width="480" height="480">
+  </header>
+
+  <section class="sec">
+    <p class="eyebrow">01 — What it does</p>
+    <h2>You bring the words. It brings the look.</h2>
+    <p class="lede">I kept saving screenshots of interfaces I loved: a museum page, a small music toy, a designer's case study, a calm AI app. They all did the same thing. They got out of the way. So I wrote those rules down as a skill, and now every page I ask Claude for comes out that way.</p>
+    <div class="grid">
+      <div class="cell"><span class="num">01</span><h3>No style prompt needed</h3><p>Just say "make this in the gallery style." The spacing, type sizes and components are already decided.</p></div>
+      <div class="cell"><span class="num">02</span><h3>It picks the layout</h3><p>Writing becomes an editorial page, images become a gallery, AI features get soft orb screens, tools get tactile controls.</p></div>
+      <div class="cell"><span class="num">03</span><h3>Black, white and grey</h3><p>No colors are invented. Your own photos keep theirs, and if you want an accent, you show it a picture.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="examples">
+    <p class="eyebrow">02 — Examples</p>
+    <h2>Five screens it built</h2>
+    <p class="lede">Each one came from a few lines of made-up content and one request.</p>
+
+    <div class="examples">
+      <figure>
+        <a class="shot" href="img/case-study.webp" target="_blank" rel="noopener"><img src="img/case-study.webp" alt="A case study page with a label, headline, thin lines converging on a black box reading 'First order in under 2 min', and three numbered cards." loading="lazy" width="2400" height="1500"></a>
+        <figcaption><b>Case study</b><span>Five product decisions drawn as thin lines meeting at one goal, then explained in a numbered grid.</span></figcaption>
+      </figure>
+      <figure>
+        <a class="shot" href="img/dashboard.webp" target="_blank" rel="noopener"><img src="img/dashboard.webp" alt="An invoicing dashboard with a text sidebar, four large numbers, a thin line chart and a table of clients." loading="lazy" width="2400" height="1500"></a>
+        <figcaption><b>Web app</b><span>An invoicing dashboard. Quiet text navigation, big light numbers, one black line on the chart, hairline table.</span></figcaption>
+      </figure>
+      <figure>
+        <a class="shot" href="img/phone-app.webp" target="_blank" rel="noopener"><img src="img/phone-app.webp" alt="Three phone screens: a reading tracker, a bank balance and a delivery address form." loading="lazy" width="2400" height="1500"></a>
+        <figcaption><b>Phone app</b><span>A reading tracker, a bank balance and a checkout step. Tiny uppercase tabs, grey circles, one black button each.</span></figcaption>
+      </figure>
+      <figure>
+        <a class="shot" href="img/ai-screens.webp" target="_blank" rel="noopener"><img src="img/ai-screens.webp" alt="Three AI assistant screens, each with a soft blurred grey orb, a greeting or prompt and an input field." loading="lazy" width="2400" height="1500"></a>
+        <figcaption><b>AI screens</b><span>A greeting, a voice prompt and a listening state. The blurred orb stands in for the assistant.</span></figcaption>
+      </figure>
+      <figure>
+        <a class="shot" href="img/gallery.webp" target="_blank" rel="noopener"><img src="img/gallery.webp" alt="A gallery page with a large pink pressed flower beside a small museum-style label card." loading="lazy" width="2400" height="1500"></a>
+        <figcaption><b>Gallery</b><span>One image, one wall label. The flower keeps its pink because it's content, not interface.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+</div>
+
+<section class="band">
+  <div class="wrap inner">
+    <div>
+      <p class="eyebrow">03 — About color</p>
+      <h2>Show it a picture, get its colors</h2>
+      <p class="lede">By default there is no color at all. Upload a screenshot or a photo you like and it pulls two to four colors from it, tells you which, and uses them as sparingly as the picture does.</p>
+    </div>
+    <div class="swatches" aria-hidden="true">
+      <div class="sw"><i style="background:#111"></i>Ink</div>
+      <div class="sw"><i style="background:#6e6e6e"></i>Muted</div>
+      <div class="sw"><i style="background:#e9e9e8"></i>Object</div>
+      <div class="sw"><i style="background:#fff"></i>Paper</div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <section class="sec">
+    <p class="eyebrow">04 — How to use it</p>
+    <h2>Install once, then just ask</h2>
+    <p class="lede">Download the skill from GitHub and add it to Claude. After that, any of these work:</p>
+    <div class="prompts">
+      <div class="prompt"><span class="num">01</span><p>"Make this case study into a page in the gallery style."</p></div>
+      <div class="prompt"><span class="num">02</span><p>"Design three phone screens for my reading app, minimal gallery style."</p></div>
+      <div class="prompt"><span class="num">03</span><p>"Turn these notes into a web dashboard. Use the colors from this screenshot."</p></div>
+    </div>
+  </section>
+
+  <section class="end">
+    <p class="eyebrow">Open source</p>
+    <h2>Free to use and change</h2>
+    <p class="lede">The whole skill is one file you can read in a few minutes.</p>
+    <div class="actions">
+      <a class="pill" href="https://github.com/wenyuew/gallery-minimal-ui" target="_blank" rel="noopener">Get the skill on GitHub</a>
+      <a class="text-btn" href="../#work">More of my work →</a>
+    </div>
+  </section>
+
+  <footer><span>© 2026 Emily Wang</span><a href="../">Back to home</a></footer>
+</div>
+</body>
+</html>
