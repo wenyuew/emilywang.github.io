@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockmate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#ffffff; --surface:#f7f7f6; --band:#f3f2ef; --object:#e9e9e8; --hair:#e6e6e4;
+  --ink:#111111; --ink-2:#3d3d3d; --muted:#6e6e6e; --faint:#a6a6a6; --on-ink:#ffffff;
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Noto Sans SC",sans-serif;
+  --fs-eyebrow:11px; --ls-eyebrow:.16em; --fs-caption:12px; --fs-small:13px; --fs-body:15px; --lh-body:1.75;
+  --fs-title:14px; --fs-h2:20px; --fs-h1:clamp(22px,2.4vw,30px);
+  --r-card:8px; --r-pill:10px; --r-object:6px;
+  --shadow-soft:0 30px 60px -30px rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.04);
+  --text-col:620px; --page:1120px; --gutter:clamp(16px,5vw,64px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0f0f0f; --surface:#171717; --band:#141413; --object:#1d1d1d; --hair:#2a2a2a;
+    --ink:#f2f2f2; --ink-2:#d0d0d0; --muted:#9a9a9a; --faint:#646464; --on-ink:#0f0f0f;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#0f0f0f; --surface:#171717; --band:#141413; --object:#1d1d1d; --hair:#2a2a2a;
+  --ink:#f2f2f2; --ink-2:#d0d0d0; --muted:#9a9a9a; --faint:#646464; --on-ink:#0f0f0f;
+}
+* { box-sizing:border-box; }
+[hidden] { display:none !important; }
+body { margin:0; background:var(--bg); color:var(--muted); font-family:var(--font);
+  font-size:var(--fs-body); line-height:var(--lh-body); -webkit-font-smoothing:antialiased; }
+.wrap { max-width:var(--page); margin:0 auto; padding:0 var(--gutter); }
+nav { display:flex; justify-content:space-between; align-items:center; padding:28px 0; }
+.mark { font-size:14px; font-weight:500; color:var(--ink); letter-spacing:-.01em; }
+.eyebrow { font-size:var(--fs-eyebrow); letter-spacing:var(--ls-eyebrow); text-transform:uppercase; color:var(--faint); font-weight:500; margin:0 0 16px; }
+h1 { font-size:var(--fs-h1); font-weight:500; color:var(--ink); letter-spacing:-.01em; line-height:1.3; margin:0 0 16px; }
+h2 { font-size:var(--fs-h2); font-weight:500; color:var(--ink); line-height:1.45; margin:0; letter-spacing:-.005em; }
+h3 { font-size:var(--fs-title); font-weight:500; color:var(--ink); margin:0 0 6px; }
+.lede { max-width:var(--text-col); margin:0; }
+.screen { display:none; padding:48px 0 120px; }
+.screen.on { display:block; animation:fade .3s ease-out; }
+@keyframes fade { from { opacity:0; transform:translateY(4px);} to { opacity:1; transform:none; } }
+
+/* form */
+.form { display:grid; grid-template-columns:1fr 1fr; gap:36px 48px; margin-top:72px; max-width:860px; }
+.field.full { grid-column:1 / -1; }
+.field label, .lbl { display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:500; margin-bottom:8px; }
+.field input, .field select, .field textarea {
+  width:100%; border:0; border-bottom:1px solid var(--hair); background:transparent; color:var(--ink);
+  font:inherit; font-size:15px; padding:6px 0 10px; outline:none; border-radius:0; transition:border-color .2s; }
+.field textarea { resize:vertical; min-height:72px; line-height:1.6; }
+.field select { appearance:none; -webkit-appearance:none; cursor:pointer; }
+.field input:focus, .field select:focus, .field textarea:focus { border-bottom-color:var(--ink); }
+.field input::placeholder, .field textarea::placeholder { color:var(--faint); }
+.hint { font-size:var(--fs-caption); color:var(--faint); margin-top:8px; line-height:1.5; }
+.checks { display:flex; flex-wrap:wrap; gap:14px 32px; }
+.check { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--ink-2); cursor:pointer; text-transform:none; letter-spacing:0; margin:0; }
+.check input { width:14px; height:14px; accent-color:var(--ink); margin:0; }
+.actions { display:flex; align-items:center; gap:24px; margin-top:56px; flex-wrap:wrap; }
+.btn { font:inherit; font-size:13px; font-weight:500; cursor:pointer; border:0; transition:transform .2s ease-out, opacity .2s; }
+.btn:hover { transform:translateY(-1px); }
+.btn:disabled { opacity:.35; cursor:default; transform:none; }
+.btn-primary { background:var(--ink); color:var(--on-ink); border-radius:var(--r-pill); padding:10px 18px; }
+.btn-text { background:none; color:var(--ink); padding:10px 0; }
+.btn-line { background:transparent; color:var(--ink); border:1px solid var(--hair); border-radius:var(--r-pill); padding:9px 16px; text-decoration:none; display:inline-block; }
+.error { font-size:13px; color:var(--ink); margin-top:16px; min-height:20px; }
+
+/* room */
+.room { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:64px; align-items:start; }
+.object { background:var(--object); border-radius:var(--r-object); box-shadow:var(--shadow-soft); padding:14px; }
+.object-top { display:flex; justify-content:space-between; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:500; padding:0 2px 10px; }
+.rec { display:flex; align-items:center; gap:8px; font-variant-numeric:tabular-nums; }
+.rec i { width:6px; height:6px; border-radius:50%; background:var(--ink); animation:blink 1.4s infinite; }
+@keyframes blink { 50% { opacity:.2; } }
+.cam { position:relative; aspect-ratio:4/3; background:#1a1a1a; border-radius:4px; overflow:hidden; }
+.cam video { width:100%; height:100%; object-fit:cover; transform:scaleX(-1); display:block; }
+.cam .nocam { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#8a8a8a; font-size:12px; }
+.room-actions { display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:16px; flex-wrap:wrap; }
+.side { padding-top:6px; }
+.who { display:flex; align-items:center; gap:14px; margin-bottom:28px; }
+.orb-wrap { width:44px; height:44px; position:relative; flex:none; }
+.orb { position:absolute; inset:-8px; border-radius:50%; filter:blur(9px);
+  background:radial-gradient(circle at 40% 40%, #c9cad0, #e3e3e8 50%, transparent 72%); animation:breathe 6s ease-in-out infinite; }
+.thinking .orb { animation-duration:1.6s; }
+@keyframes breathe { 0%,100% { transform:scale(.92); opacity:.75; } 50% { transform:scale(1.06); opacity:1; } }
+.who-name { font-size:13px; font-weight:500; color:var(--ink); line-height:1.3; }
+.status { font-size:12px; color:var(--faint); }
+.q-meta { display:flex; gap:12px; }
+.question { min-height:90px; }
+.cue-block { margin-top:40px; min-height:92px; }
+.cue { display:inline-block; background:var(--ink); color:var(--on-ink); border-radius:var(--r-pill); padding:12px 22px;
+  font-size:15px; font-weight:500; line-height:1.45; opacity:0; transform:translateY(4px); transition:opacity .3s ease-out, transform .3s ease-out; }
+.cue.show { opacity:1; transform:none; }
+.transcript { margin-top:40px; border-top:1px solid var(--hair); padding-top:24px; }
+.tx { font-size:14px; line-height:1.7; color:var(--ink-2); max-height:220px; overflow:auto; margin:0; }
+.tx .interim { color:var(--faint); }
+.tx:empty::before { content:"Your words appear here as you speak."; color:var(--faint); }
+#typed { width:100%; min-height:140px; border:0; border-bottom:1px solid var(--hair); background:transparent; color:var(--ink); font:inherit; font-size:14px; outline:none; resize:vertical; }
+
+/* report */
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; margin:64px 0 0; }
+.stat { background:var(--surface); padding:24px 26px; }
+.stat .n { font-size:28px; font-weight:400; color:var(--ink); line-height:1.2; font-variant-numeric:tabular-nums; }
+.stat .u { font-size:12px; color:var(--faint); margin-left:4px; }
+.pill-big { background:var(--ink); color:var(--on-ink); border-radius:var(--r-pill); padding:14px 28px; font-size:15px; font-weight:500; text-align:center; margin:56px auto 0; max-width:720px; line-height:1.5; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:96px; }
+.cell { background:var(--surface); padding:28px; }
+.cell ol { margin:0; padding:0; list-style:none; counter-reset:c; }
+.cell li { counter-increment:c; position:relative; padding-left:32px; margin-top:14px; font-size:14px; color:var(--ink-2); line-height:1.65; }
+.cell li::before { content:counter(c,decimal-leading-zero); position:absolute; left:0; font-size:12px; color:var(--faint); top:2px; font-variant-numeric:tabular-nums; }
+.answers { margin-top:120px; }
+.ans { display:grid; grid-template-columns:48px 1fr 60px; gap:24px; padding:36px 0; border-top:1px solid var(--hair); }
+.ans .num { font-size:12px; color:var(--faint); font-variant-numeric:tabular-nums; padding-top:3px; }
+.ans .sc { font-size:20px; color:var(--ink); text-align:right; font-variant-numeric:tabular-nums; }
+.ans .sc small { font-size:12px; color:var(--faint); }
+.ans .kind { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); margin-bottom:6px; }
+.ans h3 { font-size:15px; line-height:1.55; }
+.ans .meta { font-size:12px; color:var(--faint); margin:6px 0 18px; }
+.ans .row { margin-top:14px; font-size:14px; color:var(--ink-2); line-height:1.7; max-width:var(--text-col); }
+.ans .row b { display:block; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); font-weight:500; margin-bottom:2px; }
+details { margin-top:14px; font-size:13px; }
+summary { cursor:pointer; color:var(--ink); font-size:13px; list-style:none; }
+summary::-webkit-details-marker { display:none; }
+details p { color:var(--muted); line-height:1.7; margin:10px 0 0; max-width:var(--text-col); }
+.playback { margin-top:120px; display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:64px; align-items:start; }
+.playback video { width:100%; border-radius:4px; background:#1a1a1a; display:block; }
+.caption { font-size:var(--fs-caption); color:var(--faint); margin-top:12px; line-height:1.5; }
+.loading { display:flex; align-items:center; gap:14px; margin-top:48px; }
+
+@media (max-width: 820px) {
+  .form { grid-template-columns:1fr; gap:32px; margin-top:48px; }
+  .room, .playback { grid-template-columns:1fr; gap:40px; }
+  .stats { grid-template-columns:1fr 1fr; }
+  .grid2 { grid-template-columns:1fr; margin-top:64px; }
+  .answers, .playback { margin-top:80px; }
+  .ans { grid-template-columns:32px 1fr 44px; gap:12px; }
+  .screen { padding:24px 0 80px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before { animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav><span class="mark">Mockmate</span><span class="eyebrow" id="step" style="margin:0">Setup</span></nav>
+
+  <!-- 1 · SETUP -->
+  <section class="screen on" id="setup">
+    <p class="eyebrow">Mock interview — with a live coach</p>
+    <h1>Practice out loud. Get asked the next question.</h1>
+    <p class="lede">Mockmate records you, listens as you answer, whispers a cue when you drift — and asks follow-ups built from your own words. At the end, you get the recording and honest feedback.</p>
+
+    <div class="form">
+      <div class="field"><label for="role">Role</label><input id="role" placeholder="Senior Product Manager, Agentic AI"></div>
+      <div class="field"><label for="company">Company</label><input id="company" placeholder="Optional"></div>
+      <div class="field"><label for="type">Interview type</label>
+        <select id="type">
+          <option value="behavioral">Behavioral</option>
+          <option value="product sense">Product sense</option>
+          <option value="mixed behavioral and product">Mixed</option>
+          <option value="technical / execution">Technical &amp; execution</option>
+          <option value="hiring manager screen">Hiring manager screen</option>
+        </select></div>
+      <div class="field"><label for="count">Main questions</label>
+        <select id="count"><option>3</option><option selected>5</option><option>8</option></select>
+        <p class="hint">Follow-ups come on top — at most one per question.</p></div>
+      <div class="field full"><label for="jd">Job description</label><textarea id="jd" placeholder="Paste it — questions will map to what they're hiring for. Optional."></textarea></div>
+      <div class="field full"><label for="bg">About you</label><textarea id="bg" placeholder="A few lines or your resume summary, so questions fit your background. Optional."></textarea></div>
+      <div class="field"><label for="lang">Language</label>
+        <select id="lang"><option value="en-US">English</option><option value="en-GB">English (UK)</option><option value="zh-CN">中文</option><option value="fr-FR">Français</option></select></div>
+      <div class="field"><label for="model">Model</label><input id="model" value="claude-sonnet-4-5"></div>
+      <div class="field full"><label for="key">Anthropic API key</label><input id="key" type="password" placeholder="sk-ant-…" autocomplete="off">
+        <p class="hint">Sent only to Anthropic, straight from your browser. Camera, mic and recording never leave this page.</p></div>
+      <div class="field full checks">
+        <label class="check"><input type="checkbox" id="tts" checked> Read questions aloud</label>
+        <label class="check"><input type="checkbox" id="cues" checked> Live coaching cues</label>
+        <label class="check"><input type="checkbox" id="remember" checked> Remember key on this device</label>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="start">Start interview →</button>
+      <span class="hint" id="support" style="margin:0"></span>
+    </div>
+    <p class="error" id="setupErr"></p>
+  </section>
+
+  <!-- 2 · ROOM -->
+  <section class="screen" id="room">
+    <div class="room">
+      <div>
+        <div class="object">
+          <div class="object-top"><span>Camera</span><span class="rec"><i></i><span id="clock">00:00</span></span></div>
+          <div class="cam"><video id="cam" autoplay muted playsinline></video><div class="nocam" id="nocam" hidden>Audio only</div></div>
+        </div>
+        <div class="room-actions">
+          <button class="btn btn-primary" id="done" disabled>Done answering →</button>
+          <button class="btn btn-text" id="end">End interview</button>
+        </div>
+        <p class="error" id="roomErr"></p>
+      </div>
+      <div class="side">
+        <div class="who" id="who">
+          <div class="orb-wrap"><div class="orb"></div></div>
+          <div><div class="who-name">Interviewer</div><div class="status" id="status">Getting ready…</div></div>
+        </div>
+        <div class="q-meta"><p class="eyebrow" id="qnum">Question 01</p><p class="eyebrow" id="qkind"></p></div>
+        <div class="question"><h2 id="question"></h2></div>
+        <div class="cue-block" id="cueBlock"><p class="eyebrow">Live cue</p><div class="cue" id="cue"></div></div>
+        <div class="transcript"><p class="eyebrow">You</p><p class="tx" id="tx"></p><textarea id="typed" hidden placeholder="Speech recognition isn't available in this browser — type your answer here."></textarea></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · REPORT -->
+  <section class="screen" id="report">
+    <p class="eyebrow">Feedback</p>
+    <h1 id="rHead">Reviewing your interview…</h1>
+    <p class="lede" id="rSub"></p>
+    <div class="loading" id="rLoad"><div class="orb-wrap thinking"><div class="orb"></div></div><span class="status">Reading every answer — this takes about 20 seconds.</span></div>
+    <div id="rBody" hidden>
+      <div class="stats" id="stats"></div>
+      <div class="pill-big" id="topFix"></div>
+      <div class="grid2">
+        <div class="cell"><p class="eyebrow">What worked</p><ol id="strengths"></ol></div>
+        <div class="cell"><p class="eyebrow">What to work on</p><ol id="improve"></ol></div>
+      </div>
+      <div class="answers"><p class="eyebrow">Answer by answer</p><div id="answers"></div></div>
+    </div>
+    <div class="playback" id="playback" hidden>
+      <div><video id="replay" controls playsinline></video><p class="caption">The full session — camera, voice and the interviewer's questions if read aloud through speakers.</p></div>
+      <div><p class="eyebrow">Keep it</p><h2>Watch yourself back once.</h2>
+        <p class="lede" style="margin-top:12px">Most of what matters — pace, eye contact, the pause before an answer — only shows up on video.</p>
+        <div class="actions" style="margin-top:32px">
+          <a class="btn btn-primary" id="dlVideo" style="text-decoration:none">Download recording</a>
+          <button class="btn btn-line" id="dlText">Transcript .txt</button>
+        </div>
+      </div>
+    </div>
+    <p class="error" id="rErr"></p>
+    <div class="actions" style="margin-top:96px"><button class="btn btn-text" id="again">Practice again →</button></div>
+  </section>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const LANG_NAME = { 'en-US':'English', 'en-GB':'English', 'zh-CN':'Simplified Chinese', 'fr-FR':'French' };
+const FIELDS = ['role','company','type','count','jd','bg','lang','model'];
+const S = {};
+
+function reset() {
+  Object.assign(S, { cfg:null, qa:[], current:null, mainCount:0, stream:null, recorder:null, chunks:[], recog:null,
+    listening:false, accepting:false, finalText:'', interim:'', sessionStart:0, clockT:null, cueT:null,
+    cueBusy:false, lastCueWords:0, lastCueAt:0, videoURL:null, mime:'', busy:false, finishing:false, retry:false });
+}
+reset();
+
+/* ---------- persistence (per-viewer convenience only) ---------- */
+function load() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('mockmate') || '{}');
+    FIELDS.forEach(f => { if (saved[f] != null) $(f).value = saved[f]; });
+    if (saved.key) $('key').value = saved.key;
+    ['tts','cues'].forEach(f => { if (saved[f] != null) $(f).checked = saved[f]; });
+  } catch (e) {}
+}
+function save(cfg) {
+  try {
+    const o = {}; FIELDS.forEach(f => o[f] = cfg[f]); o.tts = cfg.tts; o.cues = cfg.cues;
+    if ($('remember').checked) o.key = cfg.key;
+    localStorage.setItem('mockmate', JSON.stringify(o));
+  } catch (e) {}
+}
+load();
+(() => { let framed = false; try { framed = window.self !== window.top; } catch (x) { framed = true; }
+  if (!window.isSecureContext || framed) $('setupErr').textContent = mediaHelp(); })();
+if (!SR) $('support').textContent = 'Live transcription needs Chrome, Edge or Safari — elsewhere you can type answers.';
+
+/* ---------- helpers ---------- */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const mmss = s => pad(Math.floor(s/60)) + ':' + pad(Math.floor(s%60));
+const isZh = () => S.cfg.lang.startsWith('zh');
+function units(t) { t = t || ''; return isZh() ? (t.match(/[一-鿿]/g) || []).length : (t.trim().match(/\S+/g) || []).length; }
+function fillers(t) {
+  t = t || '';
+  const re = isZh() ? /(嗯|呃|那个|就是说|然后呢)/g
+    : S.cfg.lang.startsWith('fr') ? /\b(euh|bah|ben|genre|en fait|du coup|voilà)\b/gi
+    : /\b(um+|uh+|erm|hmm|you know|basically|actually|literally|kind of|sort of|i mean)\b/gi;
+  return (t.match(re) || []).length;
+}
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id));
+  $('step').textContent = { setup:'Setup', room:'Interview', report:'Feedback' }[id];
+  window.scrollTo(0,0);
+}
+function setStatus(txt, thinking) { $('status').textContent = txt; $('who').classList.toggle('thinking', !!thinking); }
+
+async function claude(system, user, max_tokens = 500) {
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{ 'content-type':'application/json', 'x-api-key':S.cfg.key, 'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true' },
+    body: JSON.stringify({ model:S.cfg.model, max_tokens, system, messages:[{ role:'user', content:user }] })
+  });
+  if (!r.ok) {
+    let msg = r.status + '';
+    try { const j = await r.json(); msg += ' — ' + (j.error?.message || ''); } catch (e) {}
+    throw new Error('Anthropic API error ' + msg);
+  }
+  const j = await r.json();
+  return (j.content || []).map(c => c.text || '').join('').trim();
+}
+function parseJSON(t) { const m = t.match(/\{[\s\S]*\}/); return JSON.parse(m ? m[0] : t); }
+
+function context() {
+  const c = S.cfg;
+  return `Role: ${c.role}${c.company ? '\nCompany: ' + c.company : ''}\nInterview type: ${c.type}` +
+    (c.jd ? `\n\nJob description:\n${c.jd}` : '') + (c.bg ? `\n\nCandidate background:\n${c.bg}` : '');
+}
+function history() {
+  return S.qa.map(x => `${x.kind === 'followup' ? 'Interviewer (follow-up)' : 'Interviewer'}: ${x.q}\nCandidate: ${x.answer || '(no answer captured)'}`).join('\n\n');
+}
+
+/* ---------- media ---------- */
+function mediaHelp(e) {
+  const framed = (() => { try { return window.self !== window.top; } catch (x) { return true; } })();
+  if (!navigator.mediaDevices || !window.isSecureContext)
+    return 'Camera and mic only work on a secure page. Open Mockmate from an https:// address (e.g. GitHub Pages or your website).';
+  if (framed)
+    return 'This preview window blocks the camera and mic. Download the file and open it in Chrome, or open it from your website.';
+  if (e && (e.name === 'NotAllowedError' || e.name === 'SecurityError'))
+    return 'Camera/mic permission was blocked. Click the camera icon in the address bar, allow both, then try again.';
+  if (e && e.name === 'NotFoundError') return 'No microphone was found. Plug one in and try again.';
+  if (e && e.name === 'NotReadableError') return 'Your camera or mic is in use by another app (Zoom, FaceTime…). Close it and try again.';
+  return 'Could not start camera/mic' + (e && e.name ? ' (' + e.name + ')' : '') + '. Allow access in your browser and try again.';
+}
+async function setupMedia() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error(mediaHelp());
+  try { S.stream = await navigator.mediaDevices.getUserMedia({ video:{ width:1280, height:720 }, audio:true }); }
+  catch (e) {
+    try { S.stream = await navigator.mediaDevices.getUserMedia({ audio:true }); $('nocam').hidden = false; }
+    catch (e2) { throw new Error(mediaHelp(e2)); }
+  }
+  $('cam').srcObject = S.stream;
+  const types = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4','audio/webm'];
+  const mimeType = types.find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t));
+  try {
+    S.recorder = new MediaRecorder(S.stream, mimeType ? { mimeType } : undefined);
+    S.recorder.ondataavailable = e => { if (e.data.size) S.chunks.push(e.data); };
+    S.mime = S.recorder.mimeType || mimeType || '';
+    S.recorder.start(1000);
+  } catch (e) { S.recorder = null; }
+}
+
+function startRecog() {
+  if (!SR) { $('tx').hidden = true; $('typed').hidden = false; return; }
+  const r = new SR();
+  r.continuous = true; r.interimResults = true; r.lang = S.cfg.lang;
+  r.onresult = e => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const res = e.results[i];
+      if (!S.accepting) continue;
+      if (res.isFinal) S.finalText += res[0].transcript.trim() + ' ';
+      else interim += res[0].transcript;
+    }
+    S.interim = S.accepting ? interim : '';
+    renderTx();
+  };
+  r.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') $('roomErr').textContent = 'Speech recognition was blocked — type in the box instead.'; };
+  r.onend = () => { if (S.listening) { try { r.start(); } catch (e) {} } };
+  S.recog = r; S.listening = true;
+  try { r.start(); } catch (e) {}
+}
+function renderTx() { $('tx').innerHTML = esc(S.finalText) + '<span class="interim">' + esc(S.interim) + '</span>'; $('tx').scrollTop = 1e9; }
+function answerText() { return (SR ? S.finalText + ' ' + S.interim : $('typed').value).trim(); }
+
+function speak(text) {
+  return new Promise(res => {
+    if (!S.cfg.tts || !window.speechSynthesis) return res();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = S.cfg.lang; u.rate = 1.02;
+    const v = speechSynthesis.getVoices().find(v => v.lang === S.cfg.lang) || speechSynthesis.getVoices().find(v => v.lang.startsWith(S.cfg.lang.slice(0,2)));
+    if (v) u.voice = v;
+    let done = false; const fin = () => { if (!done) { done = true; setTimeout(res, 350); } };
+    u.onend = fin; u.onerror = fin;
+    setTimeout(fin, 4000 + text.length * 90); // safety net
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  });
+}
+
+/* ---------- interview flow ---------- */
+async function getNext() {
+  const c = S.cfg, last = S.qa[S.qa.length - 1];
+  const canFollow = last && last.kind === 'main';
+  const canMain = S.mainCount < c.count;
+  if (!canFollow && !canMain) return { kind:'end' };
+  let options;
+  if (!last) options = 'Ask the opening main question. Make it a natural opener for this interview type.';
+  else options = [
+    canFollow ? `"followup" — probe the last answer. Choose this when it was vague, skipped the candidate's own actions or the measurable result, or mentioned something worth digging into. The follow-up must reference their specific words.` : null,
+    canMain ? `"main" — move to a new question testing a different competency than before (prefer ones the job description emphasizes).` : null,
+    !canMain ? `"end" — close the interview if no follow-up is needed.` : null
+  ].filter(Boolean).join('\n');
+  const system = `You are a sharp, warm interviewer running a realistic mock ${c.type} interview. Ask exactly one question, at most 45 words, conversational, no praise or preamble ("Great answer" etc.). Write in ${LANG_NAME[c.lang]}. Respond only with JSON.`;
+  const user = `${context()}\n\nInterview so far:\n${history() || '(nothing yet)'}\n\nMain questions asked: ${S.mainCount} of ${c.count}.\nAllowed next moves:\n${options}\n\nReturn JSON: {"kind": "main" | "followup" | "end", "question": "..."}`;
+  const out = parseJSON(await claude(system, user, 300));
+  if (!last) out.kind = 'main';
+  if (out.kind === 'followup' && !canFollow) out.kind = canMain ? 'main' : 'end';
+  if (out.kind === 'main' && !canMain) out.kind = 'end';
+  return out;
+}
+
+async function askNext() {
+  S.accepting = false; S.busy = true; $('done').disabled = true; hideCue();
+  setStatus('Thinking…', true);
+  let res;
+  try { res = await getNext(); }
+  catch (e) { $('roomErr').textContent = e.message; setStatus('Paused'); S.busy = false; $('done').disabled = false; $('done').textContent = 'Retry →'; S.retry = true; return; }
+  if (S.finishing) return;
+  S.retry = false; $('done').textContent = 'Done answering →';
+  if (res.kind === 'end' || !res.question) return finish();
+  if (res.kind === 'main') S.mainCount++;
+  S.current = { q:res.question, kind:res.kind, answer:'', start:0, end:0, cues:[] };
+  $('qnum').textContent = res.kind === 'followup' ? 'Follow-up' : `Question ${pad(S.mainCount)} / ${pad(S.cfg.count)}`;
+  $('qkind').textContent = '';
+  $('question').textContent = res.question;
+  S.finalText = ''; S.interim = ''; renderTx(); $('typed').value = '';
+  if (S.cfg.tts) { setStatus('Asking…', true); await speak(res.question); }
+  if (S.finishing) return; // ended while speaking
+  S.finalText = ''; S.interim = ''; renderTx();
+  S.current.start = Date.now(); S.lastCueWords = 0; S.lastCueAt = Date.now();
+  S.accepting = true; S.busy = false; $('done').disabled = false;
+  setStatus(SR ? 'Listening…' : 'Type your answer');
+}
+
+function commitAnswer() {
+  if (!S.current || !S.current.start) return;
+  S.current.answer = answerText();
+  S.current.end = Date.now();
+  S.qa.push(S.current);
+  S.current = null;
+}
+
+async function doneAnswering() {
+  if (S.retry) { $('roomErr').textContent = ''; return askNext(); }
+  if (S.busy || !S.accepting) return;
+  S.accepting = false;
+  commitAnswer();
+  await askNext();
+}
+
+/* ---------- live cues ---------- */
+function hideCue() { $('cue').classList.remove('show'); }
+async function maybeCue() {
+  if (!S.cfg.cues || !S.accepting || S.cueBusy || !S.current) return;
+  const text = answerText(), n = units(text), now = Date.now();
+  const need = isZh() ? 30 : 15;
+  if (n - S.lastCueWords < need || now - S.lastCueAt < 10000) return;
+  S.cueBusy = true; S.lastCueWords = n; S.lastCueAt = now;
+  const q = S.current.q, elapsed = Math.round((now - S.current.start) / 1000);
+  try {
+    const cue = await claude(
+      `You are a silent interview coach whispering one cue to a candidate mid-answer. Reply with the cue only: max 8 words, imperative, no quotes, no emoji. Write in ${LANG_NAME[S.cfg.lang]}. If they are on track, reply exactly: On track — keep going`,
+      `${context()}\n\nQuestion: ${q}\nAnswer so far (live speech transcript, may contain recognition errors): ${text}\nElapsed: ${elapsed}s.\n\nWhat should they do in the next 20 seconds? Consider: clear structure (situation → action → result), concrete specifics, numbers for impact, their own role ("I" not "we"), rambling or repeating, actually answering the question, trade-offs, and wrapping up once past ~2 minutes.`, 40);
+    if (S.accepting && S.current && S.current.q === q) {
+      const clean = cue.replace(/^["'“”]+|["'“”]+$/g, '').trim();
+      S.current.cues.push(clean);
+      $('cue').classList.remove('show');
+      setTimeout(() => { $('cue').textContent = clean; $('cue').classList.add('show'); }, 120);
+    }
+  } catch (e) { /* cues are best-effort */ }
+  S.cueBusy = false;
+}
+
+/* ---------- start / finish ---------- */
+async function start() {
+  const cfg = {}; FIELDS.forEach(f => cfg[f] = $(f).value.trim());
+  cfg.key = $('key').value.trim(); cfg.tts = $('tts').checked; cfg.cues = $('cues').checked;
+  cfg.count = parseInt(cfg.count, 10) || 5; cfg.model = cfg.model || 'claude-sonnet-4-5';
+  if (!cfg.role) { $('setupErr').textContent = 'Add the role you are interviewing for.'; return; }
+  if (!cfg.key) { $('setupErr').textContent = 'Add your Anthropic API key.'; return; }
+  $('setupErr').textContent = '';
+  reset(); S.cfg = cfg; save(cfg);
+  $('cueBlock').hidden = !cfg.cues;
+  $('tx').hidden = false; $('typed').hidden = true; $('roomErr').textContent = ''; $('nocam').hidden = true;
+  $('question').textContent = ''; $('qnum').textContent = 'Question 01'; hideCue();
+  show('room');
+  try { await setupMedia(); } catch (e) { $('setupErr').textContent = e.message; show('setup'); return; }
+  S.sessionStart = Date.now();
+  S.clockT = setInterval(() => $('clock').textContent = mmss((Date.now() - S.sessionStart) / 1000), 500);
+  S.cueT = setInterval(maybeCue, 2000);
+  startRecog();
+  askNext();
+}
+
+function stopMedia() {
+  return new Promise(res => {
+    S.listening = false; S.accepting = false;
+    try { S.recog && S.recog.stop(); } catch (e) {}
+    try { speechSynthesis.cancel(); } catch (e) {}
+    clearInterval(S.clockT); clearInterval(S.cueT);
+    const stopTracks = () => { S.stream && S.stream.getTracks().forEach(t => t.stop()); S.stream = null; res(); };
+    if (S.recorder && S.recorder.state !== 'inactive') {
+      S.recorder.onstop = () => {
+        if (S.chunks.length) S.videoURL = URL.createObjectURL(new Blob(S.chunks, { type:S.mime || 'video/webm' }));
+        stopTracks();
+      };
+      S.recorder.stop();
+    } else stopTracks();
+  });
+}
+
+async function finish() {
+  if (S.finishing) return; S.finishing = true;
+  if (S.current && S.current.start && answerText()) commitAnswer();
+  S.current = null;
+  await stopMedia();
+  S.recorder = null;
+  show('report');
+  $('rHead').textContent = 'Reviewing your interview…'; $('rSub').textContent = '';
+  $('rBody').hidden = true; $('rLoad').hidden = false; $('rErr').textContent = '';
+  renderPlayback();
+  const qa = S.qa.filter(x => x.start);
+  qa.forEach(x => {
+    x.secs = Math.max(1, (x.end - x.start) / 1000);
+    x.units = units(x.answer); x.pace = Math.round(x.units / (x.secs / 60)); x.fill = fillers(x.answer);
+  });
+  S.qa = qa;
+  if (!qa.length) { $('rLoad').hidden = true; $('rHead').textContent = 'No answers were recorded.'; $('rSub').textContent = 'Start again and answer at least one question to get feedback.'; S.finishing = false; return; }
+  renderStats();
+  try {
+    const transcript = qa.map((x, i) => `#${i+1} ${x.kind === 'followup' ? '(follow-up) ' : ''}Q: ${x.q}\nA (${Math.round(x.secs)}s, ${x.pace} ${isZh() ? 'chars' : 'words'}/min, ${x.fill} filler words): ${x.answer || '(no answer)'}`).join('\n\n');
+    const out = parseJSON(await claude(
+      `You are an experienced hiring manager giving candid, specific, kind feedback on a mock interview. Judge like a real interviewer for this role and level. Transcripts come from live speech recognition, so ignore obvious transcription errors. Write in ${LANG_NAME[S.cfg.lang]}. Respond only with JSON.`,
+      `${context()}\n\nInterview transcript:\n\n${transcript}\n\nReturn JSON exactly in this shape:\n{"score": integer 1-10 overall, "headline": "one-sentence overall verdict", "top_fix": "the single most important change for next time, max 14 words", "strengths": ["3 specific strengths, quoting or referencing their answers"], "improvements": ["3 specific, actionable improvements"], "answers": [{"score": integer 1-10, "worked": "one or two sentences", "fix": "one or two sentences", "stronger": "a stronger 2-3 sentence version of how they could have opened this answer, first person, using their real material"}]}\nThe answers array must have exactly ${qa.length} items, in order.`, 3500));
+    renderReport(out);
+  } catch (e) {
+    $('rLoad').hidden = true; $('rHead').textContent = 'Feedback could not be generated.';
+    $('rErr').textContent = e.message + ' — your recording and transcript are still below.';
+    $('rBody').hidden = false; $('topFix').hidden = true; $('strengths').parentNode.parentNode.hidden = true;
+    renderAnswers([]);
+  }
+  S.finishing = false;
+}
+
+/* ---------- report ---------- */
+function renderStats() {
+  const qa = S.qa, talk = qa.reduce((a, x) => a + x.secs, 0), u = qa.reduce((a, x) => a + x.units, 0);
+  const pace = Math.round(u / (talk / 60)), fill = qa.reduce((a, x) => a + x.fill, 0);
+  const stats = [
+    ['Talk time', mmss(talk), ''],
+    ['Pace', pace || 0, isZh() ? 'chars/min' : 'wpm'],
+    ['Filler words', fill, ''],
+    ['Answers', qa.length, `${qa.filter(x => x.kind === 'followup').length} follow-up`]
+  ];
+  $('stats').innerHTML = stats.map(([l, n, u]) => `<div class="stat"><p class="eyebrow" style="margin-bottom:10px">${l}</p><span class="n">${esc(n)}</span><span class="u">${esc(u)}</span></div>`).join('');
+}
+function renderReport(r) {
+  $('rLoad').hidden = true; $('rBody').hidden = false; $('topFix').hidden = false; $('strengths').parentNode.parentNode.hidden = false;
+  $('rHead').textContent = `${r.score ?? '–'} / 10 — ${r.headline || ''}`;
+  $('rSub').textContent = `${S.cfg.role}${S.cfg.company ? ' · ' + S.cfg.company : ''} · ${S.cfg.type}`;
+  $('topFix').textContent = r.top_fix || '';
+  $('strengths').innerHTML = (r.strengths || []).map(s => `<li>${esc(s)}</li>`).join('');
+  $('improve').innerHTML = (r.improvements || []).map(s => `<li>${esc(s)}</li>`).join('');
+  renderAnswers(r.answers || []);
+}
+function renderAnswers(fb) {
+  $('answers').innerHTML = S.qa.map((x, i) => {
+    const f = fb[i] || {};
+    return `<div class="ans"><span class="num">${pad(i+1)}</span><div>
+      <div class="kind">${x.kind === 'followup' ? 'Follow-up' : 'Question'}</div>
+      <h3>${esc(x.q)}</h3>
+      <div class="meta">${mmss(x.secs)} · ${x.pace} ${isZh() ? 'chars/min' : 'wpm'} · ${x.fill} filler${x.fill === 1 ? '' : 's'}</div>
+      ${f.worked ? `<div class="row"><b>Worked</b>${esc(f.worked)}</div>` : ''}
+      ${f.fix ? `<div class="row"><b>Fix</b>${esc(f.fix)}</div>` : ''}
+      ${f.stronger ? `<div class="row"><b>Try opening with</b>${esc(f.stronger)}</div>` : ''}
+      <details><summary>Your answer →</summary><p>${esc(x.answer || '(no answer captured)')}</p>
+      ${x.cues.length ? `<p><span style="color:var(--faint)">Cues shown:</span> ${x.cues.map(esc).join(' · ')}</p>` : ''}</details>
+    </div><div class="sc">${f.score != null ? `${esc(f.score)}<small>/10</small>` : ''}</div></div>`;
+  }).join('');
+}
+function renderPlayback() {
+  $('playback').hidden = !S.videoURL;
+  if (!S.videoURL) return;
+  $('replay').src = S.videoURL;
+  const ext = S.mime.includes('mp4') ? 'mp4' : 'webm';
+  $('dlVideo').href = S.videoURL; $('dlVideo').download = `mockmate-${new Date().toISOString().slice(0,10)}.${ext}`;
+}
+function downloadText() {
+  const c = S.cfg;
+  const t = `Mockmate — ${c.role}${c.company ? ' @ ' + c.company : ''} (${c.type})\n${new Date().toLocaleString()}\n\n` +
+    S.qa.map((x, i) => `${pad(i+1)} ${x.kind === 'followup' ? '[follow-up] ' : ''}${x.q}\n\n${x.answer || '(no answer)'}\n`).join('\n---\n\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([t], { type:'text/plain' }));
+  a.download = `mockmate-transcript-${new Date().toISOString().slice(0,10)}.txt`; a.click();
+}
+
+$('start').onclick = start;
+$('done').onclick = doneAnswering;
+$('end').onclick = () => { if (!S.finishing) finish(); };
+$('dlText').onclick = downloadText;
+$('again').onclick = () => { if (S.videoURL) URL.revokeObjectURL(S.videoURL); show('setup'); };
+if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {};
+</script>
+</body>
+</html>
