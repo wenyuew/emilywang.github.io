@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Word Bank · Flowy</title>
+<link rel="icon" href="icons/icon48.png">
+<link rel="stylesheet" href="vocab.css">
+</head>
+<body>
+<main>
+  <header>
+    <div class="caps title">Flowy<br>Word Bank</div>
+    <div class="caps muted" id="summary"></div>
+  </header>
+
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Search" autocomplete="off">
+    <nav class="caps filters" id="filter">
+      <button data-f="all" class="on">All</button>
+      <button data-f="word">Words</button>
+      <button data-f="sentence">Sentences</button>
+    </nav>
+    <span class="spacer"></span>
+    <nav class="caps filters">
+      <button id="hideMeaning" title="Hide meanings and translations to test yourself">Test myself</button>
+      <button id="slow" title="Play audio slower">Slow audio</button>
+      <button id="export">Export CSV &rarr;</button>
+    </nav>
+  </div>
+
+  <section id="list"></section>
+  <p id="empty" class="empty" hidden>
+    Nothing saved yet.<br>
+    On a YouTube video, click a word in the transcript, drag across a few words for a phrase,
+    or press the small circle beside a line to keep the whole sentence.
+  </p>
+</main>
+<div id="toast" class="caps" hidden></div>
+<script src="vocab.js"></script>
+</body>
+</html>
