@@ -1,0 +1,49 @@
+/* Start / End markers injected into each saved post — gallery minimal style */
+.tbs-pins {
+  position: absolute;
+  top: 12px;
+  right: 120px;
+  display: flex;
+  gap: 6px;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease-out;
+}
+article[data-testid="tweet"]:hover .tbs-pins,
+.tbs-is-start .tbs-pins,
+.tbs-is-end .tbs-pins {
+  opacity: 1;
+  pointer-events: auto;
+}
+.tbs-pins button {
+  font: 500 10px/1 "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 1px solid #e6e6e4;
+  background: #ffffff;
+  color: #6e6e6e;
+  cursor: pointer;
+  transition: color 0.2s ease-out, transform 0.2s ease-out;
+}
+.tbs-pins button:hover { color: #111111; transform: translateY(-1px); }
+
+/* Marked posts: a thin ink line on the left, the chosen marker filled black */
+.tbs-is-start,
+.tbs-is-end { box-shadow: inset 2px 0 0 #111111; }
+.tbs-is-start .tbs-pins button[data-act="start"],
+.tbs-is-end .tbs-pins button[data-act="end"] {
+  background: #111111;
+  border-color: #111111;
+  color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tbs-pins button { background: #0f0f0f; border-color: #2a2a2a; color: #9a9a9a; }
+  .tbs-pins button:hover { color: #f2f2f2; }
+  .tbs-is-start, .tbs-is-end { box-shadow: inset 2px 0 0 #f2f2f2; }
+  .tbs-is-start .tbs-pins button[data-act="start"],
+  .tbs-is-end .tbs-pins button[data-act="end"] { background: #f2f2f2; border-color: #f2f2f2; color: #0f0f0f; }
+}

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xtract — Emily Wang</title>
+<meta name="description" content="Xtract is a Chrome extension that summarizes a range of your saved posts on X, grouped by topic, person or your own categories.">
+<meta property="og:title" content="Xtract">
+<meta property="og:description" content="Mark a start and end on your X bookmarks and get a one-line summary of every post in between.">
+<meta property="og:image" content="wide.png">
+<link rel="icon" href="extension/icons/icon32.png">
+<style>
+  :root {
+    --page: #ffffff;
+    --body: #f1f1ef;
+    --line: #e4e4e1;
+    --ink: #111111;
+    --text: #3b3b3b;
+    --muted: #8a8a86;
+    --dot: #111111;
+    --shadow: 0 30px 60px -30px rgba(0,0,0,.25), 0 2px 6px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--page); color: var(--text);
+    font: 16px/1.65 "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .caps { text-transform: uppercase; letter-spacing: .16em; font-size: 11px; font-weight: 500; }
+  .muted { color: var(--muted); }
+  main { max-width: 1040px; margin: 0 auto; padding: 56px 32px 96px; }
+
+  nav.top { display: flex; justify-content: space-between; margin-bottom: 96px; }
+  nav.top a { text-decoration: none; color: var(--muted); }
+  nav.top a:hover { color: var(--ink); }
+
+  .intro { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; margin-bottom: 128px; }
+  h1 { font-size: 44px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; color: var(--ink); margin: 14px 0 20px; }
+  .lede { font-size: 18px; color: var(--text); margin: 0 0 28px; max-width: 32em; }
+  .tags { display: flex; gap: 18px; margin-bottom: 36px; }
+  .actions { display: flex; gap: 28px; flex-wrap: wrap; }
+  .actions a { text-decoration: none; color: var(--ink); padding: 4px 0; border-bottom: 1px solid var(--ink); }
+  .actions a.secondary { color: var(--muted); border-color: var(--line); }
+  .actions a:hover { border-color: var(--dot); }
+
+  figure { margin: 0; }
+  figure img { display: block; width: 100%; height: auto; border-radius: 10px; }
+  .shot { max-width: 380px; justify-self: center; }
+  .shot img { box-shadow: var(--shadow); border: 1px solid var(--line); }
+  figcaption {
+    margin: 4px 0 0 24px; padding: 10px 12px; border: 1px solid var(--line); display: inline-block;
+    font-size: 12px; line-height: 1.5; color: var(--muted); max-width: 280px;
+  }
+  figcaption b { display: block; color: var(--ink); font-weight: 600; }
+
+  section { margin-bottom: 120px; }
+  .label { color: var(--muted); margin-bottom: 28px; display: flex; align-items: center; gap: 10px; }
+  .label::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--dot); }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px 40px; }
+  .grid h3 { font-size: 17px; font-weight: 600; color: var(--ink); margin: 8px 0 6px; }
+  .grid p { margin: 0; font-size: 15px; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  ol.steps { list-style: none; padding: 0; margin: 0; counter-reset: s; }
+  ol.steps li { counter-increment: s; display: grid; grid-template-columns: 52px 1fr; padding: 16px 0; border-top: 1px solid var(--line); font-size: 15px; }
+  ol.steps li:last-child { border-bottom: 1px solid var(--line); }
+  ol.steps li::before { content: "No." counter(s, decimal-leading-zero); color: var(--muted); text-transform: uppercase; letter-spacing: .12em; font-size: 10.5px; padding-top: 4px; }
+  code { font: 13px/1.4 ui-monospace, Menlo, monospace; background: var(--body); padding: 2px 6px; border-radius: 4px; color: var(--ink); }
+
+  .wide img { border: 1px solid var(--line); }
+  .note { font-size: 15px; max-width: 36em; }
+
+  footer { border-top: 1px solid var(--line); padding-top: 22px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  @media (max-width: 780px) {
+    main { padding: 32px 20px 64px; }
+    nav.top { margin-bottom: 56px; }
+    .intro, .split { grid-template-columns: 1fr; gap: 48px; }
+    .intro { margin-bottom: 88px; }
+    h1 { font-size: 36px; }
+    .grid { grid-template-columns: 1fr; gap: 32px; }
+    section { margin-bottom: 88px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <nav class="top caps">
+    <a href="../">&larr; Work</a>
+    <a href="https://github.com/wenyuew/emilywang.github.io/tree/main/xtract/extension">Code &rarr;</a>
+  </nav>
+
+  <div class="intro">
+    <div>
+      <div class="caps muted">Chrome extension &middot; 2026</div>
+      <h1>Xtract</h1>
+      <p class="lede">For everything you saved on X and never went back to. Mark where to start and where to stop on your bookmarks, and Xtract writes one line for every post in between, grouped by topic, by person, or by categories you choose.</p>
+      <div class="tags caps muted"><span>AI</span><span>Chrome extension</span><span>Reading</span></div>
+      <div class="actions caps">
+        <a href="xtract.zip" download>Download &rarr;</a>
+        <a class="secondary" href="https://github.com/wenyuew/emilywang.github.io/tree/main/xtract/extension">View the code &rarr;</a>
+      </div>
+    </div>
+    <figure class="shot">
+      <img src="panel.png" alt="The Xtract side panel: a start post and an end post marked, grouping options for topic, person or your own categories, a language choice and a black Summarize range button." width="840" height="1520">
+      <figcaption><b>The side panel</b>Sits beside X. Your start and end posts, how to group them, and which language to write in.</figcaption>
+    </figure>
+  </div>
+
+  <section>
+    <div class="label caps">How it works</div>
+    <div class="grid">
+      <div>
+        <div class="caps muted">No.01</div>
+        <h3>Mark a range</h3>
+        <p>Hover any saved post and click <i>Start here</i>, then another and click <i>End here</i>.</p>
+      </div>
+      <div>
+        <div class="caps muted">No.02</div>
+        <h3>It reads for you</h3>
+        <p>Xtract goes back to your start post and scrolls down to the end at a human pace, collecting every post in between.</p>
+      </div>
+      <div>
+        <div class="caps muted">No.03</div>
+        <h3>One line each</h3>
+        <p>Claude writes one sentence per post: the idea, the tip or the resource, with a link back to the original.</p>
+      </div>
+      <div>
+        <div class="caps muted">No.04</div>
+        <h3>Your grouping</h3>
+        <p>By topic, by person, or by categories you type yourself. Each group gets a short line on what ties it together.</p>
+      </div>
+      <div>
+        <div class="caps muted">No.05</div>
+        <h3>In your language</h3>
+        <p>Summaries in English, 中文, or the language each post was written in. Copy the whole digest as Markdown.</p>
+      </div>
+      <div>
+        <div class="caps muted">No.06</div>
+        <h3>Stays yours</h3>
+        <p>Your own Anthropic key, kept in your browser. Only the posts' text goes to Claude, and nothing is sent anywhere else.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="split">
+    <figure class="shot">
+      <img src="digest.png" alt="An Xtract digest: posts grouped into AI agents, Design craft and Product management, each with a one-line summary and a link to open the post." width="840" height="1800">
+      <figcaption><b>The digest</b>Numbered groups, one line per post, and a link back to each one.</figcaption>
+    </figure>
+    <div>
+      <div class="label caps">Try it</div>
+      <ol class="steps">
+        <li><span><a href="xtract.zip" download>Download Xtract</a> and unzip it.</span></li>
+        <li><span>Open <code>chrome://extensions</code> and switch on <b>Developer mode</b>.</span></li>
+        <li><span>Click <b>Load unpacked</b> and choose the <code>xtract</code> folder.</span></li>
+        <li><span>Pin Xtract, click it, and paste your Anthropic API key under <b>Settings</b>.</span></li>
+        <li><span>Open your bookmarks on X, mark a start and an end, and click <b>Summarize range</b>.</span></li>
+      </ol>
+      <p class="note muted" style="margin-top:20px">Works in Chrome on desktop. Up to 300 posts per run. It reads the page the way you see it and paces its scrolling, without touching X's hidden APIs.</p>
+    </div>
+  </section>
+
+  <section class="wide">
+    <div class="label caps">Beside the page</div>
+    <figure>
+      <img src="wide.png" alt="X's bookmarks with Start here and End here markers on a post, and the Xtract side panel open to the right." width="1800" height="1124">
+    </figure>
+  </section>
+
+  <footer class="caps muted">
+    <span>Emily Wang</span>
+    <span>Built with AI, one step at a time.</span>
+  </footer>
+</main>
+</body>
+</html>

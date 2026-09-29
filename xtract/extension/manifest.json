@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "Xtract",
+  "version": "0.3.0",
+  "description": "Summarize a range of your saved posts on X, grouped by topic, person or your own categories, in a side panel.",
+  "permissions": [
+    "storage",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://twitter.com/*",
+    "https://api.anthropic.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "options.html",
+  "action": {
+    "default_title": "Open Xtract",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

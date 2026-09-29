@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Xtract</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#ffffff; --surface:#f7f7f6; --hair:#e6e6e4;
+      --ink:#111111; --ink-2:#3d3d3d; --muted:#6e6e6e; --faint:#a6a6a6; --on-ink:#ffffff;
+      --font:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Noto Sans SC",sans-serif;
+      --r-pill:10px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg:#0f0f0f; --surface:#171717; --hair:#2a2a2a;
+        --ink:#f2f2f2; --ink-2:#d0d0d0; --muted:#9a9a9a; --faint:#646464; --on-ink:#0f0f0f;
+      }
+    }
+    * { box-sizing:border-box; }
+    html, body { margin:0; background:var(--bg); }
+    body { color:var(--muted); font-family:var(--font); font-size:15px; line-height:1.75; -webkit-font-smoothing:antialiased; }
+    main { padding:40px 24px 64px; }
+    button { font:inherit; cursor:pointer; background:none; border:0; padding:0; color:inherit; }
+    [hidden] { display:none !important; }
+
+    .eyebrow { margin:0; font-size:11px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); }
+    .num { font-size:12px; color:var(--faint); font-variant-numeric:tabular-nums; }
+    .text-btn { font-size:13px; color:var(--ink); transition:color .2s ease-out; }
+    .text-btn:hover { color:var(--muted); }
+
+    header { display:flex; justify-content:space-between; align-items:baseline; }
+    h1 { margin:18px 0 0; font-size:22px; font-weight:500; letter-spacing:-0.01em; color:var(--ink); line-height:1.3; }
+    .lede { margin:8px 0 0; font-size:13px; line-height:1.6; }
+
+    .range { margin-top:32px; display:grid; gap:2px; }
+    .mark { background:var(--surface); padding:14px 16px; display:grid; grid-template-columns:28px 1fr; gap:2px 8px; }
+    .mark .num { grid-row:1 / span 2; padding-top:1px; }
+    .val { font-size:13px; line-height:1.5; color:var(--faint); overflow:hidden; text-overflow:ellipsis;
+           display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; min-width:0; }
+    .val.set { color:var(--ink-2); }
+    .hint { margin:10px 0 0; font-size:12px; color:var(--faint); line-height:1.6; }
+    .hint .text-btn { font-size:12px; }
+
+    .field { margin-top:32px; }
+    .field .eyebrow { margin-bottom:10px; }
+    .seg { display:flex; gap:20px; border-bottom:1px solid var(--hair); }
+    .seg button { font-size:13px; color:var(--faint); padding:0 0 8px; margin-bottom:-1px; border-bottom:1px solid transparent; transition:color .2s ease-out; }
+    .seg button:hover { color:var(--muted); }
+    .seg button.on { color:var(--ink); border-bottom-color:var(--ink); }
+    textarea, select { width:100%; background:transparent; color:var(--ink); border:0; border-bottom:1px solid var(--hair);
+                       border-radius:0; padding:8px 0; font:inherit; font-size:15px; outline:none; }
+    textarea { margin-top:14px; min-height:44px; resize:vertical; line-height:1.5; }
+    textarea::placeholder { color:var(--faint); }
+    textarea:focus, select:focus { border-bottom-color:var(--ink); }
+    select { appearance:none; cursor:pointer; }
+    select option { background:var(--bg); color:var(--ink); }
+
+    .actions { margin-top:40px; display:flex; align-items:center; gap:20px; }
+    .primary { flex:1; background:var(--ink); color:var(--on-ink); border-radius:var(--r-pill); padding:14px 24px;
+               font-size:15px; font-weight:500; text-align:center; transition:opacity .2s ease-out, transform .25s ease-out; }
+    .primary:hover:not(:disabled) { transform:translateY(-1px); }
+    .primary:disabled { opacity:.35; cursor:default; }
+    .status { margin:14px 0 0; font-size:12px; color:var(--faint); min-height:1em; line-height:1.6; }
+    .status.error { color:var(--ink); }
+
+    .result:not(:empty) { margin-top:48px; padding-top:28px; border-top:1px solid var(--hair); }
+    .rhead { display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+    .rtools { display:flex; gap:16px; }
+    .group { margin-top:36px; }
+    .group h2 { margin:8px 0 0; font-size:14px; font-weight:500; color:var(--ink); line-height:1.4; }
+    .ov { margin:4px 0 0; font-size:13px; line-height:1.6; }
+    ul { list-style:none; margin:14px 0 0; padding:0; }
+    li { padding:12px 0; border-top:1px solid var(--hair); font-size:13px; line-height:1.6; }
+    li .who { display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); margin-bottom:2px; }
+    li a { color:var(--ink-2); text-decoration:none; white-space:nowrap; }
+    li a:hover { color:var(--ink); }
+
+    .empty { padding-top:24px; }
+    .empty .text-btn { margin-top:24px; display:inline-block; }
+
+    @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Xtract</p>
+      <button class="text-btn" data-act="settings">Settings</button>
+    </header>
+
+    <!-- Shown when the current tab isn't the bookmarks page -->
+    <section id="away" class="empty" hidden>
+      <h1>Open your bookmarks</h1>
+      <p class="lede">The digest works on your saved posts page on X — open it in this tab and the markers appear on every post.</p>
+      <button class="text-btn" data-act="goto">Go to bookmarks →</button>
+    </section>
+
+    <!-- Shown when the page was open before the extension was installed or updated -->
+    <section id="reload" class="empty" hidden>
+      <h1>Refresh to connect</h1>
+      <p class="lede">This bookmarks tab was open before the extension loaded — refresh it once and the markers appear.</p>
+      <button class="text-btn" data-act="reload">Refresh page →</button>
+    </section>
+
+    <section id="main" hidden>
+      <h1>Bookmark digest</h1>
+      <p class="lede">Choose where to begin and end — everything in between is read and summarized.</p>
+
+      <div class="range">
+        <div class="mark"><span class="num">01</span><span class="eyebrow">Start</span><span class="val" data-slot="start">Not set</span></div>
+        <div class="mark"><span class="num">02</span><span class="eyebrow">End</span><span class="val" data-slot="end">Not set</span></div>
+      </div>
+      <p class="hint">Hover any saved post to mark it. <button class="text-btn" data-act="clear">Clear marks</button></p>
+
+      <div class="field">
+        <p class="eyebrow">Group by</p>
+        <div class="seg">
+          <button data-group="topic">Topic</button>
+          <button data-group="person">Person</button>
+          <button data-group="custom">My categories</button>
+        </div>
+        <textarea data-field="categories" placeholder="AI agents, design, career, fashion" hidden></textarea>
+      </div>
+
+      <div class="field">
+        <p class="eyebrow">Language</p>
+        <select data-field="language">
+          <option value="English">English</option>
+          <option value="Simplified Chinese">中文</option>
+          <option value="the same language as each post">Same as each post</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="primary" data-act="run">Summarize range</button>
+        <button class="text-btn" data-act="stop" hidden>Stop</button>
+      </div>
+      <p class="status"></p>
+    </section>
+
+    <div class="result"></div>
+  </main>
+  <script src="summarize.js"></script>
+  <script src="sidepanel.js"></script>
+</body>
+</html>
