@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>coucou — Emily Wang</title>
+<meta name="description" content="coucou is a journal for learning a language: write or speak about your day in any language, read and hear it in the language you are learning, and keep the words you want.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f7f7f6; --band:#f3f2ef; --object:#e9e9e8; --hair:#e6e6e4;
+  --ink:#111111; --ink-2:#3d3d3d; --muted:#6e6e6e; --faint:#a6a6a6; --on-ink:#ffffff;
+  --accent:var(--ink); --mark:#ecebe7; --danger:#111111;
+  --font:"Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
+  --fs-eyebrow:11px; --ls-eyebrow:.16em; --fs-caption:12px; --fs-small:13px; --fs-body:15px; --lh-body:1.75;
+  --fs-h1:clamp(22px, 2.4vw, 30px);
+  --r-card:8px; --r-pill:10px;
+  --shadow-circle:0 6px 14px -6px rgba(0,0,0,.25);
+  --text-col:620px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f0f0f; --surface:#171717; --band:#141413; --object:#1d1d1d; --hair:#2a2a2a;
+    --ink:#f2f2f2; --ink-2:#d0d0d0; --muted:#9a9a9a; --faint:#646464; --on-ink:#0f0f0f; --mark:#262624;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f0f0f; --surface:#171717; --band:#141413; --object:#1d1d1d; --hair:#2a2a2a;
+  --ink:#f2f2f2; --ink-2:#d0d0d0; --muted:#9a9a9a; --faint:#646464; --on-ink:#0f0f0f; --mark:#262624;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0; background:var(--bg); color:var(--muted); font-family:var(--font); font-size:var(--fs-body); line-height:var(--lh-body); -webkit-font-smoothing:antialiased; padding-inline:16px; padding-block:0 120px}
+.wrap{max-width:var(--text-col); margin:0 auto}
+::selection{background:var(--ink); color:var(--on-ink)}
+button,select,textarea{font:inherit; color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:1px solid var(--ink); outline-offset:3px; border-radius:4px}
+
+header{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px 24px; padding-block:40px 0}
+.brand{font-size:14px; font-weight:500; color:var(--ink); letter-spacing:-.005em}
+.settings{display:flex; flex-wrap:wrap; gap:20px; align-items:flex-end}
+.field{display:flex; flex-direction:column; gap:2px}
+.label,.eyebrow{font-size:var(--fs-eyebrow); letter-spacing:var(--ls-eyebrow); text-transform:uppercase; color:var(--faint); font-weight:500}
+select{appearance:none; background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M.5.5l3.5 3.5 3.5-3.5' fill='none' stroke='%23a6a6a6'/%3E%3C/svg%3E") no-repeat right 0 center; border:0; border-bottom:1px solid var(--hair); border-radius:0; padding:4px 16px 4px 0; font-size:13px; color:var(--ink)}
+select option{background:var(--bg); color:var(--ink)}
+
+nav{display:flex; gap:24px; padding-block:40px 0}
+nav button{background:none; border:0; padding:0; color:var(--muted); font-size:13px}
+nav button:hover{color:var(--ink-2)}
+nav button[aria-selected="true"]{color:var(--ink)}
+nav .count{font-size:12px; color:var(--faint); margin-left:5px; font-variant-numeric:tabular-nums}
+
+section{padding-top:72px}
+.stack{display:flex; flex-direction:column; gap:64px}
+.row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+.between{justify-content:space-between}
+
+.prompt{display:flex; flex-direction:column; gap:14px}
+.prompt .tgt{font-size:var(--fs-h1); font-weight:500; color:var(--ink); line-height:1.3; letter-spacing:-.01em; text-wrap:balance}
+.prompt .src{color:var(--muted)}
+
+.btn{border:1px solid var(--hair); background:transparent; border-radius:var(--r-pill); padding:8px 14px; font-size:13px; color:var(--ink); display:inline-flex; align-items:center; gap:6px; transition:border-color .2s}
+.btn:hover{border-color:var(--faint)}
+.btn.primary{background:var(--ink); color:var(--on-ink); border-color:var(--ink); padding:10px 18px; font-weight:500}
+.btn[disabled]{opacity:.4; cursor:default}
+.btn.ghost{border-color:transparent; color:var(--muted); padding-inline:4px}
+.btn.ghost:hover{color:var(--ink)}
+.btn.danger{color:var(--faint); font-size:12px}
+.btn.danger:hover{color:var(--ink)}
+.chip{border:0; background:none; padding:2px 0; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); font-weight:500}
+.chip:hover{color:var(--muted)}
+.chip[aria-pressed="true"]{color:var(--ink)}
+.play{width:32px; height:32px; border-radius:50%; border:0; background:var(--object); box-shadow:var(--shadow-circle); display:inline-grid; place-items:center; flex:none; padding:0; transition:transform .2s ease-out}
+.play:hover{transform:translateY(-1px)}
+.play svg{width:10px; height:10px; fill:var(--ink); margin-left:1px}
+.play.on{background:var(--ink)} .play.on svg{fill:var(--on-ink)}
+
+.editor{display:flex; flex-direction:column; gap:14px}
+textarea{border:0; border-bottom:1px solid var(--hair); background:none; resize:vertical; min-height:180px; width:100%; outline:none; font-size:15px; line-height:1.75; padding:0 0 14px; color:var(--ink)}
+textarea:focus{border-bottom-color:var(--faint)}
+textarea::placeholder{color:var(--faint)}
+.editor .foot{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px}
+.meta{font-size:12px; color:var(--faint); font-variant-numeric:tabular-nums}
+.msg{font-size:13px; color:var(--ink-2)}
+
+.output{display:flex; flex-direction:column; gap:28px}
+.out-bar{display:flex; flex-wrap:wrap; gap:14px 18px; align-items:center; justify-content:space-between}
+.sents{display:flex; flex-direction:column; gap:22px}
+.sent{display:grid; grid-template-columns:32px 1fr; gap:4px 16px; align-items:start}
+.sent .tgt{font-size:18px; line-height:1.55; color:var(--ink); padding-top:3px}
+.sent .src{grid-column:2; color:var(--faint); font-size:13px; line-height:1.6}
+.hideorig .sent .src{display:none}
+mark{background:var(--mark); color:inherit; border-radius:3px; padding:0 .15em; border-bottom:1px solid var(--faint)}
+.hint{font-size:var(--fs-caption); color:var(--faint); margin:0}
+.example-tag{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); font-weight:500}
+
+.list{display:flex; flex-direction:column}
+.item{display:flex; flex-direction:column; gap:8px; padding-block:28px; border-bottom:1px solid var(--hair)}
+.item:first-child{padding-top:8px}
+.word-head{display:flex; align-items:center; gap:14px}
+.word-head .w{font-size:22px; font-weight:500; color:var(--ink); line-height:1.25; overflow-wrap:anywhere; letter-spacing:-.01em}
+.meaning{font-size:15px; color:var(--ink-2)}
+.note{font-size:12px; color:var(--faint)}
+.ctx{font-size:14px; color:var(--muted); line-height:1.6}
+.item .tail{display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between}
+.pill{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); font-weight:500}
+.entry{cursor:pointer; text-align:left; background:none; border:0; border-bottom:1px solid var(--hair); padding:28px 90px 28px 0; display:flex; flex-direction:column; gap:6px; width:100%}
+.entry .num{font-size:12px; color:var(--faint); font-variant-numeric:tabular-nums}
+.etgt{font-size:15px; font-weight:500; color:var(--ink); line-height:1.5}
+.entry:hover .etgt{color:var(--ink-2)}
+.esrc{color:var(--muted); font-size:13px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical}
+.empty{color:var(--muted); padding-block:8px; max-width:46ch}
+
+.speak{display:flex; flex-direction:column; align-items:center; gap:14px; padding-block:28px 20px}
+.mic{width:76px; height:76px; border-radius:50%; border:0; background:var(--object); box-shadow:var(--shadow-circle); display:grid; place-items:center; padding:0; position:relative; transition:transform .2s ease-out, background .2s}
+.mic:hover{transform:translateY(-1px)}
+.mic svg{width:24px; height:24px; fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linecap:round}
+.mic.on{background:var(--ink)} .mic.on svg{stroke:var(--on-ink)}
+.mic.on::after{content:""; position:absolute; inset:-8px; border-radius:50%; border:1px solid var(--faint)}
+@media (prefers-reduced-motion:no-preference){ .mic.on::after{animation:breathe 2.4s ease-in-out infinite} @keyframes breathe{0%,100%{transform:scale(1); opacity:.8}50%{transform:scale(1.12); opacity:.2}} }
+.speak .hint{text-align:center; max-width:40ch; line-height:1.6}
+.spoken-tag{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); font-weight:500}
+#saveFab{position:absolute; z-index:20; background:var(--ink); color:var(--on-ink); border:0; border-radius:var(--r-pill); padding:8px 14px; font-size:12px; font-weight:500; box-shadow:0 10px 24px -12px rgba(0,0,0,.35)}
+#toast{position:fixed; left:50%; bottom:calc(28px + env(safe-area-inset-bottom, 0px)); transform:translateX(-50%); background:var(--ink); color:var(--on-ink); padding:9px 16px; border-radius:var(--r-pill); font-size:12px; z-index:30; max-width:calc(100% - 32px)}
+.store-note{font-size:var(--fs-caption); color:var(--faint); margin-top:96px}
+
+@media (max-width:480px){
+  header{padding-top:28px}
+  section{padding-top:48px}
+  .stack{gap:48px}
+  .sent .tgt{font-size:17px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .sent{animation:rise .3s ease-out both}
+  @keyframes rise{from{opacity:.001; transform:translateY(3px)}to{opacity:1; transform:none}}
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><a href="../" style="color:var(--faint); text-decoration:none; font-weight:400">Emily Wang /</a> coucou</div>
+    <div class="settings">
+      <label class="field"><span class="label">Learning</span><select id="lang"></select></label>
+      <label class="field"><span class="label">Level</span><select id="level"></select></label>
+      <label class="field"><span class="label">Voice</span><select id="voice"><option value="auto">Auto</option><option value="device">Device</option><option value="online">Online</option></select></label>
+      <button class="btn ghost" id="keyBtn" style="font-size:12px">API key</button>
+    </div>
+  </header>
+
+  <div id="keyPanel" hidden style="padding-top:40px; display:flex; flex-direction:column; gap:10px; max-width:460px">
+    <span class="label">Anthropic API key</span>
+    <input id="keyInput" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…" style="border:0; border-bottom:1px solid var(--hair); background:none; padding:6px 0; font:inherit; font-size:14px; color:var(--ink); outline:none">
+    <p class="hint">Translation and prompts call Claude with your own key. It stays in this browser only and is sent only to api.anthropic.com. Get one at console.anthropic.com.</p>
+    <div class="row"><button class="btn primary" id="keySave">Save key</button><button class="btn ghost" id="keyClear">Remove</button></div>
+  </div>
+
+  <nav role="tablist">
+    <button role="tab" data-tab="write" aria-selected="true">Write</button>
+    <button role="tab" data-tab="words" aria-selected="false">Saved<span class="count" id="cWords"></span></button>
+    <button role="tab" data-tab="entries" aria-selected="false">Entries<span class="count" id="cEntries"></span></button>
+  </nav>
+
+  <section id="v-write" class="stack">
+    <div class="prompt" id="promptBox"></div>
+
+    <div class="editor">
+      <div class="row between">
+        <div class="row" style="gap:18px" role="group" aria-label="Input mode">
+          <button class="chip" id="modeWrite" aria-pressed="true">Write</button>
+          <button class="chip" id="modeSpeak" aria-pressed="false">Speak</button>
+        </div>
+        <label class="row" style="gap:8px" id="speakLangWrap" hidden><span class="label">Speaking in</span><select id="speakLang"></select></label>
+      </div>
+      <div class="speak" id="speakPanel" hidden>
+        <button class="mic" id="mic" aria-label="Start speaking">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>
+        </button>
+        <span class="label" id="micState">Tap to speak</span>
+        <p class="hint" id="micHelp" hidden></p>
+      </div>
+      <textarea id="src" placeholder="Write in English, 中文, or any language you like…" aria-label="Journal entry"></textarea>
+      <div class="foot">
+        <span class="meta" id="today"></span>
+        <div class="row">
+          <button class="btn ghost" id="newEntry">New entry</button>
+          <button class="btn primary" id="go">Translate</button>
+        </div>
+      </div>
+    </div>
+    <div class="msg" id="msg" hidden></div>
+
+    <div class="output" id="output"></div>
+  </section>
+
+  <section id="v-words" hidden></section>
+  <section id="v-entries" hidden></section>
+
+  <p class="store-note" id="storeNote"></p>
+</div>
+
+<button id="saveFab" hidden>+ Save</button>
+<div id="toast" hidden></div>
+
+<script>
+(() => {
+const LANGS = [
+  ["fr","French","fr-FR"],["es","Spanish","es-ES"],["it","Italian","it-IT"],["de","German","de-DE"],
+  ["nl","Dutch","nl-NL"],["pt","Portuguese","pt-PT"],["ja","Japanese","ja-JP"],["ko","Korean","ko-KR"],
+  ["zh","Chinese (Mandarin)","zh-CN"],["en","English","en-US"]
+];
+const LEVELS = [["natural","Natural"],["b1","Intermediate · B1"],["a2","Simple · A2"]];
+const LEVEL_RULE = {
+  natural:"Use natural, native-sounding phrasing.",
+  b1:"Use clear intermediate (CEFR B1) vocabulary and grammar.",
+  a2:"Use simple beginner (CEFR A2) vocabulary and short sentences."
+};
+const PROMPTS = [
+  ["Qu'est-ce qui t'a fait sourire aujourd'hui ?","What made you smile today?"],
+  ["Décris la pièce où tu te trouves en ce moment.","Describe the room you're in right now."],
+  ["Qu'as-tu mangé aujourd'hui, et c'était bon ?","What did you eat today, and was it good?"],
+  ["Une chose que tu veux retenir de cette semaine.","One thing you want to remember from this week."],
+  ["À qui as-tu parlé aujourd'hui ? De quoi avez-vous parlé ?","Who did you talk to today? What about?"],
+  ["Qu'est-ce que tu attends avec impatience ?","What are you looking forward to?"],
+  ["Raconte un petit moment calme de ta journée.","Tell me about a small, quiet moment from your day."]
+];
+const EXAMPLE = {
+  id:"example", lang:"fr", level:"natural", created:Date.now(),
+  promptT:PROMPTS[0][0], promptEn:PROMPTS[0][1],
+  source:"After work I walked along the canal. The light was soft, and I bought tulips for my desk. Small things, but they made the day feel lighter.",
+  sentences:[
+    {t:"Après le travail, je me suis promenée le long du canal.", s:"After work I walked along the canal."},
+    {t:"La lumière était douce, et j'ai acheté des tulipes pour mon bureau.", s:"The light was soft, and I bought tulips for my desk."},
+    {t:"De petites choses, mais elles ont rendu la journée plus légère.", s:"Small things, but they made the day feel lighter."}
+  ]
+};
+
+const $ = s => document.querySelector(s);
+function h(tag, attrs, ...kids){
+  const el = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs||{})){
+    if (v == null || v === false) continue;
+    if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "class") el.className = v;
+    else if (k === "dataset") Object.assign(el.dataset, v);
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) el.append(c instanceof Node ? c : String(c));
+  return el;
+}
+const lsGet = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
+const lsSet = (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const langOf = code => LANGS.find(l => l[0] === code) || LANGS[0];
+const fmtDate = t => new Date(t).toLocaleDateString(undefined,{weekday:"short", day:"numeric", month:"short", year:"numeric"});
+const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+
+const prefs = lsGet("coucou-prefs") || {};
+const state = {
+  lang: prefs.lang || "fr", level: prefs.level || "natural", rate: prefs.rate || 0.9,
+  showOrig: prefs.showOrig !== false, tab:"write",
+  entries:[], words:[], current: EXAMPLE, prompt:null, busy:false, wordFilter:"lang"
+};
+const savePrefs = () => lsSet("coucou-prefs",{...(lsGet("coucou-prefs")||{}), lang:state.lang, level:state.level, rate:state.rate, showOrig:state.showOrig});
+
+/* ---------- Claude + storage ---------- */
+const MODEL = "claude-haiku-4-5";
+const getKey = () => { try { return localStorage.getItem("coucou-key") || ""; } catch { return ""; } };
+function parseLoose(text){
+  try { return JSON.parse(text); } catch {}
+  const f = text.match(/```(?:json)?\s*([\s\S]*?)```/); if (f){ try { return JSON.parse(f[1]); } catch {} }
+  const a = text.search(/[\[{]/), b = Math.max(text.lastIndexOf("}"), text.lastIndexOf("]"));
+  if (a >= 0 && b > a){ try { return JSON.parse(text.slice(a, b + 1)); } catch {} }
+  throw {code:"invalid_json"};
+}
+function makeSample(){
+  const call = async (input) => {
+    const key = getKey();
+    if (!key) throw {code:"no_key"};
+    let res;
+    try {
+      res = await fetch("https://api.anthropic.com/v1/messages", {
+        method:"POST",
+        headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+        body: JSON.stringify({model:MODEL, max_tokens:2048, messages:[{role:"user", content:String(input)}]})
+      });
+    } catch { throw {code:"upstream_error"}; }
+    if (res.status === 401 || res.status === 403) throw {code:"bad_key"};
+    if (res.status === 429) throw {code:"rate_limited"};
+    if (!res.ok) throw {code:"upstream_error"};
+    const j = await res.json();
+    return {text:(j.content || []).map(c => c.text || "").join("")};
+  };
+  call.json = async (input) => parseLoose((await call(input + "\n\nReply with the JSON only, no other text.")).text);
+  return call;
+}
+let sample = makeSample();
+const store = {
+  mode:"memory",
+  async init(){
+    try {
+      const use = window.claude?.use?.bind(window.claude);
+      if (use){
+        const [db, user] = await Promise.all([use("db"), use("user")]);
+        sample = await use("sample");
+        refreshSampleUI();
+        const uid = user ? await user.id() : null;
+        if (db && uid){
+          const base = db.doc(`data/users/${uid}/carnet`);
+          this.E = base.collection("entries"); this.W = base.collection("words");
+          const [e, w] = await Promise.all([this.E.get(), this.W.get()]);
+          this.mode = "db";
+          const clone = d => JSON.parse(JSON.stringify(d.data()));
+          return { entries: e.docs.map(clone), words: w.docs.map(clone) };
+        }
+      }
+    } catch (err){ console.warn("coucou storage", err); }
+    this.mode = "local";
+    return lsGet("coucou-data") || {entries:[], words:[]};
+  },
+  local(){ if (this.mode !== "db") lsSet("coucou-data",{entries:state.entries, words:state.words}); },
+  async put(kind, obj){
+    if (this.mode === "db"){
+      try { await (kind === "e" ? this.E : this.W).doc(obj.id).set(obj); }
+      catch (e){ toast(e.code === "quota_exceeded" ? "Storage is full. Delete a few old items." : "Couldn't save. Check your connection."); }
+    } else this.local();
+  },
+  async del(kind, id){
+    if (this.mode === "db"){ try { await (kind === "e" ? this.E : this.W).doc(id).delete(); } catch { toast("Couldn't delete. Try again."); } }
+    else this.local();
+  }
+};
+
+function errCopy(e){
+  switch (e?.code){
+    case "not_granted": case "sampling_disabled": case "not_declared": case "capability_disabled":
+      return "Claude isn't allowed on this page, so translation is off. Reload to be asked again.";
+    case "rate_limited": return "Too many requests right now. Wait a minute and try again.";
+    case "invalid_json": return "The reply came back in the wrong shape. Try again.";
+    case "prompt_too_large": return "That entry is too long to translate at once. Split it into two.";
+    case "session_expired": return "You've been signed out. Sign in again and retry.";
+    case "no_key": return "Add your Anthropic API key first (API key, top right).";
+    case "bad_key": return "That API key didn't work. Check it under API key, top right.";
+    default: return "Couldn't reach Claude. Check your connection and try again.";
+  }
+}
+
+/* ---------- speech ---------- */
+const synth = window.speechSynthesis;
+let voices = [];
+const loadVoices = () => { voices = synth ? synth.getVoices() : []; };
+if (synth){ loadVoices(); synth.onvoiceschanged = loadVoices; }
+let playingBtn = null;
+let liveUtter = null, liveAudio = null, keepAlive = null, speakToken = 0;
+let deviceFailed = (() => { try { return localStorage.getItem("coucou-tts-fallback") === "1"; } catch { return false; } })();
+function stopSpeech(){
+  speakToken++;
+  clearInterval(keepAlive);
+  let cancelled = false;
+  try { if (synth && (synth.speaking || synth.pending)){ synth.cancel(); cancelled = true; } } catch {}
+  if (liveAudio){ try { liveAudio.pause(); } catch {} liveAudio = null; }
+  playingBtn?.classList.remove("on"); playingBtn = null; liveUtter = null;
+  return cancelled;
+}
+function chunkText(text){
+  const out = []; let rest = text.replace(/\s+/g, " ").trim();
+  while (rest.length > 180){
+    let cut = Math.max(rest.lastIndexOf(". ",180), rest.lastIndexOf("! ",180), rest.lastIndexOf("? ",180), rest.lastIndexOf("。",180), rest.lastIndexOf("！",180), rest.lastIndexOf("？",180));
+    if (cut < 40) cut = Math.max(rest.lastIndexOf(", ",180), rest.lastIndexOf("，",180));
+    if (cut < 40) cut = rest.lastIndexOf(" ",180);
+    if (cut < 1) cut = 179;
+    out.push(rest.slice(0, cut + 1).trim()); rest = rest.slice(cut + 1).trim();
+  }
+  if (rest) out.push(rest);
+  return out;
+}
+function speakOnline(text, code, btn, token){
+  const tl = code === "zh" ? "zh-CN" : code;
+  const parts = chunkText(text); let i = 0;
+  const finish = () => { if (token !== speakToken) return; btn?.classList.remove("on"); if (playingBtn === btn) playingBtn = null; liveAudio = null; };
+  const next = () => {
+    if (token !== speakToken) return;
+    if (i >= parts.length) return finish();
+    const a = new Audio("https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=" + tl + "&q=" + encodeURIComponent(parts[i++]));
+    a.playbackRate = state.rate; a.preservesPitch = true;
+    liveAudio = a;
+    a.onended = next;
+    a.onerror = () => { finish(); toast("Couldn't load the online voice. Check your internet connection."); };
+    a.play().catch(() => { finish(); toast("Tap play once more to hear it."); });
+  };
+  next();
+}
+function speak(text, code, btn){
+  const wasThis = playingBtn === btn && (liveAudio || (synth && (synth.speaking || synth.pending)));
+  const cancelled = stopSpeech();
+  if (wasThis) return;                                   // second tap = stop
+  const token = speakToken;
+  if (btn){ btn.classList.add("on"); playingBtn = btn; }
+
+  const canDevice = !!synth && typeof SpeechSynthesisUtterance !== "undefined";
+  if (!voices.length && canDevice) loadVoices();
+  const bcp = langOf(code)[2];
+  const norm = v => (v.lang || "").replace("_","-").toLowerCase();
+  const matches = voices.filter(v => norm(v) === bcp.toLowerCase() || norm(v).startsWith(code + "-") || norm(v) === code);
+  const pref = state.voice || "auto";
+  if (pref === "online" || !canDevice || (pref === "auto" && (deviceFailed || (voices.length && !matches.length)))){
+    return speakOnline(text, code, btn, token);
+  }
+
+  const v = matches.find(v => norm(v) === bcp.toLowerCase() && v.localService) || matches.find(v => norm(v) === bcp.toLowerCase()) || matches[0];
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = bcp; u.rate = state.rate; u.volume = 1; u.pitch = 1;
+  if (v) u.voice = v;
+  liveUtter = u;
+  let started = false;
+  const done = () => { clearInterval(keepAlive); if (token !== speakToken) return; btn?.classList.remove("on"); if (playingBtn === btn) playingBtn = null; liveUtter = null; };
+  const fallback = why => {
+    if (token !== speakToken) return;
+    try { synth.cancel(); } catch {}
+    if (pref === "auto"){
+      deviceFailed = true; try { localStorage.setItem("coucou-tts-fallback","1"); } catch {}
+      speakOnline(text, code, btn, token);
+    } else { done(); toast(why); }
+  };
+  u.onstart = () => { started = true; };
+  u.onend = done;
+  u.onerror = e => {
+    if (e.error === "interrupted" || e.error === "canceled") return done();
+    fallback("Your device voice couldn't play this (" + (e.error || "unknown") + "). Switch Voice to Online.");
+  };
+  const go = () => {
+    if (token !== speakToken) return;
+    try { synth.resume(); } catch {}
+    synth.speak(u);
+    if (v && !v.localService && /Chrome/.test(navigator.userAgent)){
+      keepAlive = setInterval(() => { if (synth.speaking && !synth.paused){ synth.pause(); synth.resume(); } }, 10000);
+    }
+    setTimeout(() => { if (!started && liveUtter === u) fallback("Your device voice didn't start. Switch Voice to Online."); }, 1800);
+  };
+  cancelled ? setTimeout(go, 80) : go();                 // Chrome ignores speak() right after cancel()
+}
+const ICON_PLAY = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2v9.6L10.5 6z"/></svg>';
+function playBtn(text, code, label){
+  const b = h("button",{class:"play", "aria-label": label || "Play audio", title: label || "Play"});
+  b.innerHTML = ICON_PLAY;
+  b.addEventListener("click", () => speak(text, code, b));
+  return b;
+}
+
+/* ---------- helpers ---------- */
+function withMarks(text, code){
+  const ws = [...new Set(state.words.filter(w => w.lang === code).map(w => w.text.trim()).filter(Boolean))]
+    .sort((a,b) => b.length - a.length);
+  if (!ws.length) return [text];
+  const re = new RegExp("(" + ws.map(esc).join("|") + ")", "gi");
+  return text.split(re).map((part,i) => i % 2 ? h("mark",{},part) : part);
+}
+let toastT;
+function toast(t){ const el = $("#toast"); el.textContent = t; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => el.hidden = true, 2600); }
+function showMsg(t){ const m = $("#msg"); m.textContent = t || ""; m.hidden = !t; }
+function confirmBtn(label, onConfirm){
+  let armed = false, t;
+  const b = h("button",{class:"btn ghost danger"}, label);
+  b.addEventListener("click", ev => {
+    ev.stopPropagation();
+    if (!armed){ armed = true; b.textContent = "Tap again to delete"; t = setTimeout(() => { armed = false; b.textContent = label; }, 3000); return; }
+    clearTimeout(t); onConfirm();
+  });
+  return b;
+}
+
+/* ---------- prompt ---------- */
+function defaultPrompt(){
+  const day = Math.floor(Date.now() / 864e5);
+  const p = PROMPTS[day % PROMPTS.length];
+  return {t:p[0], en:p[1], lang:"fr"};
+}
+function renderPrompt(){
+  const box = $("#promptBox"); box.replaceChildren();
+  const p = state.prompt || defaultPrompt();
+  const inTarget = p.lang === state.lang;
+  box.append(
+    h("span",{class:"label"},"Today’s prompt"),
+    inTarget
+      ? h("div",{class:"row", style:"gap:12px; align-items:flex-start; flex-wrap:nowrap"},
+          playBtn(p.t, p.lang, "Hear the prompt"),
+          h("div",{class:"sent-prompt"}, h("div",{class:"tgt", dataset:{lang:p.lang, ctx:p.t, ctxsrc:p.en}}, ...withMarks(p.t, p.lang))))
+      : h("div",{class:"tgt"}, p.en),
+    inTarget ? h("div",{class:"src"}, p.en) : null,
+    h("div",{class:"row", style:"margin-top:6px"},
+      h("button",{class:"btn", id:"another", onclick:newPrompt, hidden: !sample}, inTarget ? "Another prompt" : `Get a prompt in ${langOf(state.lang)[1]}`))
+  );
+}
+let promptCtl;
+async function newPrompt(){
+  if (!sample) return;
+  const b = $("#another"); b.disabled = true; b.textContent = "Thinking…";
+  const L = langOf(state.lang)[1];
+  const prev = (state.prompt || defaultPrompt()).en;
+  try {
+    const r = await sample.json(
+      `Write one short, warm, personal journaling prompt for someone learning ${L}. ${LEVEL_RULE[state.level]} ` +
+      `Everyday life topics: senses, small moments, people, plans, memories, food, places. Make it different from: "${prev}". ` +
+      `Reply with only JSON: {"t":"the prompt in ${L}","en":"the same prompt in English"}`,
+      {modelTier:"quick", cache:false});
+    if (!r || typeof r.t !== "string") throw {code:"invalid_json"};
+    state.prompt = {t:r.t, en:String(r.en || ""), lang:state.lang};
+  } catch (e){ if (e?.code !== "cancelled") toast(errCopy(e)); }
+  renderPrompt();
+}
+
+/* ---------- output ---------- */
+function renderOutput(){
+  const out = $("#output"); out.replaceChildren();
+  const c = state.current; if (!c || !c.sentences?.length) return;
+  const code = c.lang;
+  const full = c.sentences.map(s => s.t).join(" ");
+  const rates = [[0.7,"0.7×"],[0.9,"0.9×"],[1,"1×"]];
+  out.className = "output" + (state.showOrig ? "" : " hideorig");
+  out.append(
+    h("div",{class:"out-bar"},
+      h("div",{class:"row", style:"gap:10px"},
+        playBtn(full, code, "Play the whole entry"),
+        h("span",{class:"label"}, "In " + langOf(code)[1]),
+        c.id === "example" ? h("span",{class:"example-tag"},"Example") : null),
+      h("div",{class:"row"},
+        ...rates.map(([r,l]) => h("button",{class:"chip", "aria-pressed": String(state.rate === r), onclick:() => { state.rate = r; savePrefs(); renderOutput(); }}, l)),
+        h("button",{class:"chip", "aria-pressed": String(state.showOrig), onclick:() => { state.showOrig = !state.showOrig; savePrefs(); renderOutput(); }}, "Original"))),
+    h("div",{class:"sents"},
+      c.sentences.map((s,i) => h("div",{class:"sent", style:`animation-delay:${i*50}ms`},
+        playBtn(s.t, code, "Play sentence"),
+        h("div",{class:"tgt", dataset:{lang:code, ctx:s.t, ctxsrc:s.s || ""}}, ...withMarks(s.t, code)),
+        s.s ? h("div",{class:"src"}, s.s) : null))),
+    h("p",{class:"hint"}, "Select any word or phrase above, then tap Save to keep it in your word bank.")
+  );
+}
+
+async function translate(){
+  const src = $("#src").value.trim();
+  if (!src){ showMsg("Write something first, in any language."); return; }
+  if (!sample){ showMsg("Translation needs Claude, which isn't available in this view."); return; }
+  showMsg(""); state.busy = true; if (recOn) stopRec();
+  const go = $("#go"); go.disabled = true; go.textContent = "Translating…";
+  const L = langOf(state.lang)[1];
+  try {
+    const r = await sample.json(
+      `You are helping a language learner keep a daily journal. Translate the journal entry below into ${L}. ` +
+      `Keep the writer's voice and first person. ${LEVEL_RULE[state.level]} The entry may be written in any language or a mix. ` +
+      `Split the translation into sentences and pair each with the matching part of the original.\n` +
+      `Reply with only JSON: {"sentences":[{"t":"sentence in ${L}","s":"matching original text"}]}\n\n` +
+      `Journal entry:\n"""\n${src.slice(0, 12000)}\n"""`,
+      {modelTier:"quick"});
+    const sents = (r?.sentences || []).filter(s => s && typeof s.t === "string" && s.t.trim())
+      .map(s => ({t:s.t.trim(), s:String(s.s || "").trim()}));
+    if (!sents.length) throw {code:"invalid_json"};
+    const prev = state.current && state.current.id !== "example" ? state.current : null;
+    const p = state.prompt || defaultPrompt();
+    state.current = {
+      id: prev?.id || newId(), created: prev?.created || Date.now(), updated: Date.now(),
+      lang: state.lang, level: state.level, source: src, sentences: sents, spoken: !!(spokeThisEntry || prev?.spoken),
+      promptT: prev?.promptT ?? (p.lang === state.lang ? p.t : ""), promptEn: prev?.promptEn ?? p.en
+    };
+    const i = state.entries.findIndex(e => e.id === state.current.id);
+    if (i >= 0) state.entries[i] = state.current; else state.entries.unshift(state.current);
+    lsSet("coucou-draft", null);
+    renderOutput(); renderCounts();
+    await store.put("e", state.current);
+  } catch (e){ showMsg(errCopy(e)); }
+  state.busy = false; go.disabled = false; go.textContent = "Translate";
+}
+
+function newEntry(){
+  stopRec(); spokeThisEntry = false;
+  state.current = null; $("#src").value = ""; lsSet("coucou-draft", null);
+  showMsg(""); renderOutput(); $("#src").focus();
+}
+
+/* ---------- saving selections ---------- */
+const fab = $("#saveFab");
+let pending = null;
+function checkSelection(){
+  const sel = getSelection();
+  const text = sel && !sel.isCollapsed ? sel.toString().replace(/\s+/g," ").trim() : "";
+  if (!text || text.length > 240){ fab.hidden = true; pending = null; return; }
+  const node = sel.anchorNode && (sel.anchorNode.nodeType === 1 ? sel.anchorNode : sel.anchorNode.parentElement);
+  const tgt = node?.closest?.(".tgt[data-lang]");
+  if (!tgt){ fab.hidden = true; pending = null; return; }
+  pending = {text: text.replace(/^[«"“(\s]+|[»"”),.;:!?¿¡。、！？\s]+$/g,""), lang:tgt.dataset.lang, ctx:tgt.dataset.ctx, ctxsrc:tgt.dataset.ctxsrc};
+  if (!pending.text){ fab.hidden = true; return; }
+  const rect = sel.getRangeAt(0).getBoundingClientRect();
+  fab.hidden = false;
+  const w = fab.offsetWidth;
+  const left = Math.min(Math.max(8, rect.left + rect.width/2 - w/2), document.documentElement.clientWidth - w - 8);
+  fab.style.left = (left + scrollX) + "px";
+  fab.style.top = (rect.bottom + scrollY + 10) + "px";
+}
+let selT;
+document.addEventListener("selectionchange", () => { clearTimeout(selT); selT = setTimeout(checkSelection, 180); });
+fab.addEventListener("mousedown", e => e.preventDefault());
+fab.addEventListener("click", async () => {
+  if (!pending) return;
+  const p = pending; fab.hidden = true; pending = null; getSelection()?.removeAllRanges();
+  if (state.words.some(w => w.lang === p.lang && w.text.toLowerCase() === p.text.toLowerCase())){ toast("Already in your word bank"); return; }
+  const word = {id:newId(), text:p.text, lang:p.lang, context:p.ctx || "", contextSrc:p.ctxsrc || "", meaning:"", note:"", created:Date.now()};
+  state.words.unshift(word);
+  renderCounts(); renderOutput(); renderPrompt();
+  toast(`Saved “${p.text}”`);
+  await store.put("w", word);
+  if (sample){
+    try {
+      const L = langOf(p.lang)[1];
+      const r = await sample.json(
+        `A learner saved the ${L} expression "${p.text}" from this sentence: "${p.ctx}". ` +
+        `Give its meaning in this context in English, and a short grammar note (part of speech; gender for nouns; infinitive for conjugated verbs; reading/romanization for Japanese, Chinese or Korean). ` +
+        `Reply with only JSON: {"meaning":"short English meaning","note":"very short note"}`,
+        {modelTier:"quick"});
+      word.meaning = String(r?.meaning || ""); word.note = String(r?.note || "");
+      if (state.tab === "words") renderWords();
+      await store.put("w", word);
+    } catch (e){ /* keep the word without a gloss */ }
+  }
+});
+
+/* ---------- words view ---------- */
+function renderWords(){
+  const v = $("#v-words"); v.replaceChildren();
+  const L = langOf(state.lang);
+  const list = state.wordFilter === "lang" ? state.words.filter(w => w.lang === state.lang) : state.words;
+  v.append(h("div",{class:"row between", style:"margin-bottom:12px"},
+    h("div",{class:"row"},
+      h("button",{class:"chip", "aria-pressed": String(state.wordFilter === "lang"), onclick:() => { state.wordFilter = "lang"; renderWords(); }}, L[1]),
+      h("button",{class:"chip", "aria-pressed": String(state.wordFilter === "all"), onclick:() => { state.wordFilter = "all"; renderWords(); }}, "All languages")),
+    h("span",{class:"meta"}, `${list.length} saved`)));
+  if (!list.length){
+    v.append(h("p",{class:"empty"}, `Nothing saved in ${state.wordFilter === "lang" ? L[1] : "any language"} yet. On the Write tab, select a word or phrase in a translation and tap Save.`));
+    return;
+  }
+  v.append(h("div",{class:"list"}, list.map(w => {
+    const ctxEl = w.context ? h("div",{class:"ctx"}, ...w.context.split(new RegExp("(" + esc(w.text) + ")","i")).map((p,i) => i % 2 ? h("mark",{},p) : p)) : null;
+    return h("div",{class:"item"},
+      h("div",{class:"word-head"}, playBtn(w.text, w.lang, "Hear " + w.text), h("span",{class:"w"}, w.text)),
+      w.meaning ? h("div",{class:"meaning"}, w.meaning) : h("div",{class:"meaning", style:"color:var(--faint)"}, sample ? "Looking up meaning…" : "No meaning yet"),
+      w.note ? h("div",{class:"note"}, w.note) : null,
+      ctxEl ? h("div",{class:"row", style:"gap:10px; flex-wrap:nowrap; align-items:flex-start; margin-top:4px"}, playBtn(w.context, w.lang, "Hear the sentence"), ctxEl) : null,
+      h("div",{class:"tail"},
+        h("span",{class:"meta"}, (state.wordFilter === "all" ? langOf(w.lang)[1] + " · " : "") + fmtDate(w.created)),
+        confirmBtn("Delete", async () => { state.words = state.words.filter(x => x.id !== w.id); renderWords(); renderCounts(); await store.del("w", w.id); })));
+  })));
+}
+
+/* ---------- entries view ---------- */
+function renderEntries(){
+  const v = $("#v-entries"); v.replaceChildren();
+  if (!state.entries.length){
+    v.append(h("p",{class:"empty"}, "Your translated entries will collect here, newest first. Write something on the Write tab and tap Translate."));
+    return;
+  }
+  const sorted = [...state.entries].sort((a,b) => (b.created||0) - (a.created||0));
+  v.append(h("div",{class:"list"}, sorted.map((e, idx) => h("div",{style:"position:relative"},
+    h("button",{class:"entry", onclick:() => openEntry(e)},
+      h("div",{class:"row", style:"gap:14px"}, h("span",{class:"num"}, String(sorted.length - idx).padStart(2,"0")), h("span",{class:"meta"}, fmtDate(e.created)), h("span",{class:"pill"}, langOf(e.lang)[1]), e.spoken ? h("span",{class:"spoken-tag"},"Spoken") : null),
+      h("div",{class:"etgt"}, e.sentences?.[0]?.t || ""),
+      h("div",{class:"esrc"}, e.source)),
+    h("div",{style:"position:absolute; right:0; top:22px"},
+      confirmBtn("Delete", async () => {
+        state.entries = state.entries.filter(x => x.id !== e.id);
+        if (state.current?.id === e.id){ state.current = null; $("#src").value = ""; renderOutput(); }
+        renderEntries(); renderCounts(); await store.del("e", e.id);
+      }))))));
+}
+function openEntry(e){
+  state.current = e; $("#src").value = e.source || "";
+  if (e.promptT || e.promptEn) state.prompt = {t:e.promptT || e.promptEn, en:e.promptEn || "", lang: e.promptT ? e.lang : "en"};
+  setTab("write"); renderPrompt(); renderOutput(); scrollTo({top:0});
+}
+
+/* ---------- chrome ---------- */
+function renderCounts(){
+  $("#cWords").textContent = state.words.length || "";
+  $("#cEntries").textContent = state.entries.length || "";
+}
+function setTab(t){
+  state.tab = t;
+  document.querySelectorAll("nav button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === t)));
+  $("#v-write").hidden = t !== "write"; $("#v-words").hidden = t !== "words"; $("#v-entries").hidden = t !== "entries";
+  if (t === "words") renderWords();
+  if (t === "entries") renderEntries();
+  fab.hidden = true;
+}
+function refreshSampleUI(){
+  renderPrompt();
+  if (!sample){ $("#go").disabled = true; $("#go").title = "Translation needs Claude"; }
+}
+
+LANGS.forEach(([c,n]) => $("#lang").append(h("option",{value:c}, n)));
+LEVELS.forEach(([c,n]) => $("#level").append(h("option",{value:c}, n)));
+$("#lang").value = state.lang; $("#level").value = state.level;
+$("#lang").addEventListener("change", e => {
+  state.lang = e.target.value; savePrefs();
+  if (state.prompt && state.prompt.lang !== state.lang) state.prompt = null;
+  renderPrompt();
+  if (state.tab === "words") renderWords();
+  if (state.current && state.current.lang !== state.lang && $("#src").value.trim()) showMsg(`Tap Translate to see this entry in ${langOf(state.lang)[1]}.`);
+});
+$("#level").addEventListener("change", e => { state.level = e.target.value; savePrefs(); });
+document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => setTab(b.dataset.tab)));
+$("#go").addEventListener("click", translate);
+$("#newEntry").addEventListener("click", newEntry);
+$("#src").addEventListener("keydown", e => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") translate(); });
+let draftT;
+$("#src").addEventListener("input", () => { clearTimeout(draftT); draftT = setTimeout(() => lsSet("coucou-draft", $("#src").value), 400); });
+$("#today").textContent = fmtDate(Date.now());
+
+/* ---------- voice setting ---------- */
+state.voice = prefs.voice || "auto";
+$("#voice").value = state.voice;
+$("#voice").addEventListener("change", e => {
+  state.voice = e.target.value; stopSpeech();
+  if (state.voice === "device"){ deviceFailed = false; try { localStorage.removeItem("coucou-tts-fallback"); } catch {} }
+  lsSet("coucou-prefs", {...(lsGet("coucou-prefs")||{}), voice:state.voice});
+});
+
+/* ---------- API key ---------- */
+$("#keyBtn").addEventListener("click", () => { const p = $("#keyPanel"); p.hidden = !p.hidden; if (!p.hidden){ $("#keyInput").value = getKey(); $("#keyInput").focus(); } });
+$("#keySave").addEventListener("click", () => { try { localStorage.setItem("coucou-key", $("#keyInput").value.trim()); } catch {} $("#keyPanel").hidden = true; toast("Key saved in this browser"); });
+$("#keyClear").addEventListener("click", () => { try { localStorage.removeItem("coucou-key"); } catch {} $("#keyInput").value = ""; toast("Key removed"); });
+if (!getKey()) setTimeout(() => { $("#keyPanel").hidden = false; }, 0);
+
+/* ---------- speak mode ---------- */
+const SPEAK_LANGS = [["en-US","English"],["zh-CN","中文"],["fr-FR","Français"],["es-ES","Español"],["it-IT","Italiano"],["de-DE","Deutsch"],["nl-NL","Nederlands"],["pt-PT","Português"],["ja-JP","日本語"],["ko-KR","한국어"]];
+SPEAK_LANGS.forEach(([c,n]) => $("#speakLang").append(h("option",{value:c}, n)));
+state.speakLang = prefs.speakLang || "en-US";
+$("#speakLang").value = state.speakLang;
+$("#speakLang").addEventListener("change", e => {
+  state.speakLang = e.target.value;
+  lsSet("coucou-prefs", {...(lsGet("coucou-prefs")||{}), speakLang:state.speakLang});
+  if (recOn){ stopRec(); startRec(); }
+});
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, recOn = false, recBlocked = false, spokeThisEntry = false;
+
+function setMode(m){
+  $("#modeWrite").setAttribute("aria-pressed", String(m === "write"));
+  $("#modeSpeak").setAttribute("aria-pressed", String(m === "speak"));
+  $("#speakPanel").hidden = m !== "speak";
+  $("#speakLangWrap").hidden = m !== "speak";
+  $("#src").placeholder = m === "speak" ? "What you say appears here. You can edit it before translating." : "Write in English, 中文, or any language you like…";
+  if (m === "write") stopRec();
+  lsSet("coucou-prefs", {...(lsGet("coucou-prefs")||{}), mode:m});
+}
+function setRecUI(on){
+  $("#mic").classList.toggle("on", on);
+  $("#mic").setAttribute("aria-label", on ? "Stop" : "Start speaking");
+  $("#micState").textContent = on ? "Listening — tap to stop" : "Tap to speak";
+}
+function showDictationHelp(){
+  recBlocked = true;
+  const isApple = /Mac|iPhone|iPad/.test(navigator.userAgent);
+  const help = $("#micHelp");
+  help.hidden = false;
+  help.textContent = isApple
+    ? "This page can’t reach your microphone directly, so use your keyboard’s dictation: tap the text box below, then the mic key on iPhone, or press Fn twice on a Mac. It’s noted down the same way."
+    : "This page can’t reach your microphone directly, so use your keyboard’s dictation: tap the text box below, then the mic key on your phone keyboard, or Windows + H on Windows.";
+  setRecUI(false);
+  $("#micState").textContent = "Use keyboard dictation";
+  $("#src").focus();
+}
+function startRec(){
+  if (!SR || recBlocked) return showDictationHelp();
+  const box = $("#src");
+  let base = box.value; if (base && !/\s$/.test(base)) base += " ";
+  let finals = "";
+  rec = new SR();
+  rec.lang = state.speakLang; rec.continuous = true; rec.interimResults = true;
+  rec.onresult = e => {
+    let interim = "";
+    for (let i = e.resultIndex; i < e.results.length; i++){
+      const r = e.results[i];
+      if (r.isFinal) finals += r[0].transcript.trim() + (state.speakLang.startsWith("zh") || state.speakLang.startsWith("ja") ? "" : " ");
+      else interim += r[0].transcript;
+    }
+    box.value = base + finals + interim;
+    box.scrollTop = box.scrollHeight;
+    spokeThisEntry = true;
+    clearTimeout(draftT); draftT = setTimeout(() => lsSet("coucou-draft", box.value), 400);
+  };
+  rec.onerror = e => {
+    if (["not-allowed","service-not-allowed","audio-capture"].includes(e.error)){ recOn = false; showDictationHelp(); }
+    else if (e.error === "network"){ recOn = false; setRecUI(false); toast("Speech recognition needs an internet connection."); }
+  };
+  rec.onend = () => {
+    if (recOn && !recBlocked){ try { startRec(); } catch { recOn = false; setRecUI(false); } }  // browsers stop after a pause; keep listening
+    else setRecUI(false);
+  };
+  try { rec.start(); recOn = true; setRecUI(true); }
+  catch { showDictationHelp(); }
+}
+function stopRec(){ recOn = false; try { rec?.stop(); } catch {} setRecUI(false); }
+$("#mic").addEventListener("click", () => recOn ? stopRec() : startRec());
+$("#modeWrite").addEventListener("click", () => setMode("write"));
+$("#modeSpeak").addEventListener("click", () => setMode("speak"));
+setMode(prefs.mode === "speak" ? "speak" : "write");
+
+const draft = lsGet("coucou-draft");
+if (draft){ $("#src").value = draft; state.current = null; }
+else $("#src").value = "";
+renderPrompt(); renderOutput(); renderCounts();
+
+store.init().then(d => {
+  state.entries = d.entries || []; state.words = d.words || [];
+  $("#storeNote").textContent = store.mode === "db" ? "Entries and words are saved to your account." : "Entries and words are saved in this browser only.";
+  renderCounts(); renderPrompt(); renderOutput();
+  if (state.tab !== "write") setTab(state.tab);
+});
+})();
+</script>
+
+</body>
+</html>
