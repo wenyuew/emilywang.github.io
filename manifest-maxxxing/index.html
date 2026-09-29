@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manifest Maxxxing</title>
+<meta name="description" content="Set any goal, list the steps, and feed a hungry cat a fish for every step you finish — until it's full and happy.">
+<meta property="og:title" content="Manifest Maxxxing">
+<meta property="og:description" content="A progress map where every finished step feeds a hungry cat.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2040%2040%27%3E%3Cpath%20d%3D%27M6%2022%20L8%206%20L16%2013%20L24%2013%20L32%206%20L34%2022%20A%2014%2012%200%201%201%206%2022%20Z%27%20fill%3D%27white%27%20stroke%3D%27black%27%20stroke-width%3D%272.4%27%20stroke-linejoin%3D%27round%27/%3E%3Ccircle%20cx%3D%2715%27%20cy%3D%2722%27%20r%3D%272.4%27/%3E%3Ccircle%20cx%3D%2725%27%20cy%3D%2722%27%20r%3D%272.4%27/%3E%3C/svg%3E">
+<style>html{color-scheme:light}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+<style>
+/* Tactile + editorial: one soft grey object (cat + map) centered in white space, quiet lists below */
+:root {
+  --bg:#ffffff; --surface:#f7f7f6; --band:#f3f2ef; --object:#e9e9e8; --hair:#e6e6e4;
+  --ink:#111111; --ink-2:#3d3d3d; --muted:#6e6e6e; --faint:#a6a6a6; --on-ink:#ffffff;
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Noto Sans SC",sans-serif;
+  --fs-eyebrow:11px; --ls-eyebrow:.16em; --fs-caption:12px; --fs-small:13px; --fs-body:15px; --lh-body:1.75;
+  --fs-h1:clamp(22px,2.4vw,30px);
+  --r-card:8px; --r-pill:10px; --r-object:6px;
+  --shadow-soft:0 30px 60px -30px rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.04);
+  --text-col:620px; --page:980px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0f0f0f; --surface:#171717; --band:#141413; --object:#1d1d1d; --hair:#2a2a2a;
+    --ink:#f2f2f2; --ink-2:#d0d0d0; --muted:#9a9a9a; --faint:#646464; --on-ink:#0f0f0f; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#0f0f0f; --surface:#171717; --band:#141413; --object:#1d1d1d; --hair:#2a2a2a;
+  --ink:#f2f2f2; --ink-2:#d0d0d0; --muted:#9a9a9a; --faint:#646464; --on-ink:#0f0f0f; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--muted);font-family:var(--font);font-size:var(--fs-body);line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--page);margin:0 auto;padding-inline:clamp(16px,5vw,64px);padding-block:72px 120px}
+.eyebrow{font-size:var(--fs-eyebrow);letter-spacing:var(--ls-eyebrow);text-transform:uppercase;color:var(--faint);font-weight:500;margin:0 0 14px}
+h2{font-size:20px;font-weight:500;color:var(--ink);margin:0;letter-spacing:-.01em}
+.num{font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums}
+button{font:inherit;cursor:pointer;background:none;border:0;color:inherit;padding:0}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:1px solid var(--ink);outline-offset:3px}
+
+/* header */
+.goal-title{width:100%;border:0;background:transparent;font:inherit;font-size:var(--fs-h1);font-weight:500;color:var(--ink);letter-spacing:-.01em;padding:0 0 6px;border-bottom:1px solid transparent}
+.goal-title{border-bottom-color:var(--hair)}
+.goal-title:hover,.goal-title:focus{border-bottom-color:var(--ink);outline:none}
+.goal-title::placeholder{color:var(--faint)}
+.goal-label{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);font-weight:500;margin:0 0 6px}
+.example{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border-radius:var(--r-card);padding:12px 16px;margin:0 0 36px;font-size:var(--fs-small)}
+.when{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;margin-top:14px;font-size:var(--fs-small);color:var(--muted);font-variant-numeric:tabular-nums}
+.when input,.when select{border:0;border-bottom:1px solid var(--hair);background:transparent;font:inherit;color:var(--ink);padding:2px 0}
+.when input[type=number]{width:40px;text-align:center}
+.when-out{color:var(--faint)}
+.wk{font-size:13px;font-weight:400;color:var(--faint);margin-left:8px;letter-spacing:0}
+.list.plain .item{grid-template-columns:22px 1fr auto}
+.lede{margin:10px 0 0;max-width:var(--text-col);font-variant-numeric:tabular-nums}
+
+/* object */
+.object{margin-top:48px;background:var(--object);border-radius:var(--r-object);box-shadow:var(--shadow-soft);padding:28px clamp(18px,4vw,40px) 24px;position:relative}
+.obj-label{position:absolute;top:14px;left:18px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.cat-row{display:grid;grid-template-columns:200px 1fr;gap:clamp(20px,4vw,48px);align-items:center;margin-top:10px}
+.cat-box{position:relative;width:200px;height:200px}
+#cat{width:200px;height:200px;display:block;overflow:visible}
+#cat .ln{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#cat .fill{fill:var(--bg);stroke:var(--ink);stroke-width:2.2}
+#cat .belly{fill:var(--faint);opacity:.45}
+#cat .body-g{transition:transform .5s ease-out;transform-origin:100px 186px}
+.munch #cat .head-g{animation:munch .6s ease-out}
+@keyframes munch{30%{transform:translateY(4px)}60%{transform:translateY(-3px)}}
+.toast{position:absolute;right:-8px;top:36px;font-size:12px;color:var(--ink);opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateY(-6px)}
+.status{min-width:0}
+.mood{font-size:22px;color:var(--ink);font-weight:500;margin:0;letter-spacing:-.01em}
+.mood-sub{margin:0;font-size:var(--fs-small);font-variant-numeric:tabular-nums}
+.mood{margin-bottom:14px!important}
+.fishes{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;margin-bottom:18px}
+.fish{width:22px;height:12px}
+.fish path{stroke:var(--ink);stroke-width:1.4;fill:none}
+.fish.eaten path{fill:var(--ink)}
+.fish.wait path{stroke:var(--faint)}
+.more{font-size:12px;color:var(--faint)}
+.pace{display:grid;grid-template-columns:auto 1fr auto;gap:8px 14px;align-items:center;font-size:12px;font-variant-numeric:tabular-nums;max-width:420px}
+.pace .lbl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.bar{height:2px;background:var(--hair);position:relative}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--ink);transition:width .5s ease-out}
+.bar.time i{background:var(--faint)}
+.pace-note{margin:12px 0 0;font-size:12px;color:var(--ink-2)}
+
+.map-box{margin-top:26px;width:100%}
+#map{display:block;width:100%;height:190px;overflow:visible}
+.map-cap{font-size:12px;color:var(--faint);margin:6px 0 0}
+
+/* sections */
+.sec{margin-top:112px}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;padding:6px 12px;border-radius:999px;background:var(--surface);color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--on-ink)}
+.row-meta{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;margin-bottom:18px;font-size:var(--fs-small)}
+.field label{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);font-weight:500;margin-bottom:4px}
+.field input{border:0;border-bottom:1px solid var(--hair);background:transparent;font:inherit;color:var(--ink);padding:2px 0}
+.list{list-style:none;margin:0;padding:0;border-top:1px solid var(--hair)}
+.item{display:grid;grid-template-columns:28px 22px 1fr auto;align-items:center;gap:10px;border-bottom:1px solid var(--hair);min-height:52px}
+.item .num{text-align:left}
+.tick{width:18px;height:18px;border-radius:50%;border:1px solid var(--faint);display:grid;place-items:center;transition:background .2s}
+.tick svg{width:10px;height:10px;opacity:0}
+.tick svg path{stroke:var(--on-ink);stroke-width:1.6;fill:none}
+.done .tick{background:var(--ink);border-color:var(--ink)}
+.done .tick svg{opacity:1}
+.item input{border:0;background:transparent;font:inherit;color:var(--ink);width:100%;min-width:0;padding:12px 0}
+.done input{color:var(--faint);text-decoration:line-through;text-decoration-color:var(--hair)}
+.item input:focus{outline:none}
+.rm{font-size:12px;color:var(--faint);opacity:0;transition:opacity .2s;padding:6px 4px}
+.item:hover .rm,.rm:focus-visible{opacity:1}
+@media (hover:none){.rm{opacity:1}}
+.add{display:grid;grid-template-columns:1fr auto;gap:12px;margin-top:14px;align-items:center}
+.add input{border:0;border-bottom:1px solid var(--hair);background:transparent;font:inherit;color:var(--ink);padding:8px 0;min-width:0}
+.add input::placeholder{color:var(--faint)}
+.pill{background:var(--ink);color:var(--on-ink);font-size:13px;font-weight:500;border-radius:var(--r-pill);padding:9px 18px}
+.text-btn{font-size:13px;color:var(--ink)}
+.text-btn.faint{color:var(--faint)}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:18px;font-size:12px;color:var(--faint)}
+.empty{font-size:13px;color:var(--faint);padding:16px 0;border-bottom:1px solid var(--hair)}
+
+@media (max-width:640px){
+  .wrap{padding-block:48px 96px}
+  .cat-row{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .status{width:100%}
+  .fishes{justify-content:center}
+  .pace{margin:0 auto}
+  .sec{margin-top:80px}
+}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:36px}
+.nav-links{display:flex;gap:22px}
+.nav-links .text-btn{color:var(--muted)}
+.nav-links .text-btn[aria-current="page"]{color:var(--ink)}
+.all-h{font-size:var(--fs-h1);font-weight:500;color:var(--ink);letter-spacing:-.01em;margin:0}
+.all-sum{margin:8px 0 40px;font-size:var(--fs-small)}
+.goals{list-style:none;margin:0;padding:0;border-top:1px solid var(--hair)}
+.goals li{border-bottom:1px solid var(--hair);display:flex;align-items:center;gap:16px}
+.goals li .grow{flex:1;min-width:0}
+.g-del{font-size:12px;color:var(--faint);padding:8px 0;white-space:nowrap;opacity:0;transition:opacity .2s}
+.goals li:hover .g-del,.g-del:focus-visible,.g-del.armed{opacity:1}
+.g-del.armed{color:var(--ink)}
+@media (hover:none){.g-del{opacity:1}}
+.grow{display:grid;grid-template-columns:44px minmax(0,1fr) 150px;gap:18px;align-items:center;width:100%;text-align:left;padding:18px 0;transition:opacity .2s}
+.grow:hover{opacity:.7}
+.grow svg{width:40px;height:40px;display:block}
+.g-name{display:block;font-size:15px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g-meta{display:block;font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums}
+.g-prog{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.g-bar{height:2px;background:var(--hair);position:relative}
+.g-bar i{position:absolute;inset:0 auto 0 0;background:var(--ink)}
+@media (max-width:640px){.grow{grid-template-columns:40px minmax(0,1fr)}.g-prog{grid-column:2}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <p class="eyebrow" style="margin:0">Manifest Maxxxing</p>
+    <div class="nav-links">
+      <button class="text-btn" id="navAll" type="button">All goals</button>
+      <button class="text-btn" id="navNew" type="button">+ New goal</button>
+    </div>
+  </nav>
+
+  <div id="allView" hidden>
+    <h1 class="all-h">All goals</h1>
+    <p class="all-sum" id="allSum"></p>
+    <ul class="goals" id="goalList"></ul>
+  </div>
+
+  <div id="goalView">
+  <div class="example" id="exampleBar" hidden><span>This is an example goal. Rename it, or start your own from a blank page.</span><button class="text-btn" id="startOwn" type="button">Start my own goal →</button></div>
+  <input class="goal-title" id="goalTitle" aria-label="Your goal" placeholder="Name your goal">
+  <div class="when">
+    <label for="durN">In</label>
+    <input id="durN" type="number" min="1" max="99" inputmode="numeric">
+    <select id="durU" aria-label="Unit"><option value="week">weeks</option><option value="month">months</option><option value="year">years</option></select>
+    <label for="startDate">from</label>
+    <input type="date" id="startDate">
+    <span class="when-out" id="whenOut"></span>
+  </div>
+
+  <div class="object" id="obj">
+    <div class="cat-row">
+      <div class="cat-box" id="catBox">
+        <svg id="cat" viewBox="0 0 200 200" aria-hidden="true">
+          <defs><clipPath id="bellyClip"><ellipse cx="100" cy="146" rx="30" ry="28"/></clipPath></defs>
+          <path class="ln" id="tail" d="M146 168 C 186 170, 190 124, 168 110"/>
+          <g class="body-g" id="bodyG">
+            <ellipse class="fill" cx="100" cy="146" rx="46" ry="42"/>
+            <rect class="belly" id="belly" x="60" y="174" width="80" height="0" clip-path="url(#bellyClip)"/>
+            <ellipse class="ln" cx="100" cy="146" rx="30" ry="28" stroke-dasharray="3 5" style="stroke:var(--faint);stroke-width:1.2"/>
+            <path class="ln" d="M80 186 v-8 M120 186 v-8"/>
+          </g>
+          <g class="head-g">
+            <path class="fill" d="M60 72 L66 30 L92 50 L108 50 L134 30 L140 72 A 42 36 0 1 1 60 72 Z"/>
+            <g id="face"></g>
+            <path class="ln" style="stroke-width:1.2" d="M52 80 L28 76 M52 88 L28 92 M148 80 L172 76 M148 88 L172 92"/>
+          </g>
+        </svg>
+        <span class="toast" id="toast">+1 fish</span>
+      </div>
+      <div class="status">
+        <p class="mood" id="mood"></p>
+        <div class="fishes" id="fishes" aria-label="Fish tally"></div>
+        <p class="mood-sub" id="moodSub"></p>
+      </div>
+    </div>
+    <div class="map-box" id="mapBox">
+      <svg id="map" role="img" aria-label="Progress map from start to full and happy"></svg>
+    </div>
+  </div>
+
+  <section class="sec" aria-labelledby="h-long">
+    <div class="sec-head">
+      <h2 id="h-long">Steps to get there</h2>
+      <button class="text-btn" id="newLong" type="button">Start a new round →</button>
+    </div>
+    <ul class="list" id="longList"></ul>
+    <form class="add" id="longAdd"><input id="longInput" placeholder="Add a step" aria-label="New long-term step"><button class="pill" type="submit">Add</button></form>
+    <div class="foot"><span id="longNote"></span></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-week">
+    <div class="sec-head">
+      <h2 id="h-week">Short term</h2>
+      <button class="text-btn" id="newWeek" type="button">Start a new round →</button>
+    </div>
+    <div class="when" style="margin:-8px 0 22px">
+      <label for="sN">In</label>
+      <input id="sN" type="number" min="1" max="99" inputmode="numeric">
+      <select id="sU" aria-label="Short-term unit"><option value="day">days</option><option value="week">weeks</option><option value="month">months</option></select>
+      <label for="sStart">from</label>
+      <input type="date" id="sStart">
+      <span class="when-out" id="sOut"></span>
+    </div>
+    <ul class="list plain" id="weekList"></ul>
+    <form class="add" id="weekAdd"><input id="weekInput" placeholder="Add a task" aria-label="New short-term task"><button class="pill" type="submit">Add</button></form>
+    <div class="foot"><span id="archiveNote"></span></div>
+  </section>
+  <div class="foot" style="margin-top:96px;justify-content:flex-end"><button class="text-btn faint" id="resetBtn" type="button">Delete this goal</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+const KEY='manifest-maxxxing-v2', OLD='feed-the-cat-v1';
+const $=id=>document.getElementById(id);
+const uid=()=>Math.random().toString(36).slice(2,9);
+const todayISO=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+const mondayISO=()=>{const d=new Date();const k=(d.getDay()+6)%7;d.setDate(d.getDate()-k);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+const DUR=[{n:1,u:'month',l:'1 month'},{n:3,u:'month',l:'3 months'},{n:6,u:'month',l:'6 months'},{n:1,u:'year',l:'1 year'}];
+
+function sample(){return{
+  id:uid(),example:true,title:'Get a job',n:6,unit:'month',start:todayISO(),
+  steps:[
+    {id:uid(),text:'Finish all the projects I’m thinking about',done:true},
+    {id:uid(),text:'Film a demo for each project',done:false},
+    {id:uid(),text:'Post the demos on social media',done:false},
+    {id:uid(),text:'Reach out to founders',done:false},
+    {id:uid(),text:'Apply to the startups I want to work for',done:false}],
+  sN:1,sUnit:'week',sStart:todayISO(),
+  week:[
+    {id:uid(),text:'Finish the projects in progress',done:true},
+    {id:uid(),text:'Make all the demos',done:false},
+    {id:uid(),text:'Post on social media',done:false}],
+  archive:[]
+}}
+function blank(){return{id:uid(),title:'',n:3,unit:'month',start:todayISO(),steps:[],sN:1,sUnit:'week',sStart:todayISO(),week:[],archive:[],rounds:[]}}
+
+function fix(g){
+  if(!g.id)g.id=uid();
+  if(g.months&&!g.unit){g.n=g.months;g.unit='month';delete g.months}
+  if(!g.sUnit){g.sN=1;g.sUnit='week';g.sStart=g.weekStart||todayISO()}
+  g.steps=g.steps||[];g.week=g.week||[];g.archive=g.archive||[];g.rounds=g.rounds||[];
+  return g;
+}
+let DB=null;
+try{DB=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!DB||!Array.isArray(DB.goals)||!DB.goals.length){
+  let old=null;try{old=JSON.parse(localStorage.getItem(OLD))}catch(e){}
+  DB={goals:[old&&Array.isArray(old.steps)?old:sample()]};
+}
+DB.goals.forEach(fix);
+if(!DB.goals.find(g=>g.id===DB.cur))DB.cur=DB.goals[0].id;
+let S=DB.goals.find(g=>g.id===DB.cur);
+let view='goal';
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}};
+function openGoal(id){S=DB.goals.find(g=>g.id===id);DB.cur=id;view='goal';save();render();window.scrollTo(0,0)}
+function newGoal(){const g=blank();DB.goals.push(g);openGoal(g.id);$('goalTitle').focus()}
+
+const fmt=iso=>{const d=new Date(iso+'T00:00:00');return d.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})};
+function addDur(iso,n,u){const d=new Date(iso+'T00:00:00');
+  if(u==='day')d.setDate(d.getDate()+n);else if(u==='week')d.setDate(d.getDate()+7*n);else if(u==='year')d.setFullYear(d.getFullYear()+n);else d.setMonth(d.getMonth()+n);return d}
+function endOf(g=S){return addDur(g.start,g.n,g.unit)}
+const durLabel=()=>`${S.n} ${S.unit}${S.n>1?'s':''}`;
+const localISO=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const pad=n=>String(n).padStart(2,'0');
+
+function tally(g=S){
+  // one step = one fish = one dot on the map; the last step is the destination
+  const eaten=g.steps.filter(s=>s.done).length;
+  const needed=g.steps.length;
+  return{eaten,needed,full:needed?eaten/needed:0,stepsDone:eaten};
+}
+
+/* ---------- cat ---------- */
+function drawFace(f){
+  const g=$('face');let eyes,mouth;
+  if(f>=1){ // full + happy: closed ^ eyes, smile
+    eyes='<path class="ln" d="M76 74 Q84 64 92 74 M108 74 Q116 64 124 74"/>';
+    mouth='<path class="ln" d="M90 88 Q100 98 110 88"/><ellipse cx="72" cy="86" rx="6" ry="3" style="fill:var(--faint);opacity:.35"/><ellipse cx="128" cy="86" rx="6" ry="3" style="fill:var(--faint);opacity:.35"/>';
+  }else if(f>=.5){
+    eyes='<circle cx="84" cy="72" r="4" style="fill:var(--ink)"/><circle cx="116" cy="72" r="4" style="fill:var(--ink)"/>';
+    mouth='<path class="ln" d="M92 88 Q96 92 100 88 Q104 92 108 88"/>';
+  }else{ // hungry: big round eyes looking up, small frown
+    eyes='<circle class="ln" cx="84" cy="72" r="7"/><circle cx="85" cy="69" r="3" style="fill:var(--ink)"/><circle class="ln" cx="116" cy="72" r="7"/><circle cx="117" cy="69" r="3" style="fill:var(--ink)"/>';
+    mouth='<path class="ln" d="M93 92 Q100 86 107 92"/>';
+  }
+  g.innerHTML=eyes+'<path class="ln" d="M97 82 L100 85 L103 82"/>'+mouth;
+  const sx=1+f*.22;
+  $('bodyG').style.transform=`scaleX(${sx})`;
+  const h=56*f; $('belly').setAttribute('y',174-h); $('belly').setAttribute('height',h);
+}
+const fishSVG=cls=>`<svg class="fish ${cls}" viewBox="0 0 22 12"><path d="M2 6 C6 0,13 0,16 6 C13 12,6 12,2 6 Z M16 6 L21 2 L21 10 Z"/></svg>`;
+
+function moodText(t){
+  if(t.needed===0)return['Waiting for a plan','Add a few steps below. Each one you finish is a fish.'];
+  if(t.full>=1)return['Full and happy','Every fish eaten. You made it to the destination.'];
+  const left=t.needed-t.eaten, f=t.full;
+  const m=f===0?'Starving':f<.34?'Hungry':f<.67?'Getting there':'Almost full';
+  return[m,`${t.eaten} fish eaten · ${left} more until full`];
+}
+
+/* ---------- map ---------- */
+function drawMap(t){
+  const svg=$('map'), W=Math.max(280,$('mapBox').clientWidth), H=190, M=22;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const d=`M${M} ${H*.72} C ${W*.22} ${H*.18}, ${W*.36} ${H*.98}, ${W*.52} ${H*.58} S ${W*.8} ${H*.2}, ${W-M} ${H*.5}`;
+  const NS='http://www.w3.org/2000/svg';
+  svg.innerHTML='';
+  const mk=(tag,attrs)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);svg.appendChild(e);return e};
+  const base=mk('path',{d,fill:'none',style:'stroke:var(--faint)','stroke-width':1,'stroke-dasharray':'2 5'});
+  const L=base.getTotalLength();
+  const walked=mk('path',{d,fill:'none',style:'stroke:var(--ink)','stroke-width':1.5,'stroke-dasharray':`${L*t.full} ${L}`});
+  walked.style.transition='stroke-dasharray .6s ease-out';
+  const n=S.steps.length, small=W<520;
+  const label=(x,y,txt,anchor,strong)=>{const e=mk('text',{x,y,'text-anchor':anchor||'middle','font-size':small?9:10,'letter-spacing':'.14em',style:`fill:var(${strong?'--ink':'--muted'});font-family:var(--font);font-weight:500`});e.textContent=txt;return e};
+  // start
+  const p0=base.getPointAtLength(0);
+  mk('circle',{cx:p0.x,cy:p0.y,r:3,style:'fill:var(--ink)'});
+  label(p0.x,p0.y+22,'START','start');
+  // steps
+  S.steps.forEach((s,i)=>{
+    if(i===n-1)return; // last step is drawn as the destination
+    const p=base.getPointAtLength(L*(i+1)/n);
+    mk('circle',{cx:p.x,cy:p.y,r:small?4.5:5.5,style:s.done?'fill:var(--ink);stroke:var(--ink)':'fill:var(--object);stroke:var(--faint)','stroke-width':1});
+    const nt=mk('text',{x:p.x,y:p.y+(small?18:22),'text-anchor':'middle','font-size':small?9:11,style:`fill:var(${s.done?'--ink':'--faint'});font-family:var(--font);font-variant-numeric:tabular-nums`});nt.textContent=pad(i+1);
+  });
+  // destination
+  const pe=base.getPointAtLength(L);
+  mk('circle',{cx:pe.x,cy:pe.y,r:11,fill:'none',style:'stroke:var(--ink)','stroke-width':1});
+  mk('circle',{cx:pe.x,cy:pe.y,r:t.full>=1?6:2.5,style:'fill:var(--ink)'});
+  label(pe.x+4,pe.y+30,n?`${pad(n)} · FULL & HAPPY`:'FULL & HAPPY','end',true);
+  // cat marker
+  const pc=base.getPointAtLength(Math.min(L*(n?t.eaten/n:0), L-0.01));
+  const g=document.createElementNS(NS,'g');g.setAttribute('transform',`translate(${pc.x} ${pc.y-(t.full>=1?30:20)})`);
+  g.innerHTML='<path d="M-9 -2 L-8 -13 L-2 -7 L2 -7 L8 -13 L9 -2 A 9 8 0 1 1 -9 -2 Z" style="fill:var(--ink)"/>'+
+    '<circle cx="-3.5" cy="-1" r="1.2" style="fill:var(--object)"/><circle cx="3.5" cy="-1" r="1.2" style="fill:var(--object)"/>';
+  svg.appendChild(g);
+}
+
+/* ---------- lists ---------- */
+function renderList(el,arr,kind){
+  el.innerHTML='';
+  if(!arr.length){const li=document.createElement('li');li.className='empty';li.textContent=kind==='long'?'No steps yet. Add the first thing you need to do.':'Nothing planned for this round yet.';el.appendChild(li);return}
+  arr.forEach((it,i)=>{
+    const li=document.createElement('li');li.className='item'+(it.done?' done':'');
+    li.innerHTML=`${kind==='long'?`<span class="num">${pad(i+1)}</span>`:''}
+      <button class="tick" type="button" aria-pressed="${it.done}" aria-label="Mark done"><svg viewBox="0 0 10 10"><path d="M1.5 5.2 L4 7.5 L8.5 2.5"/></svg></button>
+      <input id="${kind}-${it.id}" aria-label="Task">
+      <button class="rm" type="button" aria-label="Remove">Remove</button>`;
+    const inp=li.querySelector('input');inp.value=it.text;
+    inp.addEventListener('input',()=>{it.text=inp.value;save()});
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur()});
+    li.querySelector('.tick').onclick=()=>{it.done=!it.done;save();render();if(it.done)feed(kind)};
+    li.querySelector('.rm').onclick=()=>{arr.splice(i,1);save();render()};
+    el.appendChild(li);
+  });
+}
+
+function feed(kind){
+  const box=$('catBox'),toast=$('toast');toast.textContent=kind==='long'?'+1 fish':'+1 snack';
+  box.classList.remove('munch');void box.offsetWidth;box.classList.add('munch');
+  toast.classList.add('show');clearTimeout(feed.t);feed.t=setTimeout(()=>toast.classList.remove('show'),1100);
+}
+
+function miniCat(f){
+  const eyes=f>=1?'<path d="M12 21 Q15 17 18 21 M22 21 Q25 17 28 21" style="fill:none;stroke:var(--ink);stroke-width:1.4;stroke-linecap:round"/>'
+    :f>=.5?'<circle cx="15" cy="20" r="1.6" style="fill:var(--ink)"/><circle cx="25" cy="20" r="1.6" style="fill:var(--ink)"/>'
+    :'<circle cx="15" cy="20" r="2.6" style="fill:var(--bg);stroke:var(--ink);stroke-width:1.2"/><circle cx="25" cy="20" r="2.6" style="fill:var(--bg);stroke:var(--ink);stroke-width:1.2"/>';
+  return `<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 20 L8 6 L16 13 L24 13 L32 6 L34 20 A 14 12 0 1 1 6 20 Z" style="fill:var(--bg);stroke:var(--ink);stroke-width:1.4;stroke-linejoin:round"/>${eyes}</svg>`;
+}
+function renderAll(){
+  const now=new Date(), ul=$('goalList'); ul.innerHTML='';
+  let full=0;
+  DB.goals.forEach(g=>{
+    const t=tally(g); if(t.needed&&t.full>=1)full++;
+    const end=endOf(g), left=Math.max(0,Math.ceil((end-now)/864e5));
+    const li=document.createElement('li');
+    li.innerHTML=`<button class="grow" type="button">${miniCat(t.full)}
+      <span style="min-width:0"><span class="g-name"></span><span class="g-meta">${g.n} ${g.unit}${g.n>1?'s':''} · ends ${fmt(localISO(end))} · ${left} days left</span></span>
+      <span class="g-prog"><span>${t.needed?`${moodText(t)[0]} · ${t.eaten}/${t.needed} fish`:'No steps yet'}</span><span class="g-bar"><i style="width:${Math.round(t.full*100)}%"></i></span></span></button>`;
+    li.querySelector('.g-name').textContent=g.title.trim()||'Untitled goal';
+    li.querySelector('button').onclick=()=>openGoal(g.id);
+    const del=document.createElement('button');del.type='button';del.className='g-del';del.textContent='Delete';
+    del.setAttribute('aria-label',`Delete ${g.title.trim()||'untitled goal'}`);
+    let armed=false,tm;
+    del.onclick=()=>{
+      if(!armed){armed=true;del.classList.add('armed');del.textContent='Confirm delete';tm=setTimeout(()=>{armed=false;del.classList.remove('armed');del.textContent='Delete'},3500);return}
+      clearTimeout(tm);
+      DB.goals=DB.goals.filter(x=>x!==g);
+      if(!DB.goals.length)DB.goals.push(blank());
+      if(!DB.goals.includes(S)){S=DB.goals[0];DB.cur=S.id}
+      save();render();
+    };
+    li.appendChild(del);
+    ul.appendChild(li);
+  });
+  const n=DB.goals.length;
+  $('allSum').textContent=`${n} goal${n>1?'s':''}${full?` · ${full} full and happy`:''}`;
+}
+
+function render(){
+  $('allView').hidden=view!=='all';$('goalView').hidden=view!=='goal';
+  $('navAll').setAttribute('aria-current',view==='all'?'page':'false');
+  $('navAll').textContent=`All goals (${DB.goals.length})`;
+  if(view==='all'){renderAll();return}
+  const t=tally();
+  if(document.activeElement!==$('goalTitle'))$('goalTitle').value=S.title;
+  const end=endOf(), start=new Date(S.start+'T00:00:00'), now=new Date();
+  const total=Math.max(1,Math.round((end-start)/864e5)), elapsed=Math.min(total,Math.max(0,Math.floor((now-start)/864e5)));
+  const left=Math.max(0,Math.ceil((end-now)/864e5));
+  const durL=durLabel();
+  $('exampleBar').hidden=!S.example;
+  if(document.activeElement!==$('durN'))$('durN').value=S.n;$('durU').value=S.unit;
+  $('whenOut').textContent=`ends ${fmt(localISO(end))} · ${left} days left`;
+  $('startDate').value=S.start;
+
+
+  const [m,sub]=moodText(t);$('mood').textContent=m;
+  const fp=Math.round(t.full*100), tp=Math.round(elapsed/total*100);
+  $('moodSub').textContent=!t.needed||t.full>=1?sub:`${t.needed-t.eaten} more fish until full · ${fp>=tp?'ahead of':'behind'} schedule`;
+  drawFace(t.full);
+  const cap=24,fishEl=$('fishes');let h='';
+  const show=Math.min(t.needed,cap), ea=Math.min(t.eaten,show);
+  for(let i=0;i<show;i++)h+=fishSVG(i<ea?'eaten':'wait');
+  if(t.needed>cap)h+=`<span class="more">+${t.needed-cap}</span>`;
+  fishEl.innerHTML=h;
+
+
+  renderList($('longList'),S.steps,'long');
+  renderList($('weekList'),S.week,'week');
+  {const se=addDur(S.sStart,S.sN,S.sUnit),sl=Math.max(0,Math.ceil((se-now)/864e5));
+   if(document.activeElement!==$('sN'))$('sN').value=S.sN;$('sU').value=S.sUnit;$('sStart').value=S.sStart;
+   $('sOut').textContent=`ends ${fmt(localISO(se))} · ${sl?sl+' day'+(sl>1?'s':'')+' left':'time\u2019s up'}`;}
+  const aw=S.archive.length, af=S.archive.reduce((a,w)=>a+w.done,0);
+  $('archiveNote').textContent=aw?`${aw} past round${aw>1?'s':''} · ${af} snacks eaten`:'';
+  const lr=S.rounds.length;
+  $('longNote').textContent=lr?`${lr} past round${lr>1?'s':''} · ${S.rounds.reduce((a,r)=>a+r.done,0)} fish eaten`:'';
+  drawMap(t);
+}
+
+$('goalTitle').addEventListener('input',e=>{S.title=e.target.value;S.example=false;save();render()});
+$('durN').addEventListener('input',e=>{const v=Math.min(99,Math.max(1,parseInt(e.target.value,10)||0));if(v){S.n=v;save();render()}});
+$('durU').addEventListener('change',e=>{S.unit=e.target.value;save();render()});
+$('sN').addEventListener('input',e=>{const v=Math.min(99,Math.max(1,parseInt(e.target.value,10)||0));if(v){S.sN=v;save();render()}});
+$('sU').addEventListener('change',e=>{S.sUnit=e.target.value;save();render()});
+$('sStart').addEventListener('change',e=>{if(e.target.value){S.sStart=e.target.value;save();render()}});
+$('startOwn').onclick=()=>{const i=DB.goals.indexOf(S);const g=blank();DB.goals.splice(i,1,g);openGoal(g.id);$('goalTitle').focus()};
+$('navAll').onclick=()=>{view='all';render();window.scrollTo(0,0)};
+$('navNew').onclick=newGoal;
+$('startDate').addEventListener('change',e=>{if(e.target.value){S.start=e.target.value;save();render()}});
+function adder(form,input,arr){form.addEventListener('submit',e=>{e.preventDefault();const v=input.value.trim();if(!v)return;arr().push({id:uid(),text:v,done:false});input.value='';save();render();input.focus()})}
+adder($('longAdd'),$('longInput'),()=>S.steps);
+adder($('weekAdd'),$('weekInput'),()=>S.week);
+
+function twoStep(btn,label,confirmLabel,action){
+  let armed=false,t;
+  btn.onclick=()=>{
+    if(!armed){armed=true;btn.textContent=confirmLabel;t=setTimeout(()=>{armed=false;btn.textContent=label},3500);return}
+    clearTimeout(t);armed=false;btn.textContent=label;action();
+  };
+}
+twoStep($('newWeek'),'Start a new round →','Tap again to confirm →',()=>{
+  const done=S.week.filter(x=>x.done);
+  if(done.length)S.archive.push({start:S.sStart,done:done.length,total:done.length});
+  S.week=S.week.filter(x=>!x.done); // unfinished items carry over
+  S.sStart=todayISO();save();render();
+});
+twoStep($('newLong'),'Start a new round →','Tap again to clear the steps →',()=>{
+  const done=S.steps.filter(x=>x.done).length;
+  if(S.steps.length)S.rounds.push({start:S.start,done,total:S.steps.length});
+  S.steps=[];S.start=todayISO();save();render();$('longInput').focus();
+});
+twoStep($('resetBtn'),'Delete this goal','Tap again to delete',()=>{
+  DB.goals=DB.goals.filter(g=>g!==S);
+  if(!DB.goals.length){const g=blank();DB.goals.push(g);openGoal(g.id);return}
+  S=DB.goals[0];DB.cur=S.id;view='all';save();render();window.scrollTo(0,0);
+});
+
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(view==='goal')drawMap(tally())},120)});
+render();
+})();
+</script>
+
+</body>
+</html>
