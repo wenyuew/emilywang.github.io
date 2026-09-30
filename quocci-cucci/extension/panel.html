@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quocci Cucci</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="panel.css" />
+</head>
+<body>
+  <header class="top">
+    <span class="wordmark">Quocci Cucci</span>
+    <button class="text-btn" id="settingsBtn">Key</button>
+  </header>
+
+  <!-- Not on a video -->
+  <section class="view" id="vEmpty" hidden>
+    <p class="eyebrow">Nothing playing</p>
+    <h1>Open a YouTube video</h1>
+    <p class="lede">Then come back here — Quocci Cucci reads the transcript and pulls out the lines worth keeping.</p>
+  </section>
+
+  <!-- Needs a key -->
+  <section class="view" id="vSettings" hidden>
+    <p class="eyebrow">Settings</p>
+    <h1>Your Anthropic key</h1>
+    <p class="lede">Quocci Cucci uses Claude to choose the quotes. The key stays in this browser, and calls go straight from here to Anthropic.</p>
+    <label class="field">
+      <span class="label">API key</span>
+      <input id="keyInput" type="password" placeholder="sk-ant-…" autocomplete="off" spellcheck="false" />
+    </label>
+    <div class="row">
+      <button class="pill small" id="saveKey">Save</button>
+      <button class="text-btn" id="cancelKey">Cancel</button>
+    </div>
+    <p class="caption" id="keyMsg"></p>
+  </section>
+
+  <!-- A video is open -->
+  <section class="view" id="vVideo" hidden>
+    <p class="eyebrow" id="channel">Now watching</p>
+    <h1 id="title"></h1>
+
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="quotes">Quotes</button>
+      <button role="tab" data-tab="ask">Ask</button>
+    </nav>
+
+    <div id="paneQuotes">
+      <div id="start">
+        <div class="seg" role="radiogroup" aria-label="How many quotes">
+          <span class="label">Quotes</span>
+          <button data-n="5">5</button>
+          <button data-n="10">10</button>
+          <button data-n="20">20</button>
+          <input id="customN" type="number" min="1" max="100" inputmode="numeric" placeholder="Other" aria-label="Custom number of quotes" />
+        </div>
+        <button class="pill" id="goBtn">Get quotes</button>
+      </div>
+
+      <p class="status" id="status" hidden></p>
+
+      <div id="result" hidden>
+        <p class="summary" id="summary"></p>
+        <ol class="quotes" id="quotes"></ol>
+        <div class="row foot">
+          <button class="text-btn" id="copyAll">Copy all</button>
+          <button class="text-btn" id="redo">Regenerate</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="paneAsk" hidden>
+      <form class="ask" id="askForm" autocomplete="off">
+        <textarea id="askInput" rows="1" placeholder="Ask anything about this video"></textarea>
+        <div class="ask-tools">
+          <button type="button" class="mic" id="micBtn" aria-label="Speak your question">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          </button>
+          <button type="button" class="lang" id="langBtn" aria-label="Speech language"></button>
+          <button type="submit" class="text-btn send" id="sendBtn">Ask &rarr;</button>
+        </div>
+      </form>
+      <p class="caption" id="micMsg"></p>
+      <p class="status" id="askStatus" hidden></p>
+      <div id="answers"></div>
+    </div>
+  </section>
+
+  <script src="transcript.js"></script>
+  <script src="panel.js"></script>
+</body>
+</html>

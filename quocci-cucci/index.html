@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quocci Cucci — Emily Wang</title>
+<meta name="description" content="Quocci Cucci is a Chrome extension that pulls the best quotes from any YouTube video, with timestamps, and answers your questions about it.">
+<meta property="og:title" content="Quocci Cucci">
+<meta property="og:description" content="The best quotes from any YouTube video, with timestamps. Click one to jump there.">
+<meta property="og:image" content="panel.png">
+<link rel="icon" href="extension/icons/icon32.png">
+<style>
+  :root {
+    --page: #ffffff;
+    --body: #f1f1ef;
+    --line: #e4e4e1;
+    --ink: #111111;
+    --text: #3b3b3b;
+    --muted: #8a8a86;
+    --dot: #111111;
+    --shadow: 0 30px 60px -30px rgba(0,0,0,.25), 0 2px 6px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--page); color: var(--text);
+    font: 16px/1.65 "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .caps { text-transform: uppercase; letter-spacing: .16em; font-size: 11px; font-weight: 500; }
+  .muted { color: var(--muted); }
+  main { max-width: 1040px; margin: 0 auto; padding: 56px 32px 96px; }
+
+  nav.top { display: flex; justify-content: space-between; margin-bottom: 96px; }
+  nav.top a { text-decoration: none; color: var(--muted); }
+  nav.top a:hover { color: var(--ink); }
+
+  .intro { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; margin-bottom: 128px; }
+  h1 { font-size: 44px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; color: var(--ink); margin: 14px 0 20px; }
+  .lede { font-size: 18px; color: var(--text); margin: 0 0 28px; max-width: 32em; }
+  .tags { display: flex; gap: 18px; margin-bottom: 36px; }
+  .actions { display: flex; gap: 28px; flex-wrap: wrap; }
+  .actions a { text-decoration: none; color: var(--ink); padding: 4px 0; border-bottom: 1px solid var(--ink); }
+  .actions a.secondary { color: var(--muted); border-color: var(--line); }
+  .actions a:hover { border-color: var(--dot); }
+
+  figure { margin: 0; }
+  figure img { display: block; width: 100%; height: auto; border-radius: 10px; }
+  .shot { max-width: 380px; justify-self: center; }
+  .shot img { max-height: 760px; object-fit: cover; object-position: top; }
+  .shot img { box-shadow: var(--shadow); border: 1px solid var(--line); }
+  figcaption {
+    margin: 4px 0 0 24px; padding: 10px 12px; border: 1px solid var(--line); display: inline-block;
+    font-size: 12px; line-height: 1.5; color: var(--muted); max-width: 280px;
+  }
+  figcaption b { display: block; color: var(--ink); font-weight: 600; }
+
+  section { margin-bottom: 120px; }
+  .label { color: var(--muted); margin-bottom: 28px; display: flex; align-items: center; gap: 10px; }
+  .label::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--dot); }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px 40px; }
+  .grid h3 { font-size: 17px; font-weight: 600; color: var(--ink); margin: 8px 0 6px; }
+  .grid p { margin: 0; font-size: 15px; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  ol.steps { list-style: none; padding: 0; margin: 0; counter-reset: s; }
+  ol.steps li { counter-increment: s; display: grid; grid-template-columns: 52px 1fr; padding: 16px 0; border-top: 1px solid var(--line); font-size: 15px; }
+  ol.steps li:last-child { border-bottom: 1px solid var(--line); }
+  ol.steps li::before { content: "No." counter(s, decimal-leading-zero); color: var(--muted); text-transform: uppercase; letter-spacing: .12em; font-size: 10.5px; padding-top: 4px; }
+  code { font: 13px/1.4 ui-monospace, Menlo, monospace; background: var(--body); padding: 2px 6px; border-radius: 4px; color: var(--ink); }
+
+  .wide img { border: 1px solid var(--line); }
+  .note { font-size: 15px; max-width: 36em; }
+
+  footer { border-top: 1px solid var(--line); padding-top: 22px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  @media (max-width: 780px) {
+    main { padding: 32px 20px 64px; }
+    nav.top { margin-bottom: 56px; }
+    .intro, .split { grid-template-columns: 1fr; gap: 48px; }
+    .intro { margin-bottom: 88px; }
+    h1 { font-size: 36px; }
+    .grid { grid-template-columns: 1fr; gap: 32px; }
+    section { margin-bottom: 88px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <nav class="top caps">
+    <a href="../">&larr; Work</a>
+    <a href="https://github.com/wenyuew/emilywang.github.io/tree/main/quocci-cucci/extension">Code &rarr;</a>
+  </nav>
+
+  <div class="intro">
+    <div>
+      <div class="caps muted">Chrome extension &middot; 2026</div>
+      <h1>Quocci Cucci</h1>
+      <p class="lede">For videos too long to watch but too good to skip. Quocci Cucci reads a YouTube video's transcript and gives you its best lines, each with a timestamp. Click a quote and the video jumps right to it.</p>
+      <div class="tags caps muted"><span>AI</span><span>Chrome extension</span><span>YouTube</span></div>
+      <div class="actions caps">
+        <a href="quocci-cucci.zip" download>Download &rarr;</a>
+        <a class="secondary" href="https://github.com/wenyuew/emilywang.github.io/tree/main/quocci-cucci/extension">View the code &rarr;</a>
+      </div>
+    </div>
+    <figure class="shot">
+      <img src="panel.png" alt="The Quocci Cucci side panel: a video's title, a two-sentence summary, and five numbered quotes, each with a timestamp." width="840" height="2074">
+      <figcaption><b>Quotes</b>A short summary, then the lines worth keeping, in the order they're said.</figcaption>
+    </figure>
+  </div>
+
+  <section>
+    <div class="label caps">How it works</div>
+    <div class="grid">
+      <div>
+        <div class="caps muted">No.01</div>
+        <h3>Open a video</h3>
+        <p>Click the fig and a side panel opens next to the video. Nothing covers what you're watching.</p>
+      </div>
+      <div>
+        <div class="caps muted">No.02</div>
+        <h3>Pick how many</h3>
+        <p>5, 10, 20 or any number you type. Claude picks lines word for word from the transcript, spread across the whole video.</p>
+      </div>
+      <div>
+        <div class="caps muted">No.03</div>
+        <h3>Jump to the moment</h3>
+        <p>Every quote has a timestamp matched to the exact caption. Click it and the video plays from there.</p>
+      </div>
+      <div>
+        <div class="caps muted">No.04</div>
+        <h3>Ask the video</h3>
+        <p>Type or say a question. The answer comes from what's said in the video, with quotes you can click to hear it yourself.</p>
+      </div>
+      <div>
+        <div class="caps muted">No.05</div>
+        <h3>English or 中文</h3>
+        <p>Ask in either language, by typing or out loud. Quotes stay in the language the video is spoken in.</p>
+      </div>
+      <div>
+        <div class="caps muted">No.06</div>
+        <h3>Stays yours</h3>
+        <p>Your own Anthropic key, kept in your browser. Only the transcript goes to Claude, and nothing is sent anywhere else.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="split">
+    <figure class="shot">
+      <img src="ask.png" alt="The Ask tab: a question about the video, a two-paragraph answer, and two supporting quotes with timestamps." width="840" height="1770">
+      <figcaption><b>Ask</b>An answer from the video, and the lines it came from.</figcaption>
+    </figure>
+    <div>
+      <div class="label caps">Try it</div>
+      <ol class="steps">
+        <li><span><a href="quocci-cucci.zip" download>Download Quocci Cucci</a> and unzip it.</span></li>
+        <li><span>Open <code>chrome://extensions</code> and switch on <b>Developer mode</b>.</span></li>
+        <li><span>Click <b>Load unpacked</b> and choose the <code>quocci-cucci</code> folder.</span></li>
+        <li><span>Pin Quocci Cucci, open a YouTube video and click it. Paste your Anthropic API key the first time.</span></li>
+        <li><span>Press <b>Get quotes</b>, or switch to <b>Ask</b> and ask away.</span></li>
+      </ol>
+      <p class="note muted" style="margin-top:20px">Works in Chrome on desktop, on any video with captions (auto-generated ones are fine). Results are saved per video, so they're there when you come back.</p>
+    </div>
+  </section>
+
+  <footer class="caps muted">
+    <span>Emily Wang</span>
+    <span>Built with AI, one step at a time.</span>
+  </footer>
+</main>
+</body>
+</html>
