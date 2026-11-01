@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Rainy Day in the Temple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/temple.css">
+<style>
+.wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:0 clamp(16px,5vw,48px)}
+nav{padding:26px 0;font-size:14px;font-weight:500;color:var(--ink)}
+.head{padding:72px 0 0;max-width:560px}
+.head p{margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
+.pick{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;padding:30px 20px 24px;min-height:310px;background:#fff;border:1px solid var(--hair);border-radius:12px;transition:border-color .2s,background .2s,box-shadow .2s}
+.pick.selected{background:var(--blue-soft);border-color:var(--blue);box-shadow:0 0 0 .5px var(--blue)}
+.pick .txt{display:flex;flex-direction:column;align-items:center;flex:1}
+.pick:hover{border-color:var(--hair-2);box-shadow:0 10px 24px -18px rgba(0,0,0,.25)}
+.pick:focus-visible{outline:1.5px solid var(--blue);outline-offset:3px}
+.pick .ill{height:130px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:22px;transition:transform .3s cubic-bezier(.3,.7,.3,1)}
+.pick:hover .ill{transform:translateY(-3px)}
+.pick .nm{font-size:14px;font-weight:500;color:var(--ink)}
+.pick .nm .zh{font-weight:400;margin-right:6px}
+.pick .cap{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.55;max-width:220px}
+.pick .key{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:auto;padding-top:16px}
+.pick.selected .nm{color:var(--blue)}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:24px;flex-wrap:wrap}
+.foot .t-hint{max-width:460px}
+footer{padding:120px 0 48px;font-size:12px;color:var(--faint)}
+@media (max-width:720px){.head{padding-top:32px}.grid{grid-template-columns:1fr}.pick{min-height:0;flex-direction:row;text-align:left;gap:18px;padding:18px}.pick .ill{height:auto;width:96px;margin:0;flex:none}.pick .txt{align-items:flex-start}.pick .key{padding-top:8px}}
+</style>
+</head>
+<body class="t-body">
+<div class="wrap">
+  <nav>A Rainy Day in the Temple</nav>
+  <div class="head">
+    <h1 class="t-h1">Choose one way to ask, then begin</h1>
+    <p>Three old ways of asking, kept close to how they're done in person. Bring one question in out of the rain.</p>
+  </div>
+
+  <div class="grid" role="listbox" aria-label="Choose a reading">
+    <button class="pick t-card" role="option" data-k="iching" aria-selected="false">
+      <div class="ill" id="ill1"><svg width="130" height="130" viewBox="0 0 130 130" aria-hidden="true"><g transform="translate(65,65)">
+
+<g fill="#2b2b2b"><g transform="rotate(0)"><rect x="-12.0" y="-39.1" width="24" height="4.2" rx="1.2"/><rect x="-12.0" y="-46.3" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-46.3" width="10.1" height="4.2" rx="1.2"/><rect x="-12.0" y="-53.5" width="24" height="4.2" rx="1.2"/></g><g transform="rotate(45)"><rect x="-12.0" y="-39.1" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-39.1" width="10.1" height="4.2" rx="1.2"/><rect x="-12.0" y="-46.3" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-46.3" width="10.1" height="4.2" rx="1.2"/><rect x="-12.0" y="-53.5" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-53.5" width="10.1" height="4.2" rx="1.2"/></g><g transform="rotate(90)"><rect x="-12.0" y="-39.1" width="24" height="4.2" rx="1.2"/><rect x="-12.0" y="-46.3" width="24" height="4.2" rx="1.2"/><rect x="-12.0" y="-53.5" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-53.5" width="10.1" height="4.2" rx="1.2"/></g><g transform="rotate(135)"><rect x="-12.0" y="-39.1" width="24" height="4.2" rx="1.2"/><rect x="-12.0" y="-46.3" width="24" height="4.2" rx="1.2"/><rect x="-12.0" y="-53.5" width="24" height="4.2" rx="1.2"/></g><g transform="rotate(180)"><rect x="-12.0" y="-39.1" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-39.1" width="10.1" height="4.2" rx="1.2"/><rect x="-12.0" y="-46.3" width="24" height="4.2" rx="1.2"/><rect x="-12.0" y="-53.5" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-53.5" width="10.1" height="4.2" rx="1.2"/></g><g transform="rotate(225)"><rect x="-12.0" y="-39.1" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-39.1" width="10.1" height="4.2" rx="1.2"/><rect x="-12.0" y="-46.3" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-46.3" width="10.1" height="4.2" rx="1.2"/><rect x="-12.0" y="-53.5" width="24" height="4.2" rx="1.2"/></g><g transform="rotate(270)"><rect x="-12.0" y="-39.1" width="24" height="4.2" rx="1.2"/><rect x="-12.0" y="-46.3" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-46.3" width="10.1" height="4.2" rx="1.2"/><rect x="-12.0" y="-53.5" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-53.5" width="10.1" height="4.2" rx="1.2"/></g><g transform="rotate(315)"><rect x="-12.0" y="-39.1" width="10.1" height="4.2" rx="1.2"/><rect x="1.9" y="-39.1" width="10.1" height="4.2" rx="1.2"/><rect x="-12.0" y="-46.3" width="24" height="4.2" rx="1.2"/><rect x="-12.0" y="-53.5" width="24" height="4.2" rx="1.2"/></g></g>
+<circle r="24" fill="#fff" stroke="#3a3a3a" stroke-width="1.4"/>
+<path d="M0,-24 A24,24 0 0,1 0,24 A12.0,12.0 0 0,1 0,0 A12.0,12.0 0 0,0 0,-24Z" fill="#2b2b2b"/>
+<circle cx="0" cy="-12.0" r="3.6" fill="#2b2b2b"/><circle cx="0" cy="12.0" r="3.6" fill="#fff"/>
+<circle r="24" fill="none" stroke="#3a3a3a" stroke-width="1.4"/></g></svg></div>
+      <div class="txt"><span class="nm"><span class="zh">易经</span>I Ching</span>
+      <span class="cap">The master helps you shape one question, then you toss three coins six times.</span>
+      <span class="key">China · with a master</span></div>
+    </button>
+    <button class="pick t-card" role="option" data-k="qiuqian" aria-selected="false">
+      <div class="ill">
+        <svg width="96" height="130" viewBox="0 0 96 130" aria-hidden="true"><g stroke="#3a3a3a" stroke-width="1.4" stroke-linejoin="round">
+          <ellipse cx="50" cy="124" rx="38" ry="5" fill="rgba(40,30,20,.12)" stroke="none"/>
+          <g transform="rotate(-10 48 120)">
+            <rect x="26" y="6" width="6" height="64" rx="1.5" fill="#f6d77e"/><rect x="26" y="6" width="6" height="12" fill="#e5483b"/>
+            <rect x="36" y="0" width="6" height="64" rx="1.5" fill="#f6d77e"/><rect x="36" y="0" width="6" height="12" fill="#e5483b"/>
+            <rect x="46" y="8" width="6" height="64" rx="1.5" fill="#f6d77e"/><rect x="46" y="8" width="6" height="12" fill="#e5483b"/>
+            <rect x="56" y="2" width="6" height="64" rx="1.5" fill="#f6d77e"/><rect x="56" y="2" width="6" height="12" fill="#e5483b"/>
+            <rect x="66" y="10" width="6" height="64" rx="1.5" fill="#f6d77e"/><rect x="66" y="10" width="6" height="12" fill="#e5483b"/>
+            <path d="M20,52 L76,52 L76,114 Q76,122 68,122 L28,122 Q20,122 20,114Z" fill="#f6d77e"/>
+            <ellipse cx="48" cy="52" rx="28" ry="6" fill="#5a4a35"/>
+            <path d="M20,72 L76,72 M20,108 L76,108" fill="none"/>
+            <path d="M28,60 L28,116" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+          </g></g></svg>
+      </div>
+      <div class="txt"><span class="nm"><span class="zh">求签</span>Qiu Qian</span>
+      <span class="cap">Light incense, shake the bamboo cylinder until one stick falls, and read your slip.</span>
+      <span class="key">China · a temple slip</span></div>
+    </button>
+    <button class="pick t-card" role="option" data-k="omikuji" aria-selected="false">
+      <div class="ill">
+        <svg width="80" height="130" viewBox="0 0 80 130" aria-hidden="true"><g stroke="#3a3a3a" stroke-width="1.4" stroke-linejoin="round">
+          <ellipse cx="40" cy="124" rx="34" ry="5" fill="rgba(40,30,20,.12)" stroke="none"/>
+          <path d="M18,6 L62,6 L72,13 L72,113 L62,120 L18,120 L8,113 L8,13Z" fill="#f4e4c6"/>
+          <path d="M23,6 L23,120 M57,6 L57,120" fill="none" opacity=".5"/>
+          <ellipse cx="40" cy="12" rx="6" ry="2.6" fill="#5a4a35"/></g>
+          <g font-family="Noto Serif SC,serif" font-size="14" fill="#3a3a3a" text-anchor="middle"><text x="40" y="48">御</text><text x="40" y="66">神</text><text x="40" y="84">籤</text></g>
+          <path d="M14,22 L14,104" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".75"/></svg>
+      </div>
+      <div class="txt"><span class="nm"><span class="zh">おみくじ</span>Omikuji</span>
+      <span class="cap">Rinse at the basin, bow and clap, shake the box, and open your drawer.</span>
+      <span class="key">Japan · a shrine fortune</span></div>
+    </button>
+  </div>
+
+  <div class="foot">
+    <span class="t-hint">The I Ching master speaks with your own Anthropic key, added inside. The other two work without one. Readings stay in this browser.</span>
+    <button class="t-pill" id="begin" disabled>Begin →</button>
+  </div>
+
+  <footer>A Rainy Day in the Temple — for reflection, not for certainty.</footer>
+</div>
+<script src="shared/temple.js"></script>
+<script>
+
+let chosen=null;const picks=[...document.querySelectorAll(".pick")],begin=document.getElementById("begin");
+function openApp(k){ if(window.__openApp) return window.__openApp(k); location.href=k+".html"; }
+picks.forEach(p=>{
+  p.addEventListener("click",()=>{chosen=p.dataset.k;picks.forEach(q=>{q.classList.toggle("selected",q===p);q.setAttribute("aria-selected",q===p)});begin.disabled=false;Temple.sfx&&Temple.sfx.wood&&Temple.sfx.wood(.15,1.4)});
+  p.addEventListener("dblclick",()=>openApp(p.dataset.k));
+  p.addEventListener("keydown",e=>{if(e.key==="Enter"&&chosen===p.dataset.k){e.preventDefault();openApp(chosen)}});
+});
+begin.addEventListener("click",()=>{if(chosen)openApp(chosen)});
+Temple.rain();
+</script>
+</body>
+</html>

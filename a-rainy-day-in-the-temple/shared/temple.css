@@ -1,0 +1,104 @@
+/* A Rainy Day in the Temple — shared look.
+   Flat, slightly naive illustration on white. Thin outlines, soft pastels, one blue for action. */
+:root{
+  --bg:#ffffff; --surface:#f7f7f6; --hair:#ececea; --hair-2:#e2e2df;
+  --ink:#1d1d1d; --ink-2:#3b3b3b; --muted:#7a7a78; --faint:#b0b0ad; --on-ink:#ffffff;
+  --line:#3a3a3a;                       /* object outlines */
+  --blue:#2f5bd8; --blue-soft:#eef3ff;  /* the one accent */
+  --table:#efeae6; --table-edge:#e3ddd7; --table-leg:#ddd6cf;
+  --butter:#f6d77e; --butter-d:#e9bf55; --peach:#f6c6a8; --pink:#f6c4d4; --sky:#cfe0f1; --sky-d:#a9c7e6;
+  --red:#e5483b; --red-soft:#f08a7e; --sage:#d3e3c9; --wood:#ecd5b1; --wood-d:#d8b98c; --stone:#e4e2de;
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Noto Sans SC",sans-serif;
+  --serif:"Noto Serif SC","Noto Serif JP","Songti SC","STSong","Hiragino Mincho ProN",serif;
+}
+
+/* base */
+.t-body{margin:0;background:var(--bg);color:var(--muted);font-family:var(--font);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+canvas.t-rain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.5}
+[hidden]{display:none!important}
+
+/* type & controls */
+.t-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;font-size:13px;position:relative;z-index:2}
+.t-nav .right{display:flex;gap:18px;align-items:center}
+.t-nav .right button,.t-nav .right a{all:unset;cursor:pointer;color:var(--faint);transition:color .2s}
+.t-nav .right button:hover,.t-nav .right .on{color:var(--ink)}
+.t-back{all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border-radius:50%;border:1px solid var(--hair-2);background:#fff;display:inline-grid;place-items:center;color:var(--ink);transition:border-color .2s,transform .2s}
+.t-back:hover{border-color:var(--faint);transform:translateX(-1px)}
+.t-back svg{width:14px;height:14px}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:500;margin:0 0 14px}
+.t-h1{font-family:var(--font);font-weight:500;font-size:clamp(20px,2.2vw,24px);color:var(--ink);letter-spacing:-.01em;line-height:1.35;margin:0 0 10px}
+.t-h2{font-family:var(--font);font-weight:500;font-size:18px;color:var(--ink);line-height:1.4;margin:0 0 8px}
+.zh{font-family:var(--serif)}
+.t-pill{all:unset;box-sizing:border-box;cursor:pointer;background:var(--blue);color:#fff;border-radius:999px;padding:10px 22px;font-size:13px;font-weight:500;transition:transform .2s ease-out,opacity .2s,box-shadow .2s;box-shadow:0 6px 14px -8px rgba(47,91,216,.7)}
+.t-pill:hover{transform:translateY(-1px)} .t-pill:active{transform:translateY(1px) scale(.98)}
+.t-pill[disabled]{opacity:.35;cursor:default;transform:none}
+.t-link{all:unset;cursor:pointer;font-size:13px;color:var(--ink);padding:4px 0;border-bottom:1px solid var(--hair-2);transition:border-color .2s}
+.t-link:hover{border-color:var(--ink)} .t-link.quiet{color:var(--muted)}
+.t-hint{font-size:12px;color:var(--faint);min-height:20px}
+.t-hint .now{color:var(--ink-2)}
+
+/* cards (like the artist picker) */
+.t-card{background:#fff;border:1px solid var(--hair);border-radius:10px;transition:border-color .2s,background .2s,box-shadow .2s}
+.t-card.selected{background:var(--blue-soft);border-color:var(--blue);box-shadow:0 0 0 .5px var(--blue)}
+
+/* a room: white space with a faint perspective grid floor */
+.t-room{position:relative;background:var(--bg);overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none;outline:none}
+.t-room::before{content:"";position:absolute;left:-60%;right:-60%;bottom:0;height:72%;pointer-events:none;
+  background-image:linear-gradient(rgba(0,0,0,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.055) 1px,transparent 1px);background-size:56px 56px;
+  transform:perspective(520px) rotateX(64deg);transform-origin:50% 100%;
+  -webkit-mask-image:linear-gradient(to top,#000 25%,transparent 95%);mask-image:linear-gradient(to top,#000 25%,transparent 95%)}
+.t-room:focus-visible{outline:1px solid var(--blue);outline-offset:4px;border-radius:8px}
+.t-room .tag{position:absolute;top:14px;left:16px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:var(--faint);z-index:6}
+.t-room .tag span{font-family:var(--serif);letter-spacing:.16em;margin-left:6px}
+
+/* a low table: flat top, slightly darker front edge, four legs */
+.t-table{position:absolute;background:var(--table);border-radius:4px}
+.t-table::after{content:"";position:absolute;left:0;right:0;top:100%;height:18px;background:var(--table-edge);border-radius:0 0 3px 3px}
+.t-legs{position:absolute;pointer-events:none}
+.t-legs i{position:absolute;top:0;width:16px;height:100%;background:var(--table-leg)}
+
+/* the master: a round avatar with a name and a thinking bubble */
+.t-avatar{display:flex;flex-direction:column;align-items:center;gap:6px}
+.t-avatar .face{width:92px;height:92px;border-radius:50%;background:#fff;border:1px solid var(--hair-2);display:grid;place-items:center;overflow:hidden;box-shadow:0 6px 18px -12px rgba(0,0,0,.35)}
+.t-avatar .name{font-size:11px;color:var(--muted)}
+.t-think{display:inline-flex;gap:4px;padding:7px 11px;border-radius:10px;background:#fff;border:1px solid var(--hair-2);box-shadow:0 4px 10px -8px rgba(0,0,0,.3)}
+.t-think i{width:4px;height:4px;border-radius:50%;background:var(--faint);animation:think 1.2s infinite}
+.t-think i:nth-child(2){animation-delay:.15s} .t-think i:nth-child(3){animation-delay:.3s}
+@keyframes think{0%,60%,100%{opacity:.35;transform:none}30%{opacity:1;transform:translateY(-2px)}}
+.t-bubble{position:relative;display:inline-block;max-width:min(92%,460px);background:#2a2a2a;color:#fff;font-size:13px;line-height:1.55;padding:9px 14px;border-radius:9px;box-shadow:0 8px 18px -10px rgba(0,0,0,.45)}
+.t-bubble::after{content:"";position:absolute;left:50%;bottom:-5px;width:10px;height:10px;margin-left:-5px;background:#2a2a2a;transform:rotate(45deg);border-radius:2px}
+.t-bubble.up::after{bottom:auto;top:-5px}
+
+/* the floating input pill */
+.t-input{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--hair-2);border-radius:14px;padding:8px 8px 8px 16px;box-shadow:0 10px 24px -16px rgba(0,0,0,.35)}
+.t-input input,.t-input textarea{flex:1;border:0;outline:none;background:transparent;font:inherit;font-size:14px;color:var(--ink);resize:none;padding:6px 0}
+.t-input input::placeholder,.t-input textarea::placeholder{color:var(--faint)}
+.t-send{all:unset;cursor:pointer;width:34px;height:34px;border-radius:50%;background:#c9c9c6;display:grid;place-items:center;color:#fff;transition:background .2s,transform .2s;flex:none}
+.t-send.ready{background:var(--blue)} .t-send:hover{transform:translateY(-1px)}
+.t-send svg{width:15px;height:15px}
+
+/* flat materials: solid pastel fill + thin outline */
+.m-felt{background:var(--table)}
+.m-bamboo{background:var(--butter);box-shadow:inset 0 0 0 1.4px var(--line)}
+.m-wood,.m-wood-v{background:var(--wood);box-shadow:inset 0 0 0 1.4px var(--line)}
+.m-hinoki{background:#f4e4c6;box-shadow:inset 0 0 0 1.4px var(--line)}
+.m-stone{background:var(--stone);box-shadow:inset 0 0 0 1.4px var(--line)}
+.m-paper{background:#fff;box-shadow:0 0 0 1px var(--hair-2),0 14px 28px -18px rgba(0,0,0,.28)}
+
+/* drawn lines (hexagram) */
+.t-brush{overflow:visible;clip-path:inset(0 100% 0 0);transition:clip-path .5s cubic-bezier(.25,.8,.3,1)}
+.t-brush.drawn{clip-path:inset(0 0 0 0)}
+
+/* vertical poem columns built from single characters */
+.t-vert{display:flex;flex-direction:row-reverse;justify-content:center;gap:var(--col-gap,.75em);font-family:var(--serif)}
+.t-vert .col{display:flex;flex-direction:column;align-items:center;line-height:1.18}
+.t-vert .col span{display:block}
+
+/* full-screen moment */
+.t-moment{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;opacity:0;pointer-events:none;transition:opacity .9s ease;overflow:auto}
+.t-moment.on{opacity:1;pointer-events:auto}
+.t-moment .fade{opacity:0;transform:translateY(8px);transition:opacity .9s ease,transform .9s ease}
+.t-moment.named .fade{opacity:1;transform:none}
+.t-moment.named .fade.d2{transition-delay:.25s} .t-moment.named .fade.d3{transition-delay:.5s}
+
+@media (prefers-reduced-motion:reduce){ .t-brush,.t-moment,.t-moment .fade{transition:none} .t-think i{animation:none} }

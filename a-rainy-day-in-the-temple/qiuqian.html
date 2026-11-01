@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qiu Qian · A Rainy Day in the Temple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/temple.css">
+<style>
+.wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px)) 96px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:4px 0 48px}
+.mark{font-size:14px;color:var(--ink);font-weight:500}
+.mark .zh{font-size:16px;margin-right:8px;font-weight:400}
+.mark span.en{color:var(--faint);font-weight:400}
+.dots{display:flex;gap:7px} .dots i{width:6px;height:6px;border-radius:50%;background:var(--hair-2);transition:background .3s} .dots i.on{background:var(--blue)}
+.lede{margin:0 0 28px}
+section[hidden]{display:none}
+section{animation:in .4s ease-out}
+@keyframes in{from{opacity:.001;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1:focus{outline:none}
+
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:24px}
+.field label,.label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.field input,.field textarea{border:0;border-bottom:1px solid var(--hair-2);background:transparent;font:inherit;font-size:15px;color:var(--ink);padding:8px 0;outline:none;resize:none}
+.field input:focus,.field textarea:focus{border-bottom-color:var(--blue)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 32px}
+.chip{font:inherit;font-size:12px;padding:7px 14px;border:1px solid var(--hair-2);border-radius:999px;background:#fff;color:var(--muted);cursor:pointer;transition:all .2s}
+.chip b{font-family:var(--serif);font-weight:400;color:var(--ink-2);margin-right:6px}
+.chip[aria-pressed="true"]{background:var(--blue-soft);border-color:var(--blue);color:var(--blue)} .chip[aria-pressed="true"] b{color:var(--blue)}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;margin-top:28px}
+.err{font-size:12px;color:var(--red);min-height:18px;margin:-16px 0 0}
+.out{min-height:24px;margin-top:18px;color:var(--ink-2)}
+.out .big{font-family:var(--serif);font-size:19px;color:var(--ink);margin-right:10px}
+.say{margin:22px 0 0;font-size:14px;color:var(--muted)} .say q{color:var(--ink)}
+
+.stage{border-radius:12px}
+.hint{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);text-align:center;margin-top:12px}
+
+/* 1 · altar: a low table with a flat incense burner */
+.altar{height:380px;cursor:pointer}
+.altar canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.altar .t-table{left:16%;right:16%;top:268px;height:52px}
+.altar .t-legs{left:20%;right:20%;top:338px;height:46px} .altar .t-legs i:nth-child(1){left:0} .altar .t-legs i:nth-child(2){right:0}
+.censer{position:absolute;left:50%;top:150px;transform:translateX(-50%);width:200px;z-index:2;transition:transform .7s cubic-bezier(.3,.7,.3,1)}
+.censer.bow{transform:translateX(-50%) translateY(5px) scale(.985)}
+.sticks{position:absolute;left:50%;top:58px;width:60px;height:130px;transform:translateX(-50%);z-index:1}
+.stick{position:absolute;bottom:0;width:4px;height:120px;border-radius:2px;background:#c4503f;box-shadow:0 0 0 1.2px var(--line);transform-origin:50% 100%}
+.stick::after{content:"";position:absolute;bottom:0;left:0;width:4px;height:30px;border-radius:0 0 2px 2px;background:#ecd09a}
+.stick i{position:absolute;top:-4px;left:-1px;width:6px;height:6px;border-radius:50%;background:#7a6e66;transition:background .5s,box-shadow .5s}
+.lit .stick i{background:#ff6b3d;box-shadow:0 0 0 3px rgba(255,107,61,.18);animation:ember 1.6s ease-in-out infinite}
+@keyframes ember{50%{box-shadow:0 0 0 5px rgba(255,107,61,.1)}}
+
+/* 2 · bamboo cylinder on the floor */
+.floor{height:420px}
+.cylwrap{position:absolute;left:50%;bottom:110px;width:104px;height:230px;margin-left:-52px;transform-origin:50% 100%;transform:rotate(-12deg);z-index:2}
+.cylwrap.shaking{animation:shake .14s linear infinite}
+@keyframes shake{0%{transform:rotate(-15deg) translateY(-3px)}50%{transform:rotate(-8deg) translateY(2px)}100%{transform:rotate(-15deg) translateY(-3px)}}
+.cyl{position:absolute;left:0;right:0;bottom:0;height:160px;border-radius:8px 8px 14px 14px;z-index:2}
+.cyl::before,.cyl::after{content:"";position:absolute;left:0;right:0;height:1.4px;background:var(--line)}
+.cyl::before{top:44px} .cyl::after{bottom:30px}
+.cyl .mouth{position:absolute;left:0;right:0;top:-9px;height:18px;border-radius:50%;background:#5a4a35;box-shadow:inset 0 0 0 1.4px var(--line),inset 0 -4px 0 #f6d77e;z-index:3}
+.cyl .ink{position:absolute;left:50%;top:62px;transform:translateX(-50%);font-size:16px;color:var(--line);--col-gap:0}
+.cyl .hl{position:absolute;left:14px;top:14px;bottom:20px;width:5px;border-radius:3px;background:#fff;opacity:.6}
+.floorshadow{position:absolute;left:50%;bottom:98px;width:150px;height:22px;margin-left:-62px;border-radius:50%;background:rgba(40,30,20,.12);z-index:1}
+.bundle{position:absolute;left:12px;right:12px;bottom:100px;height:110px;z-index:1}
+.bstick{position:absolute;bottom:0;width:7px;height:120px;border-radius:2px 2px 1px 1px;transition:transform .08s}
+.bstick::before{content:"";position:absolute;top:1.4px;left:1.4px;right:1.4px;height:16px;border-radius:1px 1px 0 0;background:var(--red)}
+.fallen{position:absolute;left:0;top:0;width:176px;height:10px;margin:-5px 0 0 -88px;border-radius:2px;z-index:4;display:none}
+.fallen::before{content:"";position:absolute;left:1.4px;top:1.4px;bottom:1.4px;width:22px;border-radius:1px 0 0 1px;background:var(--red)}
+.fallen span{position:absolute;left:34px;top:-4px;font-family:var(--serif);font-size:10px;line-height:18px;color:var(--line);letter-spacing:.3em;white-space:nowrap}
+.fallshadow{position:absolute;left:0;top:0;width:176px;height:8px;margin:-1px 0 0 -86px;border-radius:4px;background:rgba(40,30,20,.12);display:none;z-index:3}
+
+/* 3 · moon blocks */
+.blocks{height:340px;perspective:900px;cursor:grab}
+.blocks:active{cursor:grabbing}
+.legend{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.legend div{padding:14px;font-size:12px;line-height:1.5}
+.legend b{display:block;font-family:var(--serif);font-weight:500;font-size:16px;color:var(--ink);margin-bottom:2px}
+.legend div.on{background:var(--blue-soft);border-color:var(--blue);box-shadow:0 0 0 .5px var(--blue)} .legend div.on b{color:var(--blue)}
+
+/* 4 · the slip */
+.slipwrap{display:flex;justify-content:center;padding:6px 0}
+.slip{position:relative;padding:26px 20px 30px;border-radius:3px;clip-path:inset(0 0 100% 0);transition:clip-path 1.3s cubic-bezier(.3,.7,.25,1)}
+.slip.open{clip-path:inset(0 0 0 0)}
+.slip .frame{border:1.2px solid var(--red);outline:1px solid rgba(229,72,59,.45);outline-offset:3px;padding:22px 12px 26px;display:flex;justify-content:center}
+.slip-v{font-size:20px;color:var(--ink);--col-gap:.7em}
+.slip-v .col.small{font-size:12px;line-height:1.5;margin-left:.2em}
+.slip-v .col.num{color:var(--red)}
+.seal{position:absolute;right:14px;bottom:12px;width:36px;height:36px;border-radius:4px;background:var(--red);color:#fff;font-family:var(--serif);font-size:12px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-4deg)}
+.trans{margin:26px 0 0;color:var(--ink-2);font-size:14px;line-height:1.85}
+.trans span{display:block}
+.block{margin-top:40px} .block p{margin:0;color:var(--ink-2)}
+.verdict{background:#2a2a2a;color:#fff;border-radius:12px;padding:16px 22px;font-size:15px;margin-top:40px;line-height:1.55}
+.verdict small{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.6;font-weight:500;margin-bottom:4px}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+td{padding:12px 0;border-bottom:1px solid var(--hair);vertical-align:top;color:var(--ink-2)}
+td:first-child{width:110px;color:var(--ink);font-family:var(--serif);padding-right:12px}
+td:first-child span{font-family:var(--font);color:var(--faint);margin-left:6px;font-size:12px}
+.note{font-size:12px;color:var(--faint);margin-top:24px}
+.kept{margin-top:80px}
+.kept button{all:unset;display:flex;gap:14px;width:100%;padding:12px 0;border-bottom:1px solid var(--hair);font-size:13px;cursor:pointer;box-sizing:border-box}
+.kept button:hover .k-q{color:var(--blue)}
+.kept .k-n{font-family:var(--serif);color:var(--ink);min-width:64px}
+.kept .k-q{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kept .k-d{color:var(--faint);font-variant-numeric:tabular-nums}
+@media (max-width:480px){.row2{grid-template-columns:1fr;gap:0}.legend{grid-template-columns:1fr}.top{margin-bottom:36px}.altar{height:360px}.floor{height:380px}.altar .t-table{left:8%;right:8%}.altar .t-legs{left:12%;right:12%}}
+@media (prefers-reduced-motion:reduce){.cylwrap.shaking{animation:none}.slip{transition:none}.lit .stick i{animation:none}}
+</style>
+</head>
+<body class="t-body">
+<div class="wrap">
+  <nav class="t-nav"><a class="t-back" href="index.html" id="backBtn" aria-label="Back to A Rainy Day in the Temple"></a><div class="right"><button id="snd">Sound on</button></div></nav>
+  <header class="top">
+    <span class="mark"><span class="zh">求签</span><span class="en">Qiu Qian</span></span>
+    <div class="dots" id="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  </header>
+
+  <!-- 0 ASK -->
+  <section data-step="0">
+    <p class="eyebrow">Before you enter</p>
+    <h1 class="t-h1" tabindex="-1">Bring one question</h1>
+    <p class="lede">At the temple you tell the deity who you are and what you want to know. Keep it to one question, and make it specific.</p>
+    <div class="row2">
+      <div class="field"><label for="f-name">Your name</label><input id="f-name" autocomplete="off" placeholder="Emily"></div>
+      <div class="field"><label for="f-year">Year of birth</label><input id="f-year" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="1994"></div>
+    </div>
+    <div class="field"><label for="f-q">Your question</label><textarea id="f-q" rows="2" placeholder="Should I accept the offer in Amsterdam?"></textarea></div>
+    <span class="label">What it's about</span>
+    <div class="chips" id="cats"></div>
+    <p class="err" id="err0" role="status"></p>
+    <div class="actions"><button class="t-pill" id="go1">Enter the temple →</button></div>
+    <div class="kept" id="keptWrap" hidden><p class="eyebrow">Kept slips</p><div id="keptList"></div></div>
+  </section>
+
+  <!-- 1 INCENSE -->
+  <section data-step="1" hidden>
+    <p class="eyebrow">上香 · Offer incense</p>
+    <h1 class="t-h1" tabindex="-1">Light three sticks</h1>
+    <p class="lede">Press and hold the incense to light it. Then hold it at your forehead, bow three times, and tell the deity silently who you are and what you're asking.</p>
+    <div class="stage altar t-room" id="altar" tabindex="0" role="button" aria-label="Press and hold to light the incense">
+      <span class="tag">Incense burner<span>香炉</span></span>
+      <canvas id="smoke"></canvas>
+      <div class="t-table"></div><div class="t-legs"><i></i><i></i></div>
+      <div class="sticks" id="sticks" style="top:62px">
+        <div class="stick" style="left:14px;transform:rotate(-7deg)"><i></i></div>
+        <div class="stick" style="left:28px;height:128px"><i></i></div>
+        <div class="stick" style="left:42px;transform:rotate(7deg)"><i></i></div>
+      </div>
+      <svg class="censer" id="censer" viewBox="0 0 200 130" aria-hidden="true" style="top:168px">
+        <ellipse cx="100" cy="124" rx="80" ry="5" fill="rgba(40,30,20,.12)"/>
+        <g stroke="#3a3a3a" stroke-width="1.4" stroke-linejoin="round">
+          <path d="M52,94 L44,121 L54,121 L62,97Z M148,94 L156,121 L146,121 L138,97Z M95,102 L94,123 L106,123 L105,102Z" fill="#c9a96f"/>
+          <path d="M26,24 Q22,10 34,9 L42,9 L42,17 L36,17 Q33,19 35,26Z M174,24 Q178,10 166,9 L158,9 L158,17 L164,17 Q167,19 165,26Z" fill="#dcc293"/>
+          <path d="M24,24 L176,24 Q180,24 178,33 Q168,100 100,102 Q32,100 22,33 Q20,24 24,24Z" fill="#dcc293"/>
+          <ellipse cx="100" cy="25" rx="76" ry="6" fill="#f3ecdd"/>
+          <path d="M32,46 Q100,56 168,46" fill="none" opacity=".45"/>
+        </g>
+        <text x="100" y="78" text-anchor="middle" font-family="Noto Serif SC,serif" font-size="13" letter-spacing="6" fill="#3a3a3a">香火</text>
+        <path d="M36,36 Q46,78 78,90" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/>
+      </svg>
+    </div>
+    <p class="say" id="say"></p>
+    <div class="actions"><button class="t-pill" id="incBtn">Hold to light</button><button class="t-pill" id="go2" hidden>Pick up the cylinder →</button></div>
+  </section>
+
+  <!-- 2 SHAKE -->
+  <section data-step="2" hidden>
+    <p class="eyebrow">摇签 · Shake the cylinder</p>
+    <h1 class="t-h1" tabindex="-1">Shake until one stick falls</h1>
+    <p class="lede">Kneel, tilt the bamboo cylinder forward and keep shaking. The sticks rise slowly until one drops out. If two fall together, they go back in. On a phone, shake the phone.</p>
+    <div class="stage floor t-room" id="floor" tabindex="0" role="button" aria-label="Press and hold to shake the cylinder">
+      <span class="tag">Twenty sticks<span>签筒</span></span><div class="floorshadow"></div>
+      <div class="cylwrap" id="cyl">
+        <div class="bundle" id="bundle"></div>
+        <div class="cyl m-bamboo"><div class="mouth"></div><div class="hl"></div><div class="ink t-vert"><div class="col"><span>灵</span><span>签</span></div></div></div>
+      </div>
+      <div class="fallshadow" id="fallshadow"></div><div class="fallen m-bamboo" id="fallen"><span id="fallenNum"></span></div>
+    </div>
+    <p class="hint" id="shakeHint">Press and hold to shake</p>
+    <p class="out" id="shakeOut" role="status"></p>
+    <div class="actions"><button class="t-pill" id="go3" hidden>Ask if it's your stick →</button></div>
+  </section>
+
+  <!-- 3 BLOCKS -->
+  <section data-step="3" hidden>
+    <p class="eyebrow">掷筊 · Ask for confirmation</p>
+    <h1 class="t-h1" tabindex="-1">Throw the moon blocks</h1>
+    <p class="lede">Hold the stick and ask "Is this the one for me?" Then press and hold the blocks and let them fall. One flat side up and one round side up means yes.</p>
+    <div class="stage blocks t-room" id="blkStage" tabindex="0" role="button" aria-label="Press and hold the moon blocks, release to throw"><span class="tag">Moon blocks<span>筊杯</span></span></div>
+    <div class="legend" id="legend">
+      <div class="t-card" data-r="sheng"><b>聖筊</b>One flat, one round. Yes.</div>
+      <div class="t-card" data-r="xiao"><b>笑筊</b>Both flat. The gods laugh. Throw again.</div>
+      <div class="t-card" data-r="yin"><b>陰筊</b>Both round. No. Shake again.</div>
+    </div>
+    <p class="hint" id="blkHint">Press and hold, then let go</p>
+    <p class="out" id="blkOut" role="status"></p>
+    <div class="actions"><button class="t-pill" id="go4" hidden>Read your slip →</button><button class="t-link" id="back2" hidden>Return the stick and shake again</button></div>
+  </section>
+
+  <!-- 4 SLIP -->
+  <section data-step="4" hidden>
+    <p class="eyebrow">签文 · Your slip</p>
+    <h1 class="t-h1" tabindex="-1" id="slipTitle"></h1>
+    <p class="lede" id="slipQ"></p>
+    <div class="slipwrap"><div class="slip m-paper" id="slip"><div class="frame"><div class="slip-v t-vert" id="slipV" lang="zh-Hans"></div></div><div class="seal"><span>灵</span><span>签</span></div></div></div>
+    <p class="trans" id="slipEn"></p>
+    <div class="block"><p class="eyebrow">典故 · The story</p><p id="slipStory"></p></div>
+    <div class="block"><p class="eyebrow">解签 · Reading</p><p id="slipRead"></p></div>
+    <div class="verdict" id="verdict"></div>
+    <div class="block"><p class="eyebrow">Other matters</p><table id="slipTable"></table></div>
+    <div class="actions" id="slipActions"><button class="t-pill" id="keepBtn">Keep this slip</button><button class="t-link" id="leaveBtn">Leave it at the temple</button></div>
+    <p class="out" id="slipOut" role="status"></p>
+    <div class="actions"><button class="t-link" id="again">Ask a new question →</button></div>
+    <p class="note">Traditionally you ask once per question. If the answer is unclear, a temple interpreter (解签) reads the poem against your situation. These 20 slips were written for this app in the style of temple poems.</p>
+  </section>
+</div>
+
+<script src="shared/temple.js"></script>
+<script>
+const CATS=[["career","事业","Career"],["love","姻缘","Love"],["health","健康","Health"],["wealth","财运","Wealth"],["travel","出行","Travel"],["lost","失物","Lost things"]];
+const SLIPS=[
+{r:"上上",p:["春风送暖入华堂","久旱逢霖谷满仓","莫道前程无去路","青云直上有风扬"],e:["Spring wind carries warmth into the hall,","rain after long drought fills the granary.","Don't say the road ahead has no way through —","a good wind lifts you straight into the clouds."],s:"姜太公钓鱼 · Jiang Ziya fished by the Wei River for years. At eighty, King Wen found him there and made him his chancellor.",d:"A long wait is ending. What you prepared for is about to be asked of you.",c:["Recognition or a promotion is near. Say yes.","A match both families welcome.","Recovery goes well.","Old effort starts to pay.","Go. The journey is smooth.","It turns up somewhere high."]},
+{r:"上吉",p:["明月当空照九州","扁舟一叶顺江流","何须苦把篙来撑","水到渠成自不愁"],e:["A bright moon hangs over the land,","a small boat drifts with the river.","Why strain so hard at the pole?","When the water comes, the channel forms by itself."],s:"借东风 · At Red Cliffs, Zhuge Liang did not fight the weather. He waited for the east wind, and it came.",d:"Stop forcing it. Conditions are turning your way; move when they arrive.",c:["Let it come to you. Timing beats effort now.","Ease, not pressure, brings you closer.","Rest more and it resolves.","Steady gains. Don't chase.","Good, if you don't rush the schedule.","It comes back on its own, near water."]},
+{r:"中平",p:["山高路远雾沉沉","行到中途莫问人","且把脚跟立稳了","云开方见月华新"],e:["The mountain is high, the road long, the mist heavy.","Halfway along, don't stop to ask others.","First plant your feet firmly —","when the clouds part, the moon shines new."],s:"玄奘西行 · Xuanzang walked to India for the scriptures one stage at a time, through deserts and passes no one had mapped for him.",d:"You're in the middle, and it's unclear because you're inside it. Keep your footing.",c:["Hold your position. Don't switch yet.","Uncertain. Let it show itself slowly.","Steady. Keep your routine.","Neither gain nor loss this season.","Possible, with careful planning.","Hard to find for now. Ask again later."]},
+{r:"下下",p:["枯木逢霜叶尽凋","孤舟夜泊浪滔滔","劝君暂且收帆去","莫向风前逞英豪"],e:["A dry tree meets frost and every leaf falls,","a lone boat moored at night in high waves.","Lower the sail for now,","and don't play the hero into the wind."],s:"项羽乌江 · Defeated, Xiang Yu refused to cross the Wu River and regroup. Pride ended what a retreat could have saved.",d:"This isn't the moment. Withdraw, rest and wait. Stepping back is not losing.",c:["No big moves. Protect what you have.","Arguments. Give each other space.","Take care; get anything lingering checked.","Risk of loss. Hold off on spending or investing.","Postpone.","Likely gone. Let it go."]},
+{r:"上上",p:["凤鸣岐山百鸟随","金鳞跃过禹门时","十年灯下寒窗苦","一举成名天下知"],e:["The phoenix sings on Mount Qi and all birds follow;","the golden carp is leaping the Dragon Gate.","Ten years of cold lamplight at the desk —","one success, and the world knows your name."],s:"鲤鱼跃龙门 · The carp that swims upstream and leaps the falls at Dragon Gate becomes a dragon.",d:"A breakthrough. Exams, interviews and applications go your way.",c:["You pass the test in front of you.","You are noticed. A good match appears.","Strong.","A clear rise.","Very good, especially for study or work.","Found soon."]},
+{r:"中吉",p:["细雨无声润嫩苗","耕耘日日莫辞劳","秋来自有千般好","何必今朝问几高"],e:["Fine rain falls silently on young shoots;","till the field each day and don't mind the work.","Autumn brings its thousand rewards —","why ask today how tall it has grown?"],s:"愚公移山 · The Foolish Old Man began moving two mountains by hand. Moved by his persistence, heaven carried them away.",d:"Growth is happening where you can't measure it yet. Keep tending.",c:["Slow progress that compounds.","It builds with time. Don't push for an answer.","Gradually better.","Small, steady saving.","Fine for short trips.","Found later, somewhere ordinary."]},
+{r:"下",p:["镜里看花花不真","水中捞月月难寻","劝君莫被浮名误","守得本心胜万金"],e:["Flowers in a mirror are not real flowers;","the moon in the water can't be scooped out.","Don't be misled by empty fame —","keeping your own heart is worth ten thousand gold."],s:"猴子捞月 · Monkeys hung from a branch in a chain to fish the moon out of a well, and found only water.",d:"What you're chasing may not be what it looks like. Check before you commit.",c:["An offer may be smaller than it looks. Read the terms.","Infatuation more than substance. Look again.","Don't trust quick fixes.","Beware promises of easy money.","Plans may change. Keep them flexible.","Not where you think it is."]},
+{r:"上吉",p:["枝头喜鹊报佳音","远客归来叩柴门","旧事从今皆放下","一家和气福盈门"],e:["Magpies on the branch bring good news;","a traveler home again knocks at the gate.","Lay down old grievances from today,","and harmony fills the house with blessing."],s:"鹊桥相会 · Once a year, magpies form a bridge across the Milky Way so the Cowherd and the Weaver Girl can meet.",d:"Good news and reunion. Someone or something comes back.",c:["News you've been waiting for arrives.","Reconciliation or reunion.","Family support helps recovery.","A debt or payment comes back.","A good time to go home.","Someone returns it."]},
+{r:"中平",p:["一溪流水两分途","左右徘徊意未舒","不若停舟听夜雨","天明自见路何如"],e:["One stream divides into two paths;","you pace between them, not at ease.","Better to moor the boat and hear the night rain —","at dawn you'll see which way to go."],s:"杨朱泣歧 · The philosopher Yang Zhu wept at a fork in the road, because one wrong step there leads a thousand miles astray.",d:"A choice. Don't decide tonight; the answer is clearer after rest.",c:["Two options. Wait a few days before choosing.","Mixed feelings. Give it time.","Sleep is the medicine.","Hold. Don't split your money.","Delay a little.","Retrace your steps to where the path split."]},
+{r:"中吉",p:["冬尽梅开第一枝","寒香独自傲霜时","莫嫌开得无人看","春到满园总有期"],e:["Winter ends and the first plum branch blooms,","its cold scent standing alone against the frost.","Don't mind that no one comes to look —","spring will fill the garden in its time."],s:"苏武牧羊 · Held captive, Su Wu herded sheep by a frozen lake for nineteen years and never gave up. He came home.",d:"You're early and alone in this. That doesn't make you wrong.",c:["Your idea is ahead of its time. Keep going.","Patience. They'll come around.","Endurance pays.","Later rather than sooner.","A solo trip goes well.","Found after the season changes."]},
+{r:"下下",p:["乌云压顶雨连天","行船偏遇逆风前","此时不可争长短","退步方知海阔宽"],e:["Dark clouds press down and rain fills the sky;","your boat meets a headwind just as you sail.","Don't fight over who is right now —","step back, and the sea is wide."],s:"胯下之辱 · Young Han Xin crawled between a bully's legs rather than fight. He later became the general who founded an empire.",d:"Hardship and conflict. Swallow your pride today; it buys you tomorrow.",c:["Don't argue with those above you. Endure.","Quarrels. Be the first to soften.","Low energy. Rest.","Losses possible. Spend nothing big.","Headwinds. Postpone.","Gone for now."]},
+{r:"上上",p:["良驹千里遇知音","伯乐一顾值千金","从此扬鞭驰大道","春风得意踏青云"],e:["A thousand-mile horse meets someone who knows it;","one glance from Bo Le is worth a fortune.","From now on, ride the open road —","with the spring wind, you walk on blue clouds."],s:"伯乐相马 · Bo Le could tell a great horse at a glance, even one pulling a salt cart.",d:"Someone sees your worth: a mentor, a referral, an advocate.",c:["A champion appears. Let them help.","Someone sees you clearly.","Good.","Rises through others' trust.","Very good.","Someone else finds it for you."]},
+{r:"中平",p:["守株待兔岂长谋","坐等天来事不周","不如起早耕春雨","自家田里有丰收"],e:["Waiting by the stump for another hare is no plan;","sitting for heaven to act leaves things undone.","Better to rise early and plough in the spring rain —","your own field gives the harvest."],s:"守株待兔 · A farmer saw a hare break its neck on a tree stump, so he stopped ploughing and waited by the stump for the next one.",d:"Past luck won't repeat. Go back to the work.",c:["Don't wait for an offer. Apply and reach out.","Make the first move.","Build the habit yourself.","Earned, not found.","Plan it. It won't happen by itself.","Search properly and it turns up."]},
+{r:"上吉",p:["桃花开遍小桥西","燕子衔泥认旧栖","有缘千里终相会","莫愁今日信来迟"],e:["Peach blossom covers the west side of the little bridge;","swallows carry mud back to their old nest.","Those meant to meet will meet across a thousand miles —","don't worry that the letter is late today."],s:"破镜重圆 · When war parted Princess Lechang and her husband, they split a mirror in two. Years later the halves found each other.",d:"A connection holds, even across distance and delay.",c:["A past contact returns with an opportunity.","Very good. A reunion or a destined match.","Good.","Moderate and steady.","Long-distance travel goes well.","Found with a friend's help."]},
+{r:"下",p:["深夜孤灯照影长","他人笑语隔东墙","莫将心事轻言诉","口舌招来是非场"],e:["A lone lamp at midnight throws a long shadow;","laughter from others behind the east wall.","Don't share your heart's affairs lightly —","loose words lead you into quarrels."],s:"曾参杀人 · Three people told Zeng Shen's mother he had killed a man. By the third she fled, though it was a different Zeng Shen.",d:"Gossip and misunderstanding. Guard your words and trust what you see.",c:["Keep plans private for now.","Others interfere. Talk directly.","Worry more than illness. Calm your mind.","Don't lend or borrow.","Fine, but travel quietly.","Someone may have moved it."]},
+{r:"中吉",p:["小舟初试浪犹轻","莫向深潭急急行","近处鱼虾先网得","他年再把大江征"],e:["A small boat tries waves that are still gentle;","don't rush toward the deep pool.","Net the fish close by first —","another year you'll take on the great river."],s:"范蠡经商 · Fan Li left high office and began trading small goods. He became Tao Zhu Gong, patron of merchants.",d:"Start small. Near wins first, the big ambition later.",c:["Take the smaller role and grow.","Begin as friends.","Fine, in moderation.","Small profits add up.","Nearby trips go best.","Close by."]},
+{r:"上上",p:["旭日东升万象新","枯枝发出满园春","多年心愿今朝遂","贵人扶持到君身"],e:["The morning sun rises and all things are new;","dry branches burst into a garden of spring.","The wish of many years comes true today,","and a helper arrives at your side."],s:"月下追韩信 · When Han Xin left in frustration, Xiao He rode after him through the night to bring him back and recommend him.",d:"A long-held wish is granted, with help from an unexpected person.",c:["Yes. Someone vouches for you.","Very good.","Recovering.","Good fortune.","Smooth.","Returned."]},
+{r:"中平",p:["潮来潮去本无常","得失何须细思量","半是阴云半是日","平心自有好时光"],e:["Tides come and go; nothing stays the same —","why weigh every gain and loss?","Half cloud, half sun:","with an even heart, good days come."],s:"塞翁失马 · An old man on the frontier lost his horse. It came back with another, which threw his son, which kept the son out of the war.",d:"Mixed. Neither the good nor the bad has finished showing itself.",c:["Ups and downs. Don't judge too soon.","Moods change. Stay steady.","Average. Mind your balance.","Even.","Possible.","May turn up when you stop looking."]},
+{r:"下下",p:["夜行无灯路不明","崖边草滑莫前行","今宜守旧勿求变","待到天明再启程"],e:["Walking at night with no lamp, the road unclear;","the grass at the cliff edge is slippery — don't go on.","Keep to the old way now and seek no change;","set out again at dawn."],s:"夸父逐日 · Kuafu chased the sun across the sky and died of thirst before he could catch it.",d:"Danger in overreaching. Don't move, sign or invest now.",c:["Stay where you are.","Not now.","Be careful. Get things checked.","Avoid risk entirely.","Don't go.","Not recoverable."]},
+{r:"中吉",p:["一砖一瓦筑新楼","莫羡邻家早出头","根基稳似南山石","风吹雨打也无忧"],e:["Brick by brick, tile by tile, build the new house;","don't envy the neighbour who got ahead early.","With a foundation as firm as the southern mountain,","wind and rain bring no worry."],s:"铁杵磨针 · Young Li Bai saw an old woman grinding an iron rod on a stone. She was making a needle, she said, and she would finish.",d:"Slow and solid. What you build carefully now will last.",c:["Build skills. The title comes later.","A steady, lasting bond.","Good with routine.","Saving works.","Fine.","Found where you usually keep things."]}
+];
+
+const {R,sfx}=Temple;
+const NUM=["","一","二","三","四","五","六","七","八","九","十"];
+const cn=n=>n<=10?NUM[n]:n<20?"十"+NUM[n-10]:"二十";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const S={name:"",year:"",q:"",cat:"career",stick:0};
+
+/* steps */
+const secs=[...document.querySelectorAll("section[data-step]")],dots=[...$("dots").children];
+function go(i){secs.forEach((s,k)=>s.hidden=k!==i);dots.forEach((d,k)=>d.classList.toggle("on",k<=i));scrollTo(0,0);secs[i].querySelector("h1")?.focus({preventScroll:true});({1:enterIncense,2:enterShake,3:enterBlocks})[i]?.()}
+
+/* 0 ask */
+$("cats").innerHTML=CATS.map(([k,z,e])=>`<button class="chip" data-k="${k}" aria-pressed="${k===S.cat}"><b>${z}</b>${e}</button>`).join("");
+$("cats").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;S.cat=b.dataset.k;[...$("cats").children].forEach(c=>c.setAttribute("aria-pressed",c===b))};
+$("go1").onclick=()=>{S.name=$("f-name").value.trim();S.year=$("f-year").value.trim();S.q=$("f-q").value.trim();if(!S.q){$("err0").textContent="Write your question first. The deity answers one question at a time.";$("f-q").focus();return}$("err0").textContent="";go(1)};
+
+/* 1 incense: hold to light, smoke rises, bow three times */
+let lit=false,bows=0,lightT=null,smokeOn=false;
+const sm=$("smoke"),sctx=sm.getContext("2d");let parts=[],sw=0,sh=0,wind=0;
+function fitSmoke(){const r=$("altar").getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);sw=r.width;sh=r.height;sm.width=sw*d;sm.height=sh*d;sctx.setTransform(d,0,0,d,0,0)}
+function smokeLoop(){
+  if($("altar").offsetParent===null){smokeOn=false;return}
+  sctx.clearRect(0,0,sw,sh);
+  if(lit&&parts.length<160){const tips=[...document.querySelectorAll(".stick i")].map(i=>{const a=i.getBoundingClientRect(),b=$("altar").getBoundingClientRect();return[a.left-b.left+3,a.top-b.top+3]});
+    tips.forEach(([x,y])=>{if(Math.random()<.5)parts.push({x,y,vx:R(-.04,.04),vy:R(-.65,-.5),r:R(.9,1.4),a:R(.35,.55),age:0,ph:R(0,6.28)})})}
+  wind*=.97;
+  for(const p of parts){p.age++;p.ph+=.03;p.x+=p.vx+Math.sin(p.ph+p.y*.02)*.35+wind;p.y+=p.vy;p.r+=.006;p.a*=.986}
+  parts=parts.filter(p=>p.a>.01&&p.y>-40);
+  for(const p of parts){sctx.fillStyle=`rgba(150,150,146,${p.a*.5})`;sctx.beginPath();sctx.arc(p.x,p.y,p.r,0,6.283);sctx.fill()}
+  requestAnimationFrame(smokeLoop)}
+function enterIncense(){lit=false;bows=0;parts=[];$("altar").classList.remove("lit");$("incBtn").hidden=false;$("incBtn").textContent="Hold to light";$("go2").hidden=true;
+  const who=[S.name||"your name",S.year?("born "+S.year):"your year of birth"].join(", ");
+  $("say").innerHTML=`Say silently: <q>I am ${esc(who)}. I ask about ${CATS.find(c=>c[0]===S.cat)[2].toLowerCase()}: ${esc(S.q)}</q>`;
+  requestAnimationFrame(()=>{fitSmoke();if(!smokeOn){smokeOn=true;smokeLoop()}})}
+function lightDown(){if(lit){bow();return}sfx.match();$("incBtn").textContent="Hold…";lightT=setTimeout(()=>{lit=true;$("altar").classList.add("lit");Temple.buzz(12);$("incBtn").textContent="Bow  1 / 3";$("altar").setAttribute("aria-label","Tap to bow")},Temple.reduce?0:1100)}
+function lightUp(){if(!lit){clearTimeout(lightT);$("incBtn").textContent="Hold to light"}}
+function bow(){if(!lit||bows>=3)return;bows++;const c=$("censer");c.classList.remove("bow");void c.getBoundingClientRect();c.classList.add("bow");setTimeout(()=>c.classList.remove("bow"),700);
+  wind=R(-.9,.9);sfx.wood(.25,.6);Temple.buzz(8);
+  if(bows<3)$("incBtn").textContent=`Bow  ${bows+1} / 3`;else{sfx.bowl(220,.07);$("incBtn").hidden=true;$("go2").hidden=false;$("go2").focus()}}
+Temple.hold($("altar"),lightDown,lightUp);
+Temple.hold($("incBtn"),lightDown,lightUp);
+addEventListener("resize",()=>{if(!secs[1].hidden)fitSmoke()});
+$("go2").onclick=()=>go(2);
+
+/* 2 shake: sticks jostle, one rises, falls with bounces */
+const bundle=$("bundle");
+bundle.innerHTML=Array.from({length:12},(_,i)=>{const x=i*6.8+R(-1,1),h=110+((i*37)%24);return `<div class="bstick m-bamboo" style="left:${x.toFixed(1)}px;height:${h}px;transform:rotate(${R(-3,3).toFixed(1)}deg)"></div>`}).join("")+`<div class="bstick m-bamboo" id="pick" style="left:40px;height:118px"></div>`;
+const bsticks=[...bundle.children];
+let prog=0,need=2,holding=false,last=0,clackT=0,done=false,twoOnce=false,raf=0;
+function enterShake(){$("fallshadow").style.display="none";prog=0;need=1.8+T()*1.6;done=false;holding=false;$("pick").style.display="";$("pick").style.transform="";$("fallen").style.display="none";$("cyl").classList.remove("shaking");$("shakeOut").textContent="";$("go3").hidden=true;$("shakeHint").hidden=false;bsticks.forEach(s=>s.style.translate="")}
+function T(){return Temple.rand()}
+function startShake(){if(done||holding||secs[2].hidden)return;holding=true;$("cyl").classList.add("shaking");last=performance.now();Temple.buzz(8);raf=requestAnimationFrame(loop)}
+function stopShake(){holding=false;$("cyl").classList.remove("shaking");bsticks.forEach(s=>s.style.translate="")}
+function loop(t){if(!holding||done)return;const dt=Math.min(.05,(t-last)/1000);last=t;prog+=dt;clackT-=dt;
+  if(clackT<=0){sfx.bamboo(R(.25,.45),R(.85,1.15));if(Math.random()<.4)sfx.bamboo(R(.15,.3),R(.9,1.2),.03);clackT=.07+R(0,.07);Temple.buzz(4)}
+  bsticks.forEach(s=>{if(s.id!=="pick")s.style.translate=`0 ${R(-5,2).toFixed(1)}px`});
+  $("pick").style.translate=`0 ${(-Math.min(prog/need,1)*46+R(-2,2)).toFixed(1)}px`;
+  if(prog>=need)fall();else requestAnimationFrame(loop)}
+function fall(){stopShake();
+  if(!twoOnce&&T()<.15){twoOnce=true;$("shakeOut").textContent="Two sticks fell together. Put them back and shake again.";sfx.bamboo(.6,.8);sfx.bamboo(.5,.9,.06);prog=0;need=1.6+T()*1.4;$("pick").style.translate="";return}
+  done=true;S.stick=1+Math.floor(T()*SLIPS.length);$("pick").style.display="none";$("shakeHint").hidden=true;
+  dropStick();}
+function dropStick(){
+  const f=$("fallen"),fl=$("floor").getBoundingClientRect(),cy=$("cyl").getBoundingClientRect();
+  $("fallenNum").textContent=`第${cn(S.stick)}签`;
+  let x=cy.left-fl.left+cy.width*.62,y=cy.top-fl.top+10,vx=R(70,120),vy=-R(80,160),a=-70,va=R(260,380),bounce=0;
+  const floorY=fl.height-62;f.style.display="block";const fs=$("fallshadow");fs.style.display="block";
+  const place=()=>{f.style.transform=`translate(${x}px,${y}px) rotate(${a}deg)`;const lift=Math.max(0,floorY-y);fs.style.transform=`translate(${x+3}px,${floorY+6}px) rotate(${a}deg) scaleY(${Math.max(.2,Math.abs(Math.cos(a*Math.PI/180)))})`;fs.style.opacity=Math.max(.2,1-lift/200)};
+  const finish=()=>{x=Math.min(Math.max(x,100),fl.width-100);y=floorY;place();$("shakeOut").innerHTML=`<span class="big">第${cn(S.stick)}签</span>Stick ${S.stick} fell out. Pick it up.`;$("go3").hidden=false;$("go3").focus()};
+  if(Temple.reduce){x=fl.width*.55;a=-4;finish();sfx.bamboo(.6,.8);return}
+  let lt=performance.now();
+  const step=t=>{const dt=Math.min(.033,(t-lt)/1000);lt=t;vy+=1800*dt;x+=vx*dt;if(x>fl.width-100||x<100){vx*=-.4;x=Math.min(Math.max(x,100),fl.width-100)}y+=vy*dt;a+=va*dt;
+    if(y>=floorY){y=floorY;bounce++;const hard=Math.min(1,Math.abs(vy)/700);sfx.bamboo(.35+hard*.5,R(.75,.95));sfx.thud(.2+hard*.3,"stone");Temple.buzz(Math.round(6+hard*14));
+      if(bounce<3&&Math.abs(vy)>140){vy=-vy*.32;vx*=.6;va=-va*.45+(a>0?-120:120)}else{vy=0;va=0}}
+    if(bounce>=1&&vy===0){const target=Math.round(a/180)*180-3;a+=(target-a)*Math.min(1,dt*10);vx*=Math.exp(-6*dt);
+      if(Math.abs(target-a)<.3&&Math.abs(vx)<2){a=target;finish();return}}
+    place();requestAnimationFrame(step)};
+  requestAnimationFrame(step)}
+Temple.hold($("floor"),startShake,stopShake);
+Temple.onShake(()=>{if(!secs[2].hidden)startShake();else if(!secs[3].hidden)blkDown()},()=>{if(!secs[2].hidden)stopShake();else if(!secs[3].hidden)blkUp()});
+$("go3").onclick=()=>go(3);
+
+/* 3 moon blocks: lacquered crescents with real throws */
+const CRES="M6,46 C8,8 112,8 114,46 C98,56 22,56 6,46Z";
+const flatFace=()=>`<svg viewBox="0 0 120 60" width="100%" height="100%"><path d="${CRES}" fill="#f08a7e" stroke="#3a3a3a" stroke-width="1.6"/><path d="M14,44 C16,16 104,16 106,44 C92,51 28,51 14,44Z" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="1"/><path d="M16,42 C20,20 100,20 104,42" fill="none" stroke="rgba(255,220,200,.22)" stroke-width="1"/></svg>`;
+const roundFace=()=>`<svg viewBox="0 0 120 60" width="100%" height="100%"><path d="${CRES}" fill="#e5483b" stroke="#3a3a3a" stroke-width="1.6"/><path d="M30,22 Q52,13 78,16" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/></svg>`;
+const blkEdge=`<svg viewBox="0 0 120 60" width="100%" height="100%"><path d="${CRES}" fill="#b8352b" stroke="#3a3a3a" stroke-width="1.6"/></svg>`;
+let blk=null,blkBusy=false;
+function enterBlocks(){[...$("legend").children].forEach(d=>d.classList.remove("on"));$("blkOut").textContent="";$("go4").hidden=true;$("back2").hidden=true;$("blkHint").hidden=false;blkBusy=false;
+  requestAnimationFrame(()=>{if(!blk)blk=new Temple.Tosser($("blkStage"),{count:2,w:128,h:64,thickness:4,layers:4,edge:blkEdge,front:flatFace,back:roundFace,startFaces:[1,1],startRz:i=>i?24:-18,shadowRadius:"50% 50% 40% 40%",
+    onImpact:h=>{sfx.wood(.35+h*.55,R(.8,1));sfx.thud(.2+h*.4,"stone")},onWobble:v=>sfx.wood(v*1.5,R(.9,1.1)),onRattle:()=>sfx.wood(R(.15,.25),R(1,1.2))});else blk.build()})}
+let blkHold=0;
+function blkDown(){if(!blk||blkBusy||!$("go4").hidden||!$("back2").hidden)return;if(blk.gather()){blkHold=performance.now();Temple.buzz(8);$("blkHint").textContent="Ask: is this the one for me?"}}
+async function blkUp(){if(!blk||blk.state!=="shaking")return;blkBusy=true;[...$("legend").children].forEach(d=>d.classList.remove("on"));$("blkOut").textContent="";
+  const a=Temple.rbit(),b=Temple.rbit();await blk.toss([a,b]);blkBusy=false;$("blkHint").textContent="Press and hold, then let go";
+  const flat=[a===0,b===0],r=flat[0]!==flat[1]?"sheng":flat[0]?"xiao":"yin";
+  $("legend").querySelector(`[data-r="${r}"]`).classList.add("on");
+  if(r==="sheng"){$("blkOut").textContent="聖筊. The stick is yours.";$("blkHint").hidden=true;$("go4").hidden=false;$("go4").focus();sfx.bowl(247,.05)}
+  else if(r==="xiao"){$("blkOut").textContent="笑筊. The answer isn't clear yet. Throw again."}
+  else{$("blkOut").textContent="陰筊. This isn't your stick.";$("blkHint").hidden=true;$("back2").hidden=false;$("back2").focus()}}
+Temple.hold($("blkStage"),blkDown,blkUp);
+$("back2").onclick=()=>go(2);
+$("go4").onclick=()=>{renderSlip(S.stick,S.cat,S.q,true);go(4)};
+
+/* 4 slip */
+function renderSlip(n,cat,q,fresh){const s=SLIPS[n-1],ci=CATS.findIndex(c=>c[0]===cat);
+  $("slipTitle").textContent=`第${cn(n)}签 · ${s.r}`;$("slipQ").textContent=q?`“${q}”`:"";
+  const col=(txt,cls="")=>`<div class="col ${cls}">${[...txt].map(c=>`<span>${c}</span>`).join("")}</div>`;
+  $("slipV").innerHTML=col(`第${cn(n)}签`,"small num")+col(s.r,"small")+s.p.map(l=>col(l)).join("");
+  $("slipEn").innerHTML=s.e.map(l=>`<span>${esc(l)}</span>`).join("");
+  $("slipStory").textContent=s.s;$("slipRead").textContent=s.d;
+  $("verdict").innerHTML=`<small>${CATS[ci][1]} · ${CATS[ci][2]}</small>${esc(s.c[ci])}`;
+  $("slipTable").innerHTML=CATS.map((c,i)=>i===ci?"":`<tr><td>${c[1]}<span>${c[2]}</span></td><td>${esc(s.c[i])}</td></tr>`).join("");
+  $("slipActions").hidden=!fresh;$("slipOut").textContent="";
+  const sl=$("slip");sl.classList.remove("open");void sl.offsetWidth;setTimeout(()=>{sl.classList.add("open");sfx.paper(1.1,.08)},250)}
+const KEY="qiuqian-kept";
+const getKept=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){return[]}};
+const setKept=a=>{try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}};
+function renderKept(){const k=getKept();$("keptWrap").hidden=!k.length;$("keptList").innerHTML=k.slice().reverse().map((x,i)=>`<button data-i="${k.length-1-i}"><span class="k-n">第${cn(x.n)}签</span><span class="k-q">${SLIPS[x.n-1].r} · ${esc(x.q)}</span><span class="k-d">${x.d}</span></button>`).join("")}
+$("keptList").onclick=e=>{const b=e.target.closest("button");if(!b)return;const x=getKept()[+b.dataset.i];renderSlip(x.n,x.c,x.q,false);go(4)};
+$("keepBtn").onclick=()=>{const k=getKept();k.push({n:S.stick,c:S.cat,q:S.q,d:new Date().toISOString().slice(0,10)});setKept(k);$("slipActions").hidden=true;$("slipOut").textContent="Kept. You'll find it on the first page.";sfx.paper(.4,.06)};
+$("leaveBtn").onclick=()=>{$("slipActions").hidden=true;$("slipOut").textContent="You left the slip at the temple."};
+$("again").onclick=()=>{$("f-q").value="";twoOnce=false;renderKept();go(0)};
+
+$("backBtn").innerHTML=Temple.icon.back;Temple.soundButton($("snd"));Temple.rain();
+renderKept();go(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Omikuji · A Rainy Day in the Temple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+JP:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/temple.css">
+<style>
+:root{--serif:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho","Noto Serif SC",serif}
+.wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px)) 96px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:4px 0 48px}
+.mark{font-size:14px;color:var(--ink);font-weight:500}
+.mark .zh{font-size:16px;margin-right:8px;font-weight:400}
+.mark span.en{color:var(--faint);font-weight:400}
+.dots{display:flex;gap:7px} .dots i{width:6px;height:6px;border-radius:50%;background:var(--hair-2);transition:background .3s} .dots i.on{background:var(--blue)}
+.lede{margin:0 0 28px}
+section[hidden]{display:none}
+section{animation:in .4s ease-out}
+@keyframes in{from{opacity:.001;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1:focus{outline:none}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:24px}
+.field label,.label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.field textarea{border:0;border-bottom:1px solid var(--hair-2);background:transparent;font:inherit;font-size:15px;color:var(--ink);padding:8px 0;outline:none;resize:none}
+.field textarea:focus{border-bottom-color:var(--blue)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.chip{font:inherit;font-size:12px;padding:7px 14px;border:1px solid var(--hair-2);border-radius:999px;background:#fff;color:var(--muted);cursor:pointer;transition:all .2s}
+.chip b{font-family:var(--serif);font-weight:400;color:var(--ink-2);margin-right:6px}
+.chip[aria-pressed="true"]{background:var(--blue-soft);border-color:var(--blue);color:var(--blue)} .chip[aria-pressed="true"] b{color:var(--blue)}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;margin-top:28px}
+.out{min-height:24px;margin-top:18px;color:var(--ink-2)}
+.out .big{font-family:var(--serif);font-size:19px;color:var(--ink);margin-right:10px}
+.stage{border-radius:12px}
+.hint{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);text-align:center;margin-top:12px}
+
+/* 1 · water basin */
+.basin{height:360px;cursor:pointer}
+.spout{position:absolute;left:-10px;top:96px;width:44%;height:14px;border-radius:7px;z-index:3}
+.spout::after{content:"";position:absolute;right:3px;top:3px;width:8px;height:8px;border-radius:50%;background:#5a4a35}
+.trough{position:absolute;left:10%;right:10%;bottom:46px;height:132px;border-radius:12px;z-index:2}
+.trough::after{content:"";position:absolute;left:0;right:0;top:100%;height:14px;background:#d6d3ce;border-radius:0 0 10px 10px;box-shadow:inset 0 0 0 1.4px var(--line);margin-top:-2px;z-index:-1}
+.water{position:absolute;inset:14px;border-radius:7px;overflow:hidden;background:#d6e8f3;box-shadow:inset 0 0 0 1.4px var(--line)}
+.water canvas{position:absolute;inset:0;width:100%;height:100%}
+.ladle{position:absolute;left:34%;top:142px;width:240px;height:56px;z-index:4;transform-origin:28px 28px;transition:transform .55s cubic-bezier(.3,.7,.3,1)}
+.ladle .cup{position:absolute;left:4px;top:6px;width:48px;height:44px;border-radius:6px 6px 14px 14px}
+.ladle .cup::before{content:"";position:absolute;left:0;right:0;top:-5px;height:10px;border-radius:50%;background:#5a4a35;box-shadow:inset 0 0 0 1.4px var(--line)}
+.ladle .handle{position:absolute;left:48px;top:23px;width:190px;height:8px;border-radius:4px}
+.ladle.pour{transform:translate(-14px,26px) rotate(-38deg)}
+.stream{position:absolute;left:calc(34% - 2px);top:176px;width:8px;height:90px;z-index:3;opacity:0;transition:opacity .2s}
+.stream.on{opacity:1}
+.stream path{stroke:#8fbbe0;stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:9 7;animation:flow .35s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-16}}
+.steps{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:8px}
+.steps li{background:#fff;border:1px solid var(--hair);border-radius:10px;padding:12px 16px;font-size:13px;line-height:1.55;display:flex;gap:14px;transition:all .3s}
+.steps li .n{font-variant-numeric:tabular-nums;color:var(--faint);min-width:18px}
+.steps li b{color:var(--ink);font-weight:500}
+.steps li.now{background:var(--blue-soft);border-color:var(--blue)} .steps li.now .n,.steps li.now b{color:var(--blue)}
+.steps li.done{color:var(--faint)} .steps li.done b{color:var(--faint)}
+
+/* 2 · offering box + bell */
+.hall{height:400px}
+.rope{position:absolute;left:50%;top:62px;width:14px;height:150px;margin-left:-7px;transform-origin:50% 0;border-radius:7px;z-index:3;background:repeating-linear-gradient(-55deg,#fff 0 8px,#3a3a3a 8px 9.4px);box-shadow:inset 0 0 0 1.4px var(--line)}
+.rope::after{content:"";position:absolute;left:-6px;right:-6px;bottom:-26px;height:30px;border-radius:0 0 6px 6px;background:repeating-linear-gradient(90deg,#fff 0 3px,#3a3a3a 3px 4.2px);opacity:.9}
+.rope.swing{animation:swing 1.8s cubic-bezier(.3,.5,.4,1)}
+@keyframes swing{15%{transform:rotate(9deg)}35%{transform:rotate(-6deg)}55%{transform:rotate(4deg)}75%{transform:rotate(-2deg)}}
+.suzu{position:absolute;left:50%;top:4px;width:64px;height:68px;margin-left:-32px;z-index:4;overflow:visible}
+.obox{position:absolute;left:50%;bottom:40px;width:300px;max-width:84%;height:140px;transform:translateX(-50%);border-radius:5px;z-index:2}
+.obox .slats{position:absolute;left:0;right:0;top:0;height:42px;border-radius:5px 5px 0 0;background:repeating-linear-gradient(90deg,transparent 0 18px,var(--line) 18px 19.4px);box-shadow:inset 0 -1.4px 0 var(--line)}
+.obox .ink{position:absolute;left:50%;top:62px;transform:translateX(-50%);font-family:var(--serif);font-size:26px;letter-spacing:.3em;color:var(--line)}
+.oshadow{position:absolute;left:50%;bottom:30px;width:330px;max-width:90%;height:22px;transform:translateX(-50%);border-radius:50%;background:rgba(40,30,20,.12);z-index:1}
+.goen{position:absolute;left:50%;top:150px;width:32px;height:32px;margin-left:-16px;z-index:5;display:none}
+.seq{display:flex;gap:10px;justify-content:center;margin-top:18px}
+.seq span{width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--hair-2);display:grid;place-items:center;font-family:var(--serif);font-size:14px;color:var(--faint);transition:all .25s}
+.seq span.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.bowing{animation:bow .8s ease-in-out}
+@keyframes bow{50%{transform:translateY(8px) scale(.99)}}
+
+/* 3 · hexagonal box */
+.stand{height:440px;cursor:grab}
+.boxwrap{position:absolute;left:50%;top:56px;width:120px;height:250px;margin-left:-60px;z-index:3;transition:transform .8s cubic-bezier(.4,.2,.2,1)}
+.boxwrap.flip{transform:rotate(180deg)}
+.boxwrap.shaking .hexbox{animation:jig .13s linear infinite}
+@keyframes jig{0%{transform:translateY(-6px) rotate(-3deg)}50%{transform:translateY(6px) rotate(3deg)}100%{transform:translateY(-6px) rotate(-3deg)}}
+.hexbox{position:absolute;inset:0}
+.hexbox svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.hexbox .ink{position:absolute;left:50%;top:70px;transform:translateX(-50%);color:var(--line);font-size:22px;--col-gap:0}
+.boxshadow{position:absolute;left:50%;top:322px;width:150px;height:20px;margin-left:-75px;border-radius:50%;background:rgba(40,30,20,.12);z-index:1}
+.stickout{position:absolute;left:50%;top:304px;width:16px;height:112px;margin-left:-8px;overflow:hidden;z-index:2}
+.mstick{position:absolute;left:1px;top:0;width:14px;height:110px;border-radius:0 0 2px 2px;transform:translateY(-100%);display:flex;justify-content:center;padding-top:42px}
+.mstick .t-vert{font-size:10px;color:var(--line)}
+.coin100{position:absolute;left:50%;top:120px;width:26px;height:26px;margin-left:-13px;border-radius:50%;z-index:6;display:none;background:#e3e6e8;box-shadow:inset 0 0 0 1.4px var(--line)}
+
+/* 4 · drawers */
+.cabinet{padding:12px;border-radius:8px}
+.drawers{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.drawer{all:unset;box-sizing:border-box;position:relative;aspect-ratio:1/.82;border-radius:4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  background:#f6ead3;box-shadow:inset 0 0 0 1.4px var(--line);transition:transform .35s cubic-bezier(.3,.7,.3,1),box-shadow .35s,background .2s}
+.drawer .lbl{font-family:var(--serif);font-size:14px;color:var(--ink);background:#fff;padding:1px 7px;border-radius:2px;box-shadow:0 0 0 1px var(--hair-2)}
+.drawer .pull{width:20px;height:5px;border-radius:3px;background:#e2c58f;box-shadow:inset 0 0 0 1.3px var(--line)}
+.drawer:hover{transform:translateY(-1px);background:#fbf2e2}
+.drawer:focus-visible{outline:1.5px solid var(--blue);outline-offset:2px}
+.drawer.wrong{animation:nope .3s}
+@keyframes nope{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.drawer.open{transform:translateY(6px) scale(1.08);z-index:2;background:var(--blue-soft);box-shadow:inset 0 0 0 1.6px var(--blue),0 14px 20px -12px rgba(0,0,0,.3)}
+
+/* 5 · paper */
+.paperwrap{display:flex;justify-content:center;padding:6px 0}
+.paper{position:relative;width:min(100%,360px);padding:26px 20px 28px;border-radius:3px;clip-path:inset(33% 0 33% 0);transition:clip-path 1.1s cubic-bezier(.3,.7,.25,1)}
+.paper.open{clip-path:inset(0 0 0 0)}
+.paper::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent calc(33.3% - .5px),var(--hair-2) 33.3%,transparent calc(33.3% + 1px),transparent calc(66.6% - .5px),var(--hair-2) 66.6%,transparent calc(66.6% + 1px))}
+.paper .frame{border:1.2px solid var(--red);outline:1px solid rgba(229,72,59,.4);outline-offset:3px;padding:22px 12px 26px;display:flex;flex-direction:column;align-items:center;gap:20px}
+.pnum{font-family:var(--serif);font-size:12px;letter-spacing:.3em;color:var(--red)}
+.rank{font-family:var(--serif);font-size:44px;line-height:1;color:var(--red);letter-spacing:.12em;font-weight:600;padding:12px 16px;border:1.6px solid var(--red);border-radius:3px}
+.waka{font-size:17px;color:var(--ink);--col-gap:.55em}
+.waka .col:nth-child(2n){padding-top:1.1em}
+.trans{margin:26px 0 0;color:var(--ink-2);font-size:14px;line-height:1.85}
+.block{margin-top:40px} .block p{margin:0;color:var(--ink-2)}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+td{padding:12px 0;border-bottom:1px solid var(--hair);vertical-align:top;color:var(--ink-2)}
+td:first-child{width:120px;color:var(--ink);font-family:var(--serif);padding-right:12px}
+td:first-child span{font-family:var(--font);color:var(--faint);margin-left:6px;font-size:12px}
+td .jp{font-family:var(--serif);color:var(--ink);margin-right:10px}
+tr.mine td{color:var(--blue)} tr.mine td .jp,tr.mine td:first-child{color:var(--blue)}
+tr.mine td:first-child::after{content:"Your question";display:block;font-family:var(--font);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);opacity:.7;font-weight:500;margin-top:2px}
+.note{font-size:12px;color:var(--faint);margin-top:24px}
+.after{margin-top:64px}
+.rack{position:relative;height:150px;border-radius:10px;border:1px solid var(--hair);overflow:hidden;background:#fff}
+.rack .post{position:absolute;top:10px;bottom:0;width:12px;border-radius:2px}
+.rack .rope2{position:absolute;left:16px;right:16px;height:4px;border-radius:2px;background:repeating-linear-gradient(-60deg,#fff 0 5px,#3a3a3a 5px 6.2px);box-shadow:inset 0 0 0 1px var(--line)}
+.knot{position:absolute;width:10px;height:26px;margin:-13px 0 0 -5px;border-radius:1px;background:#fff;box-shadow:inset 0 0 0 1.2px var(--line)}
+.knot::after{content:"";position:absolute;left:-2px;right:-2px;top:11px;height:4px;background:#fff;box-shadow:inset 0 0 0 1.2px var(--line)}
+.knot.new{animation:tie .7s cubic-bezier(.3,.7,.3,1)}
+@keyframes tie{from{transform:translateY(-20px) rotate(-20deg);opacity:0}}
+.wallet button{all:unset;display:flex;gap:14px;width:100%;padding:12px 0;border-bottom:1px solid var(--hair);font-size:13px;cursor:pointer;box-sizing:border-box}
+.wallet button:hover .k-q{color:var(--blue)}
+.wallet .k-n{font-family:var(--serif);color:var(--ink);min-width:84px}
+.wallet .k-q{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wallet .k-d{color:var(--faint);font-variant-numeric:tabular-nums}
+.count{font-size:12px;color:var(--faint);margin-top:12px;text-align:center}
+@media (max-width:480px){.top{margin-bottom:36px}.drawer .lbl{font-size:12px}.rank{font-size:38px}.drawers{gap:6px}}
+@media (prefers-reduced-motion:reduce){.paper,.ladle,.boxwrap{transition:none}.boxwrap.shaking .hexbox,.rope.swing,.stream path{animation:none}}
+</style>
+</head>
+<body class="t-body">
+<div class="wrap">
+  <nav class="t-nav"><a class="t-back" href="index.html" id="backBtn" aria-label="Back to A Rainy Day in the Temple"></a><div class="right"><button id="snd">Sound on</button></div></nav>
+  <header class="top">
+    <span class="mark"><span class="zh">おみくじ</span><span class="en">Omikuji</span></span>
+    <div class="dots" id="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </header>
+
+  <!-- 0 -->
+  <section data-step="0">
+    <p class="eyebrow">参拝 · Before you visit</p>
+    <h1 class="t-h1" tabindex="-1">Come with a wish</h1>
+    <p class="lede">At a shrine you purify yourself, greet the kami, and then draw a fortune. You don't say your wish out loud, but it helps to know what it is.</p>
+    <div class="field"><label for="f-q">Your wish or question <span style="color:var(--faint);text-transform:none;letter-spacing:0">(optional)</span></label><textarea id="f-q" rows="2" placeholder="Will the move to a new city go well?"></textarea></div>
+    <span class="label">Read this line first</span>
+    <div class="chips" id="cats"></div>
+    <div class="actions"><button class="t-pill" id="go1">Walk through the torii →</button></div>
+    <div class="after" id="homeAfter" hidden><p class="eyebrow">Your wallet</p><div class="wallet" id="walletHome"></div><p class="count" id="tiedHome"></p></div>
+  </section>
+
+  <!-- 1 -->
+  <section data-step="1" hidden>
+    <p class="eyebrow">手水 · Purify</p>
+    <h1 class="t-h1" tabindex="-1">Rinse at the water basin</h1>
+    <p class="lede">Before approaching the kami, you wash at the temizuya in a fixed order. Tap the basin to pour.</p>
+    <div class="stage basin t-room" id="basin" tabindex="0" role="button" aria-label="Pour water">
+      <span class="tag">Water basin<span>手水舎</span></span>
+      <div class="spout m-bamboo"></div>
+      <div class="trough m-stone"><div class="water"><canvas id="waterCv"></canvas></div></div>
+      <svg class="stream" id="stream" viewBox="0 0 10 120" preserveAspectRatio="none"><path d="M5,0 C6,40 4,80 5,120"/></svg>
+      <div class="ladle" id="ladle"><div class="handle m-bamboo"></div><div class="cup m-bamboo"></div></div>
+    </div>
+    <ol class="steps" id="purSteps">
+      <li><span class="n">01</span><span><b>Left hand.</b> Hold the ladle in your right hand and pour water over your left.</span></li>
+      <li><span class="n">02</span><span><b>Right hand.</b> Switch hands and pour over your right.</span></li>
+      <li><span class="n">03</span><span><b>Mouth.</b> Pour a little into your left palm and rinse your mouth. The ladle never touches your lips.</span></li>
+      <li><span class="n">04</span><span><b>Ladle.</b> Tilt it upright so the last water runs down the handle, then set it back.</span></li>
+    </ol>
+    <div class="actions"><button class="t-pill" id="pourBtn">Pour</button><button class="t-pill" id="go2" hidden>Go to the main hall →</button></div>
+  </section>
+
+  <!-- 2 -->
+  <section data-step="2" hidden>
+    <p class="eyebrow">二礼二拍手一礼 · Pray</p>
+    <h1 class="t-h1" tabindex="-1">Two bows, two claps, one bow</h1>
+    <p class="lede">Drop a coin into the offering box and ring the bell. Then greet the kami. After the claps, keep your hands together and make your wish silently.</p>
+    <div class="stage hall t-room" id="hall">
+      <span class="tag">Offering box<span>賽銭箱</span></span><div class="oshadow"></div>
+      <div class="rope" id="rope"></div><svg class="suzu" id="suzu" viewBox="0 0 60 64" aria-hidden="true"><g stroke="#3a3a3a" stroke-width="1.5" stroke-linejoin="round"><path d="M24,8 Q30,0 36,8" fill="none"/><path d="M10,46 Q8,12 30,9 Q52,12 50,46 L56,52 Q30,58 4,52Z" fill="#f6d77e"/><path d="M12,40 Q30,44 48,40" fill="none" opacity=".45"/><circle cx="30" cy="58" r="4.5" fill="#f6d77e"/></g><path d="M18,20 Q20,14 26,12" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/></svg>
+      <div class="obox m-wood" id="obox"><div class="slats"></div><div class="ink">奉納</div></div>
+      <svg class="goen" id="goen" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#f6d77e" stroke="#3a3a3a" stroke-width="1.6"/><circle cx="20" cy="20" r="5" fill="#fff" stroke="#3a3a3a" stroke-width="1.4"/><circle cx="20" cy="20" r="13" fill="none" stroke="#3a3a3a" stroke-width="1" opacity=".4"/></svg>
+    </div>
+    <div class="seq" id="seq" aria-hidden="true"><span>礼</span><span>礼</span><span>拍</span><span>拍</span><span>礼</span></div>
+    <p class="out" id="prayOut" role="status"></p>
+    <div class="actions" id="prayActs">
+      <button class="t-pill" id="coinBtn">Drop a coin</button>
+      <button class="t-pill" id="bellBtn" hidden>Ring the bell</button>
+      <button class="t-pill" id="bowBtn" hidden>Bow</button>
+      <button class="t-link" id="clapBtn" hidden>Clap</button>
+      <button class="t-pill" id="go3" hidden>Go to the omikuji stand →</button>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section data-step="3" hidden>
+    <p class="eyebrow">御神籤 · ¥100</p>
+    <h1 class="t-h1" tabindex="-1">Shake the box</h1>
+    <p class="lede">Put ¥100 in the slot. Then turn the hexagonal box upside down and shake it until a numbered stick slides out of the hole. On a phone, shake the phone.</p>
+    <div class="stage stand t-room" id="stand" tabindex="0" role="button" aria-label="Press and hold to shake the box">
+      <span class="tag">Twenty sticks<span>みくじ箱</span></span>
+      <div class="boxshadow"></div>
+      <div class="stickout"><div class="mstick m-hinoki" id="mstick"><div class="t-vert" id="mstickNum"></div></div></div>
+      <div class="boxwrap" id="boxwrap"><div class="hexbox"><svg viewBox="0 0 120 250" aria-hidden="true"><g stroke="#3a3a3a" stroke-width="1.4" stroke-linejoin="round">
+  <path d="M19,1 L101,1 L119,13 L119,237 L101,249 L19,249 L1,237 L1,13Z" fill="#f4e4c6"/>
+  <path d="M28,1 L28,249 M92,1 L92,249" fill="none" opacity=".5"/>
+  <ellipse cx="60" cy="10" rx="8" ry="3.5" fill="#5a4a35"/></g>
+  <path d="M14,24 L14,226" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".75"/></svg>
+  <div class="ink t-vert"><div class="col"><span>御</span><span>神</span><span>籤</span></div></div></div></div>
+      <div class="coin100" id="coin100"></div>
+    </div>
+    <p class="hint" id="hexHint">Pay first</p>
+    <p class="out" id="hexOut" role="status"></p>
+    <div class="actions"><button class="t-pill" id="payBtn">Put ¥100 in the slot</button><button class="t-pill" id="go4" hidden>Find the drawer →</button></div>
+  </section>
+
+  <!-- 4 -->
+  <section data-step="4" hidden>
+    <p class="eyebrow">引き出し · The drawers</p>
+    <h1 class="t-h1" tabindex="-1" id="drawTitle"></h1>
+    <p class="lede">Each number has its own drawer. Find the one that matches your stick and take one paper from it.</p>
+    <div class="cabinet t-card"><div class="drawers" id="drawers"></div></div>
+    <p class="out" id="drawOut" role="status"></p>
+  </section>
+
+  <!-- 5 -->
+  <section data-step="5" hidden>
+    <p class="eyebrow" id="readEye"></p>
+    <h1 class="t-h1" tabindex="-1" id="readTitle"></h1>
+    <p class="lede" id="readQ"></p>
+    <div class="paperwrap"><div class="paper m-paper" id="paper"><div class="frame">
+      <span class="pnum" id="pNum"></span><span class="rank" id="pRank"></span><div class="waka t-vert" id="pWaka" lang="ja"></div>
+    </div></div></div>
+    <p class="trans" id="pEn"></p>
+    <div class="block"><p class="eyebrow">運勢 · Overall</p><p id="pGen"></p></div>
+    <div class="block"><p class="eyebrow">Line by line</p><table id="pTable"></table></div>
+    <div class="actions" id="readActs"><button class="t-pill" id="primBtn"></button><button class="t-link" id="altBtn"></button></div>
+    <p class="note" id="readNote"></p>
+    <div class="after" id="afterBox" hidden>
+      <p class="eyebrow" id="afterEye"></p>
+      <div class="rack" id="rackBox" hidden></div>
+      <p class="count" id="tiedCount"></p>
+      <div class="wallet" id="walletList"></div>
+      <div class="actions"><button class="t-link" id="again">Visit again →</button></div>
+    </div>
+  </section>
+</div>
+
+<script src="shared/temple.js"></script>
+<script>
+const CATS=[["wish","願望","Wish"],["person","待人","Awaited person"],["lost","失物","Lost item"],["travel","旅行","Travel"],["business","商売","Business"],["study","学問","Study"],["love","恋愛","Love"]];
+const F=[
+{r:"大吉",w:["春霞","たなびく山に","日は昇り","咲く花ごとに","道ひらけゆく"],e:"Spring haze trails over the hills and the sun climbs. With every flower that opens, the road opens too.",d:"Everything opens at once. Stay modest and the luck lasts.",c:["叶う","来る　便りあり","出る","よし","利益あり","実る","良縁なり"],x:["Comes true.","Comes, with news.","Will be found.","Good.","Profitable.","Pays off.","A good match."]},
+{r:"末吉",w:["雪の下","眠れる草も","いつの日か","芽吹く時あり","急ぐことなし"],e:"Under the snow, even sleeping grass will sprout one day. There's no need to hurry.",d:"Late, but not lost. What's asleep now will grow.",c:["遅れて叶う","遅れて来る","出にくい","急ぐな","今は控えよ","努力せよ","時を待て"],x:["Comes true, late.","Comes late.","Hard to find.","Don't rush.","Hold back for now.","Keep at it.","Wait for the right time."]},
+{r:"吉",w:["川の水","岩にあたりて","曲がれども","海へ向かうを","止むることなし"],e:"River water bends where it meets rock, but nothing stops it reaching the sea.",d:"You'll get there, by a longer road than you planned.",c:["遠回りして叶う","来る","低い所にあり","よし","堅実なれば利あり","よし","誠意を尽くせ"],x:["Comes true, the long way round.","Comes.","Look somewhere low.","Good.","Steady work brings profit.","Good.","Be sincere."]},
+{r:"凶",w:["秋風に","散りゆく葉をば","惜しむとも","枝にかえらぬ","ものと知るべし"],e:"However you mourn the leaves the autumn wind takes, know that they won't return to the branch.",d:"Let go of what has already gone.",c:["叶い難し","来たらず","出ず","見合わせよ","損あり","怠るな","執着すれば苦し"],x:["Hard to fulfil.","Won't come.","Won't be found.","Postpone.","Expect losses.","Don't slack.","Clinging hurts."]},
+{r:"中吉",w:["朝露の","光る小道を","一歩ずつ","踏みしめ行けば","山も越えなん"],e:"Walk the path bright with morning dew one firm step at a time, and you'll cross even the mountain.",d:"Small, sure steps carry you over.",c:["努力して叶う","遅いが来る","出る","近場よし","少しずつ利あり","よし","焦らず進め"],x:["Comes true with effort.","Comes, slowly.","Will be found.","Short trips are good.","Small gains.","Good.","Go gently."]},
+{r:"吉",w:["月影の","宿る水面に","波立てず","静かに待てば","心澄みけり"],e:"Don't stir the water where the moon rests. Wait quietly, and your heart clears.",d:"Be still. Clarity comes when you stop stirring.",c:["静かに待てば叶う","来る","家の中にあり","よし","欲を出すな","落ち着いて励め","相手の話を聴け"],x:["Comes true if you wait quietly.","Comes.","Inside the house.","Good.","Don't get greedy.","Study calmly.","Listen to them."]},
+{r:"凶",w:["霧深き","峠の道に","明かりなし","足をとどめて","夜明けを待たん"],e:"On the mountain pass in deep fog, with no light, stop walking and wait for dawn.",d:"You're in fog. Stop and wait for light.",c:["今は叶わず","来ず","遠くにあり","控えよ","新しきは不可","基礎に帰れ","迷いあり"],x:["Not now.","Won't come.","Far away.","Hold off.","No new ventures.","Go back to basics.","Uncertain."]},
+{r:"大吉",w:["鶴の舞う","松の緑は","千代までも","変わらぬ色に","福は満ちけり"],e:"Cranes dance over pines whose green won't change for a thousand ages. Good fortune fills to the brim.",d:"Great luck, deep and lasting.",c:["必ず叶う","喜びと共に来る","すぐ出る","吉","大いに利あり","成就す","結ばれる"],x:["Certainly comes true.","Comes, bringing joy.","Found soon.","Lucky.","Large profit.","Succeeds.","You'll be together."]},
+{r:"小吉",w:["小さき灯","消さずに守る","手のひらに","冬の夜長も","ぬくもりてあり"],e:"You keep a small flame alive in your palm, and even the long winter night stays warm.",d:"Protect the small good thing you already have.",c:["小さき願いは叶う","便りあり","出る","近くならよし","小利あり","続ければよし","身近にあり"],x:["Small wishes come true.","News arrives.","Will be found.","Good if nearby.","Small profit.","Good if you keep going.","Close at hand."]},
+{r:"大凶",w:["嵐吹く","沖に小舟を","漕ぎ出すな","岸に繋ぎて","時を待つべし"],e:"While the storm blows, don't row your small boat out to sea. Tie it to the shore and wait.",d:"The worst draw, which means things can only improve. Stay ashore for now.",c:["叶わず","来ず","出ず","やめよ","大損の恐れ","心を入れ替えよ","別れの兆し"],x:["Won't come true.","Won't come.","Won't be found.","Don't go.","Risk of heavy loss.","Start fresh.","Signs of parting."]},
+{r:"吉",w:["古き井の","底より湧ける","清水こそ","汲めども尽きぬ","宝なりけれ"],e:"The clear water rising from an old well never runs dry, however much you draw. That's the treasure.",d:"What you need is in something old.",c:["古き縁より叶う","旧友来る","古い物の中","故郷よし","昔の客を大切に","復習せよ","昔の人に縁あり"],x:["Comes true through an old connection.","An old friend comes.","Among old things.","Going home is good.","Look after old customers.","Review.","A connection from before."]},
+{r:"凶",w:["浮雲を","掴まんとして","手をのばす","足もとの花","見ずに過ぎけり"],e:"Reaching up to grab the drifting clouds, you walked right past the flower at your feet.",d:"Look down. What you want is closer than you think.",c:["高望みは叶わず","来たらず","足元にあり","よからず","欲張れば損","目標を下げよ","近くを見よ"],x:["Reaching too high won't work.","Won't come.","At your feet.","Not good.","Greed brings loss.","Set smaller goals.","Look nearby."]},
+{r:"中吉",w:["梅の香の","まず一輪に","告げにけり","春はたしかに","来たるものぞと"],e:"The first plum blossom already says it with its scent: spring is surely coming.",d:"The first sign of spring has arrived.",c:["兆しあり","来る","東にあり","春ならよし","始めてよし","よし","始まりの時"],x:["Signs appear.","Comes.","To the east.","Good in spring.","A good time to start.","Good.","A time of beginnings."]},
+{r:"末吉",w:["長き坂","上りつめれば","見はるかす","野のひろがりを","知る日来るらん"],e:"Climb the long slope to the top, and a day will come when you see the whole open plain.",d:"The climb is long, but the view at the top is real.",c:["後に叶う","遅し","高い所にあり","長旅は控えよ","辛抱せよ","後に実る","今は友として"],x:["Comes true later.","Late.","Somewhere high.","Avoid long journeys.","Be patient.","Pays off later.","As friends, for now."]},
+{r:"大吉",w:["大空を","渡る雁がね","列なして","迷うことなく","帰る故郷"],e:"Wild geese cross the wide sky in a line, never lost, flying home.",d:"Everything finds its way home. Go with others.",c:["叶う","来る　嬉し","出る","大吉","仲間と組めば大利","師に恵まれる","良縁あり"],x:["Comes true.","Comes, happily.","Will be found.","Very lucky.","Partner up for big gains.","A good teacher appears.","A good match."]},
+{r:"凶",w:["蜘蛛の糸","絡まるほどに","もがくより","静かにほどけ","指先をもて"],e:"The more you thrash in a spider's thread, the tighter it gets. Undo it quietly, with your fingertips.",d:"Struggling tightens the knot. Untangle it slowly.",c:["焦れば叶わず","来ず","出にくい","控えよ","契約に注意","一つずつ","争いを避けよ"],x:["Rushing ruins it.","Won't come.","Hard to find.","Hold off.","Read contracts carefully.","One thing at a time.","Avoid fights."]},
+{r:"吉",w:["竹の節","一つ一つに","力あり","折れぬ心で","空へ伸びゆく"],e:"Each joint of the bamboo holds its own strength. With a heart that won't break, it grows toward the sky.",d:"Strength comes in stages, like bamboo.",c:["努力で叶う","来る","出る","よし","堅実に利あり","段階を踏め","誠実ならよし"],x:["Comes true through effort.","Comes.","Will be found.","Good.","Steady profit.","Go step by step.","Good, if you're honest."]},
+{r:"小吉",w:["夕立の","過ぎたる後の","虹の橋","束の間なれど","心晴れけり"],e:"After the summer shower, a bridge of rainbow. It's brief, but the heart clears.",d:"A brief joy. Enjoy it without holding on.",c:["一時叶う","便りのみ","早く探せ","短ければよし","小利あり","気を抜くな","楽しめ"],x:["Comes true for a while.","Only news.","Search soon.","Good if short.","Small profit.","Stay alert.","Enjoy it."]},
+{r:"凶",w:["鏡にも","曇りあるなり","磨かずば","己が姿も","映らざりけり"],e:"Even a mirror clouds over. Unless you polish it, it won't show you yourself.",d:"Clean the mirror before you ask the world.",c:["まず己を省みよ","来ず","身近にあり","よからず","見直せ","怠りあり","自分を大切に"],x:["Look at yourself first.","Won't come.","Close by.","Not good.","Review everything.","You've been neglecting it.","Take care of yourself."]},
+{r:"吉",w:["灯籠の","明かり一つが","夜の道","迷う人をも","照らしけるかな"],e:"One lantern on the night road lights the way even for others who are lost.",d:"Light someone else's way and your own is lit.",c:["人を助ければ叶う","来る","人に尋ねよ","よし","信用で利あり","教えて深まる","優しさが実る"],x:["Comes true by helping others.","Comes.","Ask someone.","Good.","Trust brings profit.","Teaching deepens it.","Kindness pays off."]}
+];
+const RANK_EN={"大吉":"Great blessing","吉":"Blessing","中吉":"Middle blessing","小吉":"Small blessing","末吉":"Future blessing","凶":"Curse","大凶":"Great curse"};
+const BAD=new Set(["凶","大凶"]);
+
+const {R,sfx}=Temple;
+const NUM=["","一","二","三","四","五","六","七","八","九","十"];
+const kn=n=>n<=10?NUM[n]:n<20?"十"+NUM[n-10]:"二十";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const col=txt=>`<div class="col">${[...txt].map(c=>`<span>${c}</span>`).join("")}</div>`;
+const S={q:"",cat:"wish",n:0};
+const WK="omikuji-wallet",TK="omikuji-tied";
+const load=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+
+const secs=[...document.querySelectorAll("section[data-step]")],dots=[...$("dots").children];
+function go(i){secs.forEach((s,k)=>s.hidden=k!==i);dots.forEach((d,k)=>d.classList.toggle("on",k<=i));scrollTo(0,0);secs[i].querySelector("h1")?.focus({preventScroll:true});({0:enterHome,1:enterPurify,2:enterPray,3:enterShake,4:enterDrawers})[i]?.()}
+
+/* 0 */
+$("cats").innerHTML=CATS.map(([k,j,e])=>`<button class="chip" data-k="${k}" aria-pressed="${k===S.cat}"><b>${j}</b>${e}</button>`).join("");
+$("cats").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;S.cat=b.dataset.k;[...$("cats").children].forEach(c=>c.setAttribute("aria-pressed",c===b))};
+$("go1").onclick=()=>{S.q=$("f-q").value.trim();go(1)};
+function walletHTML(){const w=load(WK,[]);return w.slice().reverse().map((x,i)=>`<button data-i="${w.length-1-i}"><span class="k-n">${kn(x.n)}番 ${F[x.n-1].r}</span><span class="k-q">${esc(x.q||RANK_EN[F[x.n-1].r])}</span><span class="k-d">${x.d}</span></button>`).join("")}
+function tiedText(){const t=load(TK,0);return t?`${t} fortune${t>1?"s":""} tied at the shrine.`:""}
+function enterHome(){const w=load(WK,[]),t=load(TK,0);$("homeAfter").hidden=!w.length&&!t;$("walletHome").innerHTML=walletHTML();$("tiedHome").textContent=tiedText()}
+function openWallet(e){const b=e.target.closest("button");if(!b)return;const x=load(WK,[])[+b.dataset.i];S.n=x.n;S.cat=x.c;S.q=x.q;renderRead(false);go(5)}
+$("walletHome").onclick=openWallet;$("walletList").onclick=openWallet;
+
+/* 1 purify: ladle pours, ripples on the water, a drip from the spout */
+let pur=0,rip=[],wcx,ww=0,wh=0,pouring=false;const purLis=[...$("purSteps").children];
+const wcv=$("waterCv");wcx=wcv.getContext("2d");
+function fitWater(){const r=wcv.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);ww=r.width;wh=r.height;wcv.width=ww*d;wcv.height=wh*d;wcx.setTransform(d,0,0,d,0,0)}
+function waterLoop(){if(secs[1].hidden)return;wcx.clearRect(0,0,ww,wh);
+  if(Math.random()<.012)rip.push({x:ww*.1+R(-4,4),y:wh*.25,r:1,a:.5});
+  for(const p of rip){p.r+=.55;p.a*=.975;wcx.strokeStyle=`rgba(80,130,180,${p.a})`;wcx.lineWidth=1;wcx.beginPath();wcx.ellipse(p.x,p.y,p.r,p.r*.38,0,0,6.283);wcx.stroke()}
+  rip=rip.filter(p=>p.a>.02);
+  wcx.strokeStyle="rgba(255,255,255,.9)";wcx.lineWidth=2;wcx.lineCap="round";wcx.beginPath();wcx.moveTo(ww*.62,wh*.28);wcx.lineTo(ww*.74,wh*.28);wcx.moveTo(ww*.78,wh*.28);wcx.lineTo(ww*.8,wh*.28);wcx.stroke();
+  requestAnimationFrame(waterLoop)}
+function paintPur(){purLis.forEach((li,i)=>{li.className=i<pur?"done":i===pur?"now":""})}
+function enterPurify(){pur=0;paintPur();$("pourBtn").hidden=false;$("go2").hidden=true;requestAnimationFrame(()=>{fitWater();waterLoop()})}
+function pour(){if(pur>=4||pouring)return;pouring=true;const l=$("ladle");l.classList.add("pour");sfx.water(1);Temple.buzz(10);
+  setTimeout(()=>{$("stream").classList.add("on");const r1=$("stream").getBoundingClientRect(),r2=wcv.getBoundingClientRect();
+    let k=0;const iv=setInterval(()=>{rip.push({x:r1.left-r2.left+5+R(-3,3),y:wh*.55+R(-6,6),r:2,a:.7});if(++k>7)clearInterval(iv)},90)},Temple.reduce?0:350);
+  setTimeout(()=>{$("stream").classList.remove("on");l.classList.remove("pour");pouring=false;pur++;paintPur();
+    if(pur>=4){$("pourBtn").hidden=true;$("go2").hidden=false;$("go2").focus()}},Temple.reduce?50:1150)}
+$("pourBtn").onclick=pour;$("basin").onclick=pour;$("basin").onkeydown=e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();pour()}};
+addEventListener("resize",()=>{if(!secs[1].hidden)fitWater()});
+$("go2").onclick=()=>go(2);
+
+/* 2 pray */
+const ORDER=["bow","bow","clap","clap","bow"];let pos=0;
+function paintSeq(){[...$("seq").children].forEach((s,i)=>s.classList.toggle("on",i<pos))}
+function enterPray(){pos=0;paintSeq();$("goen").style.display="none";["bellBtn","bowBtn","clapBtn","go3"].forEach(id=>$(id).hidden=true);$("coinBtn").hidden=false;$("prayOut").textContent=""}
+$("coinBtn").onclick=()=>{$("coinBtn").hidden=true;const g=$("goen"),hall=$("hall").getBoundingClientRect(),box=$("obox").getBoundingClientRect();
+  const land=box.top-hall.top-150-28;let y=-120,vy=0,rot=0,b=0;g.style.display="block";let lt=performance.now();
+  const end=()=>{g.style.display="none";$("bellBtn").hidden=false;$("prayOut").textContent="The coin is offered. Ring the bell to call the kami.";$("bellBtn").focus()};
+  if(Temple.reduce){sfx.clink(.5);sfx.wood(.4);end();return}
+  const step=t=>{const dt=Math.min(.033,(t-lt)/1000);lt=t;vy+=1500*dt;y+=vy*dt;rot+=dt*900;
+    if(y>=land){y=land;b++;sfx.clink(.45/b,R(1.1,1.3));sfx.wood(.35/b,1.2);Temple.buzz(10);if(b<2&&vy>200){vy=-vy*.3}else{g.style.transition="transform .25s, opacity .25s";g.style.transform=`translateY(${y+14}px) scaleY(.2)`;g.style.opacity="0";setTimeout(()=>{g.style.transition="";g.style.opacity="";g.style.transform="";end()},300);return}}
+    g.style.transform=`translateY(${y}px) rotateY(${rot}deg)`;requestAnimationFrame(step)};
+  requestAnimationFrame(step)};
+$("bellBtn").onclick=()=>{const r=$("rope");r.classList.remove("swing");void r.offsetWidth;r.classList.add("swing");sfx.bell();Temple.buzz([8,40,8]);
+  $("bellBtn").hidden=true;$("bowBtn").hidden=false;$("clapBtn").hidden=false;$("prayOut").textContent="Now bow deeply, twice."};
+function act(kind){if(ORDER[pos]!==kind){pos=0;paintSeq();$("prayOut").textContent="Start again: two bows, two claps, one bow.";return}
+  pos++;paintSeq();
+  if(kind==="clap"){sfx.clap();Temple.buzz(15)}else{const s=$("hall");s.classList.remove("bowing");void s.offsetWidth;s.classList.add("bowing");sfx.wood(.15,.5)}
+  if(pos===2)$("prayOut").textContent="Clap twice.";
+  else if(pos===4)$("prayOut").textContent=S.q?`Hands together. Make your wish silently: “${S.q}”. Then one last bow.`:"Hands together. Make your wish silently, then one last bow.";
+  else if(pos===5){$("prayOut").textContent="The kami has heard you.";$("bowBtn").hidden=true;$("clapBtn").hidden=true;$("go3").hidden=false;$("go3").focus()}}
+$("bowBtn").onclick=()=>act("bow");$("clapBtn").onclick=()=>act("clap");
+$("go3").onclick=()=>go(3);
+
+/* 3 shake the hexagonal box */
+let paid=false,prog=0,need=2,holding=false,last=0,tick=0,done=false;
+function enterShake(){paid=false;prog=0;need=1.6+Temple.rand()*1.6;done=false;holding=false;$("boxwrap").classList.remove("flip","shaking");$("mstick").style.transform="";$("payBtn").hidden=false;$("go4").hidden=true;$("hexOut").textContent="";$("hexHint").textContent="Pay first";$("hexHint").hidden=false}
+$("payBtn").onclick=()=>{$("payBtn").hidden=true;const c=$("coin100");c.style.display="block";c.animate([{transform:"translateY(-60px) scale(1.1)",opacity:0},{transform:"translateY(0) scale(1)",opacity:1,offset:.4},{transform:"translateY(30px) scaleX(.15)",opacity:0}],{duration:Temple.reduce?1:900,easing:"ease-in"}).onfinish=()=>{c.style.display="none";
+  sfx.clink(.5,1.2);setTimeout(()=>sfx.clink(.3,1.4),80);paid=true;$("boxwrap").classList.add("flip");setTimeout(()=>{sfx.wood(.6,.55);sfx.thud(.3,"wood");Temple.buzz(12)},Temple.reduce?0:650);
+  $("hexHint").textContent="Press and hold to shake"}};
+function startShake(){if(secs[3].hidden)return;if(!paid){$("hexOut").textContent="Put ¥100 in the slot first.";return}if(done||holding)return;$("hexOut").textContent="";holding=true;$("boxwrap").classList.add("shaking");last=performance.now();Temple.buzz(8);requestAnimationFrame(loop)}
+function stopShake(){holding=false;$("boxwrap").classList.remove("shaking")}
+function loop(t){if(!holding||done)return;const dt=Math.min(.05,(t-last)/1000);last=t;prog+=dt;tick-=dt;
+  if(tick<=0){sfx.wood(R(.2,.38),R(1.2,1.7));if(Math.random()<.5)sfx.wood(R(.1,.2),R(1.3,1.8),.03);tick=.06+R(0,.06);Temple.buzz(4)}
+  const p=Math.min(prog/need,1);$("mstick").style.transform=`translateY(${(-100+p*45).toFixed(1)}%)`;
+  if(prog>=need){stopShake();done=true;S.n=1+Math.floor(Temple.rand()*F.length);$("mstickNum").innerHTML=col(`${kn(S.n)}番`);
+    $("mstick").animate([{transform:"translateY(-55%)"},{transform:"translateY(0)"}],{duration:Temple.reduce?1:450,easing:"cubic-bezier(.3,.7,.3,1)",fill:"forwards"});
+    setTimeout(()=>{sfx.wood(.5,.9);Temple.buzz(14)},Temple.reduce?0:420);$("hexHint").hidden=true;
+    $("hexOut").innerHTML=`<span class="big">${kn(S.n)}番</span>Stick ${S.n} slid out. Read its number.`;$("go4").hidden=false;$("go4").focus()}
+  else requestAnimationFrame(loop)}
+Temple.hold($("stand"),startShake,stopShake);
+Temple.onShake(startShake,stopShake);
+$("go4").onclick=()=>go(4);
+
+/* 4 drawers */
+function enterDrawers(){$("drawTitle").textContent=`Open drawer ${kn(S.n)}`;$("drawOut").textContent="";
+  $("drawers").innerHTML=F.map((_,i)=>`<button class="drawer" data-n="${i+1}" aria-label="Drawer ${i+1}"><span class="lbl m-paper">${kn(i+1)}</span><span class="pull"></span></button>`).join("")}
+$("drawers").onclick=e=>{const b=e.target.closest(".drawer");if(!b||b.classList.contains("open"))return;const n=+b.dataset.n;
+  if(n!==S.n){b.classList.remove("wrong");void b.offsetWidth;b.classList.add("wrong");sfx.wood(.2,.7);$("drawOut").textContent=`That one is ${kn(n)} (${n}). Look for ${kn(S.n)}.`;return}
+  b.classList.add("open");sfx.slide();Temple.buzz(12);$("drawOut").textContent="You take a folded paper.";setTimeout(()=>{renderRead(true);go(5)},Temple.reduce?0:900)};
+
+/* 5 read */
+function renderRead(fresh){const f=F[S.n-1],ci=CATS.findIndex(c=>c[0]===S.cat),bad=BAD.has(f.r);
+  $("readEye").textContent=`第${kn(S.n)}番 · Fortune ${S.n}`;$("readTitle").textContent=`${f.r} · ${RANK_EN[f.r]}`;$("readQ").textContent=S.q?`“${S.q}”`:"";
+  $("pNum").textContent=`第${kn(S.n)}番`;$("pRank").textContent=f.r;$("pWaka").innerHTML=f.w.map(col).join("");
+  $("pEn").textContent=f.e;$("pGen").textContent=f.d;
+  const order=[ci,...CATS.map((_,i)=>i).filter(i=>i!==ci)];
+  $("pTable").innerHTML=order.map(i=>`<tr class="${i===ci?"mine":""}"><td>${CATS[i][1]}<span>${CATS[i][2]}</span></td><td><span class="jp">${f.c[i]}</span>${esc(f.x[i])}</td></tr>`).join("");
+  $("readActs").hidden=!fresh;$("afterBox").hidden=fresh;
+  if(fresh){$("primBtn").textContent=bad?"Tie it at the shrine":"Keep it in your wallet";$("altBtn").textContent=bad?"Keep it anyway":"Tie it at the shrine";$("primBtn").dataset.a=bad?"tie":"keep";$("altBtn").dataset.a=bad?"keep":"tie"}
+  $("readNote").textContent=bad?"People tie bad fortunes to a rack or a pine tree so the bad luck stays at the shrine. Pine, matsu (松), sounds like matsu (待つ), to wait: the luck waits there instead of following you."
+    :"People keep good fortunes in a wallet or purse and carry the luck with them. Some tie good ones too, to strengthen the bond with the kami. These 20 fortunes and poems were written for this app in the style of shrine omikuji.";
+  const p=$("paper");p.classList.remove("open");void p.offsetWidth;setTimeout(()=>{p.classList.add("open");sfx.paper(1,.08)},300)}
+function finish(a){$("readActs").hidden=true;$("afterBox").hidden=false;
+  if(a==="tie"){const t=load(TK,0)+1;save(TK,t);$("afterEye").textContent="結ぶ · Tied";$("rackBox").hidden=false;drawRack(t);$("tiedCount").textContent=tiedText();$("walletList").innerHTML="";sfx.paper(.4,.07);Temple.buzz(10)}
+  else{const w=load(WK,[]);w.push({n:S.n,c:S.cat,q:S.q,d:new Date().toISOString().slice(0,10)});save(WK,w);$("afterEye").textContent="財布 · Your wallet";$("rackBox").hidden=true;$("tiedCount").textContent=tiedText();$("walletList").innerHTML=walletHTML();sfx.paper(.3,.06)}}
+$("primBtn").onclick=e=>finish(e.target.dataset.a);$("altBtn").onclick=e=>finish(e.target.dataset.a);
+function drawRack(t){const shown=Math.min(t,48),per=16;let h=`<div class="post m-wood" style="left:8px"></div><div class="post m-wood" style="right:8px"></div>`;
+  for(let r=0;r<3;r++)h+=`<div class="rope2" style="top:${34+r*40}px"></div>`;
+  for(let i=0;i<shown;i++){const r=Math.floor(i/per),k=i%per;h+=`<div class="knot${i===shown-1?" new":""}" style="left:${7+k*5.6+(r%2)*2.5}%;top:${36+r*40}px;transform:rotate(${R(-8,8).toFixed(1)}deg)"></div>`}
+  $("rackBox").innerHTML=h}
+$("again").onclick=()=>{$("f-q").value="";S.q="";go(0)};
+
+$("backBtn").innerHTML=Temple.icon.back;Temple.soundButton($("snd"));Temple.rain();
+go(0);
+</script>
+</body>
+</html>

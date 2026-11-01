@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I Ching · A Rainy Day in the Temple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/temple.css">
+<style>
+.wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:0 clamp(16px,5vw,56px)}
+.col{max-width:620px}
+.lede{max-width:620px;margin:0}
+section.sec{padding:96px 0 0}
+section.hero{padding-top:56px}
+.reveal-in{animation:rise .35s ease-out both}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+#settings{max-width:520px;padding:4px 0 8px}
+.field{margin-top:22px}
+.field label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:500}
+.field input,.field textarea{width:100%;border:0;border-bottom:1px solid var(--hair-2);background:transparent;color:var(--ink);font:inherit;font-size:14px;padding:8px 0;outline:none;resize:none}
+.field input:focus,.field textarea:focus{border-bottom-color:var(--blue)}
+.note{font-size:12px;color:var(--faint);margin-top:10px}
+.row{display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-top:22px}
+.status{font-size:12px;color:var(--faint);margin-top:16px}
+.status.err{color:var(--red)}
+
+.stepper{list-style:none;padding:0;margin:28px 0 0;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:760px}
+.stepper li{border:1px solid var(--hair);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--faint);background:#fff;transition:all .3s}
+.stepper li b{display:block;font-weight:500;font-size:11px;letter-spacing:.08em;margin-bottom:2px}
+.stepper li.on{background:var(--blue-soft);border-color:var(--blue);color:var(--blue)}
+.stepper li.done{color:var(--muted)}
+@media (max-width:560px){.stepper{grid-template-columns:repeat(2,1fr)}}
+.qcard .q[contenteditable]{outline:none;border-bottom:1px dashed var(--hair-2);padding-bottom:4px}
+.qcard .q[contenteditable]:focus{border-bottom-color:var(--blue)}
+.qcard .edit{font-size:11px;color:var(--faint);margin-top:6px}
+/* 01 · the master's room */
+.scene{min-height:540px;margin-top:20px;border-radius:12px;display:flex;flex-direction:column;align-items:center;padding-top:30px}
+.scene .who{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:4}
+.scene .t-think{visibility:hidden} .scene.thinking .t-think{visibility:visible}
+.scene .say{position:relative;margin:18px 0 26px;max-width:min(92%,480px);z-index:5;text-align:center}
+.zone{position:relative;width:100%;height:250px;margin-top:auto}
+.scene .say .t-bubble{text-align:left}
+.scene .t-table{left:9%;right:9%;top:30px;height:150px}
+.scene .t-legs{left:12%;right:12%;top:198px;height:60px} .scene .t-legs i:nth-child(1){left:0} .scene .t-legs i:nth-child(2){right:0}
+.scene .props{position:absolute;left:9%;right:9%;top:0;height:180px;z-index:2;pointer-events:none}
+.scene .props svg{position:absolute}
+.scene .ask{position:absolute;left:14%;right:14%;top:148px;z-index:6}
+.transcript{max-width:620px;margin-top:20px;display:flex;flex-direction:column;gap:10px;font-size:13px}
+.transcript div{display:flex;gap:10px} .transcript b{font-weight:500;color:var(--faint);min-width:56px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding-top:2px}
+.transcript span{color:var(--ink-2)}
+.qcard{max-width:620px;margin-top:28px;padding:24px 24px 22px}
+.qcard .q{color:var(--ink);font-size:17px;line-height:1.55;margin:0}
+.warn{margin-top:24px;max-width:620px;padding:18px 20px}
+.warn p{margin:0} .warn .classic{font-family:var(--serif);color:var(--ink);letter-spacing:.06em;font-size:17px}
+.warn .cap{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* 02 · casting on the table */
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:48px;align-items:start;margin-top:32px}
+.castroom{height:480px;border-radius:12px;cursor:grab}
+.castroom:active{cursor:grabbing}
+.castroom .t-table{left:6%;right:6%;top:64px;height:330px;perspective:900px}
+.castroom .t-legs{left:9%;right:9%;top:412px;height:70px} .castroom .t-legs i:nth-child(1){left:0} .castroom .t-legs i:nth-child(2){right:0}
+.hintrow{display:flex;justify-content:space-between;gap:16px;margin-top:14px}
+.hintrow .k{font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums}
+.lines{display:flex;flex-direction:column-reverse;gap:14px}
+.line{display:flex;align-items:center;gap:14px;height:14px}
+.line .ghost{width:128px;height:1px;background:var(--hair-2)}
+.line .tag{font-size:12px;color:var(--faint);white-space:nowrap;opacity:0;transition:opacity .4s .25s}
+.line .tag .zh{color:var(--ink-2)} .line .tag b{color:var(--red);font-weight:500;margin-right:4px}
+.line.drawn .tag{opacity:1}
+
+/* moment */
+.moment .big{display:flex;flex-direction:column-reverse;gap:16px;margin:24px 0 40px}
+.moment .name{font-family:var(--serif);font-size:clamp(52px,8vw,76px);line-height:1;color:var(--ink);font-weight:500;letter-spacing:.04em}
+.moment .sub{color:var(--ink-2);margin-top:16px;text-align:center}
+.moment .sub2{font-size:13px;color:var(--faint);margin-top:4px;text-align:center}
+.moment .acts{margin-top:44px;display:flex;gap:24px}
+
+/* 03 · structure */
+.meta{display:flex;gap:36px;flex-wrap:wrap;margin-top:28px}
+.meta .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:500}
+.meta .v{color:var(--ink-2);font-size:13px;margin-top:2px}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:32px}
+.cell{padding:22px;min-height:300px;display:flex;flex-direction:column}
+.cell:first-child{background:var(--blue-soft);border-color:var(--blue)}
+.cell .role{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:500}
+.cell .fig{display:flex;flex-direction:column-reverse;gap:9px;margin:24px 0 20px;width:max-content}
+.cell .fig .ln{display:flex;align-items:center;gap:10px}
+.cell .fig .mk{font-size:12px;color:var(--red);width:10px}
+.cell .zhn{font-family:var(--serif);font-size:28px;color:var(--ink);font-weight:500;letter-spacing:.04em;margin:auto 0 4px;line-height:1.2}
+.cell h3{font-size:13px;font-weight:500;color:var(--ink);margin:0}
+.cell p{margin:4px 0 0;font-size:12px;line-height:1.6}
+.cell.none{color:var(--faint)}
+.caption{font-size:12px;color:var(--faint);margin:14px 0 0;max-width:620px}
+
+/* 04 · reading */
+.verdict{display:block;max-width:620px;background:#2a2a2a;color:#fff;border-radius:12px;padding:16px 22px;font-size:16px;margin:32px 0 6px;line-height:1.55}
+.rsec{margin-top:36px;max-width:620px}
+.rsec .eyebrow{margin-bottom:8px}
+.rsec p{margin:0 0 10px;color:var(--ink-2)}
+.follow{margin-top:48px;max-width:620px}
+.answer{margin-top:20px;color:var(--ink-2)}
+
+.table{margin-top:28px;font-size:13px}
+.prow{display:grid;grid-template-columns:110px 1fr 150px;gap:20px;padding:14px 0;border-top:1px solid var(--hair);cursor:pointer}
+.prow:hover .q{color:var(--blue)}
+.prow.head{cursor:default;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:500;border-top:0;padding-top:0}
+.prow .d{color:var(--faint);font-variant-numeric:tabular-nums}
+.prow .q{color:var(--ink-2)} .prow .h{font-family:var(--serif);color:var(--muted)}
+.detail{padding:6px 0 28px;max-width:620px}
+.empty{font-size:13px;color:var(--faint);margin-top:20px}
+footer{padding:120px 0 48px;font-size:12px;color:var(--faint)}
+
+@media (max-width:760px){
+  section.sec{padding-top:72px} section.hero{padding-top:32px}
+  .stage{grid-template-columns:1fr;gap:36px}
+  .stage .side{display:flex;flex-direction:column;align-items:center}
+  .scene .t-table,.scene .props{left:3%;right:3%} .scene .ask{left:5%;right:5%}
+  .castroom{height:420px} .castroom .t-table{left:3%;right:3%;height:280px} .castroom .t-legs{top:362px}
+  .trio{grid-template-columns:1fr} .cell{min-height:0}
+  .prow{grid-template-columns:1fr;gap:2px} .prow.head{display:none}
+}
+@media (prefers-reduced-motion:reduce){ .reveal-in{animation:none} }
+</style>
+</head>
+<body class="t-body">
+<div class="wrap">
+  <nav class="t-nav">
+    <a class="t-back" href="index.html" aria-label="Back to A Rainy Day in the Temple" id="backBtn"></a>
+    <div class="right"><button id="soundBtn">Sound on</button><button id="langBtn">EN · 中文</button><button id="keyBtn">Key</button></div>
+  </nav>
+
+  <div id="settings" hidden>
+    <div class="field"><label>Anthropic API key</label><input id="keyIn" type="password" placeholder="sk-ant-…" autocomplete="off"></div>
+    <div class="field"><label>Model</label><input id="modelIn" type="text" placeholder="claude-sonnet-4-5"></div>
+    <div class="row"><button class="t-pill" id="saveKey">Save</button><button class="t-link quiet" id="clearKey">Remove key</button></div>
+    <p class="note">The key is kept only in this browser and is sent only to Anthropic. Without one you can still cast; the master just won't speak.</p>
+  </div>
+
+  <section class="sec hero">
+    <p class="eyebrow">易经 · I Ching · A visit to the master</p>
+    <h1 class="t-h1">Sit. The rain won't stop for a while.</h1>
+    <p class="lede">The master helps you shape one clear question. Then you toss three coins six times, and the hexagram is read: where things stand, what is moving, and where it is heading.</p>
+  </section>
+
+  <ol class="stepper" id="stepper" aria-label="Steps">
+    <li data-s="1"><b>01</b>Shape the question</li><li data-s="2"><b>02</b>Toss the coins</li><li data-s="3"><b>03</b>See the hexagram</li><li data-s="4"><b>04</b>Hear the reading</li>
+  </ol>
+  <!-- 01 framing: the master's room -->
+  <section class="sec" id="s1" style="padding-top:40px">
+    <p class="eyebrow">01 — Framing the question · <span class="zh">问</span></p>
+    <div class="scene t-room" id="scene">
+      <div class="who">
+        <div class="t-think"><i></i><i></i><i></i></div>
+        <div class="t-avatar"><div class="face" id="face"></div><span class="name">易学老师 · The master</span></div>
+      </div>
+      <div class="say"><span class="t-bubble up" id="say"></span></div>
+      <div class="zone">
+      <div class="t-table"></div>
+      <div class="t-legs"><i></i><i></i></div>
+      <div class="props" aria-hidden="true">
+        <svg style="left:6%;top:52px" width="118" height="84" viewBox="0 0 118 84"><g stroke="#3a3a3a" stroke-width="1.4" stroke-linejoin="round">
+          <path d="M14,20 L96,8 L108,62 L26,76Z" fill="#cfe0f1"/><path d="M26,76 L28,82 L110,68 L108,62" fill="#fff"/><path d="M22,22 L33,73" fill="none"/>
+          <path d="M56,24 L78,21 L84,50 L62,53Z" fill="#fff"/></g>
+          <text x="70" y="40" font-family="Noto Serif SC,serif" font-size="11" fill="#3a3a3a" text-anchor="middle" transform="rotate(-8 70 40)">易经</text></svg>
+        <svg style="left:40%;top:72px" width="58" height="44" viewBox="0 0 58 44"><g stroke="#3a3a3a" stroke-width="1.4"><path d="M8,12 Q8,36 26,38 Q44,36 44,12Z" fill="#f6d77e"/><ellipse cx="26" cy="12" rx="18" ry="5" fill="#e7b864"/><path d="M44,16 Q54,16 52,24 Q50,30 42,28" fill="none"/></g></svg>
+        <svg style="left:57%;top:96px" width="58" height="44" viewBox="0 0 58 44"><g stroke="#3a3a3a" stroke-width="1.4"><path d="M8,12 Q8,36 26,38 Q44,36 44,12Z" fill="#f6d77e"/><ellipse cx="26" cy="12" rx="18" ry="5" fill="#e7b864"/><path d="M44,16 Q54,16 52,24 Q50,30 42,28" fill="none"/></g></svg>
+        <svg style="right:7%;top:18px" width="120" height="108" viewBox="0 0 120 108"><g stroke="#3a3a3a" stroke-width="1.4" stroke-linejoin="round">
+          <path d="M22,48 Q4,40 6,26 Q16,40 30,46" fill="#fff"/><path d="M92,44 Q114,40 110,62 Q106,76 90,72" fill="none" stroke-width="5" stroke="#3a3a3a"/><path d="M92,44 Q114,40 110,62 Q106,76 90,72" fill="none" stroke-width="2.4" stroke="#fff"/>
+          <path d="M26,40 Q24,96 58,98 Q94,96 92,40Z" fill="#fff"/><path d="M27,60 Q58,68 91,60" fill="none" stroke="#a9c7e6" stroke-width="5"/>
+          <ellipse cx="59" cy="40" rx="33" ry="8" fill="#fff"/><path d="M42,38 Q44,24 59,24 Q74,24 76,38" fill="#fff"/><circle cx="59" cy="20" r="4.5" fill="#cfe0f1"/></g></svg>
+      </div>
+      <div class="ask"><div class="t-input"><textarea id="chatIn" rows="1"></textarea><button class="t-send" id="sendBtn" aria-label="Send"></button></div></div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:14px"><button class="t-link quiet" id="directBtn">I already know my question →</button></div>
+    <p class="status" id="s1status" hidden></p>
+    <div class="transcript" id="chat"></div>
+    <div class="qcard t-card selected" id="qcard" hidden>
+      <p class="eyebrow">Your question</p>
+      <p class="q" id="qtext" contenteditable="true" spellcheck="false"></p><p class="edit">You can edit the wording before you cast.</p>
+      <div class="row"><button class="t-pill" id="castWith">Cast with this question →</button><button class="t-link quiet" id="keepTalking">Keep talking</button></div>
+    </div>
+    <div class="warn t-card" id="warn" hidden>
+      <p class="eyebrow">The master shakes his head</p>
+      <p class="classic">初筮告，再三渎，渎则不告。</p>
+      <p class="cap">"The first divination is answered. Asking again and again is disrespectful, and the disrespectful get no answer." — Hexagram 4, 蒙. You asked this today already. Sit with that answer, or ask something new.</p>
+    </div>
+  </section>
+
+  <!-- 02 casting -->
+  <section class="sec" id="s2" hidden>
+    <p class="eyebrow">02 — Casting · <span class="zh">起卦</span></p>
+    <h2 class="t-h2">Hold the question, then toss</h2>
+    <p class="lede">Press and hold the table to shake the coins in your hands, and let go to toss. On a phone you can shake the phone. A plain back counts three and an inscribed face counts two; six or nine is a moving line.</p>
+    <div class="stage">
+      <div>
+        <div class="castroom t-room" id="castroom" tabindex="0" role="button" aria-label="Press and hold to shake the coins, release to toss">
+          <span class="tag">Three coins<span>开元通宝</span></span>
+          <div class="t-table" id="mat"></div>
+          <div class="t-legs"><i></i><i></i></div>
+        </div>
+        <div class="hintrow"><span class="t-hint"><span class="now" id="hint">Press and hold to shake the coins. Let go to toss.</span></span><span class="k" id="count">1 / 6</span></div>
+      </div>
+      <div class="side">
+        <p class="eyebrow" style="margin-bottom:24px">Your hexagram</p>
+        <div class="lines" id="lines"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="s3" hidden>
+    <p class="eyebrow">03 — The hexagram · <span class="zh">卦象</span></p>
+    <h2 class="t-h2" id="s3title"></h2>
+    <p class="lede" id="s3lede"></p>
+    <div class="meta" id="meta"></div>
+    <div class="trio" id="trio"></div>
+    <p class="caption">The primary hexagram is where things stand now. The nuclear hexagram, drawn from lines two to five, shows what is hidden inside. The changed hexagram, after the moving lines turn, is where it is heading.</p>
+  </section>
+
+  <section class="sec" id="s4" hidden>
+    <p class="eyebrow">04 — The reading · <span class="zh">解卦</span></p>
+    <h2 class="t-h2">The master reads</h2>
+    <p class="lede" id="s4lede"></p>
+    <div class="row" id="readRow"><button class="t-pill" id="readBtn">Ask the master to read</button></div>
+    <p class="status" id="s4status" hidden></p>
+    <div id="reading"></div>
+    <div class="follow" id="follow" hidden>
+      <p class="eyebrow">One more question about this reading</p>
+      <div class="t-input"><textarea id="followIn" rows="1" placeholder="Ask about a line, the timing, what to do…"></textarea><button class="t-send ready" id="followBtn" aria-label="Ask"></button></div>
+      <div class="answer" id="answer"></div>
+    </div>
+    <div class="row" style="margin-top:56px"><button class="t-link" id="newVisit">Leave the temple and begin a new visit →</button></div>
+  </section>
+
+  <section class="sec" id="past">
+    <p class="eyebrow">Past visits</p>
+    <h2 class="t-h2">What the coins said before</h2>
+    <div class="table" id="pastTable"></div>
+  </section>
+
+  <footer>A Rainy Day in the Temple — a quiet place to ask one question. The I Ching is for reflection, not for certainty.</footer>
+</div>
+
+<div class="t-moment moment" id="moment" aria-live="polite">
+  <p class="eyebrow">本卦 · Primary hexagram</p>
+  <div class="big" id="mLines"></div>
+  <div class="name fade" id="mName"></div>
+  <div class="sub fade d2" id="mSub"></div>
+  <div class="sub2 fade d2" id="mSub2"></div>
+  <div class="acts fade d3"><button class="t-pill" id="mGo">Continue to the reading ↓</button></div>
+</div>
+<script src="shared/temple.js"></script>
+<script>
+const {R,sfx}=Temple;
+const HEX=[null,["乾","Qián","The Creative"],["坤","Kūn","The Receptive"],["屯","Zhūn","Difficulty at the Beginning"],["蒙","Méng","Youthful Folly"],["需","Xū","Waiting"],["讼","Sòng","Conflict"],["师","Shī","The Army"],["比","Bǐ","Holding Together"],["小畜","Xiǎo Chù","Small Taming"],["履","Lǚ","Treading"],["泰","Tài","Peace"],["否","Pǐ","Standstill"],["同人","Tóng Rén","Fellowship"],["大有","Dà Yǒu","Great Possession"],["谦","Qiān","Modesty"],["豫","Yù","Enthusiasm"],["随","Suí","Following"],["蛊","Gǔ","Work on the Decayed"],["临","Lín","Approach"],["观","Guān","Contemplation"],["噬嗑","Shì Kè","Biting Through"],["贲","Bì","Grace"],["剥","Bō","Splitting Apart"],["复","Fù","Return"],["无妄","Wú Wàng","Innocence"],["大畜","Dà Chù","Great Taming"],["颐","Yí","Nourishment"],["大过","Dà Guò","Great Exceeding"],["坎","Kǎn","The Abysmal"],["离","Lí","The Clinging"],["咸","Xián","Influence"],["恒","Héng","Duration"],["遁","Dùn","Retreat"],["大壮","Dà Zhuàng","Great Power"],["晋","Jìn","Progress"],["明夷","Míng Yí","Darkening of the Light"],["家人","Jiā Rén","The Family"],["睽","Kuí","Opposition"],["蹇","Jiǎn","Obstruction"],["解","Xiè","Deliverance"],["损","Sǔn","Decrease"],["益","Yì","Increase"],["夬","Guài","Breakthrough"],["姤","Gòu","Coming to Meet"],["萃","Cuì","Gathering Together"],["升","Shēng","Pushing Upward"],["困","Kùn","Oppression"],["井","Jǐng","The Well"],["革","Gé","Revolution"],["鼎","Dǐng","The Cauldron"],["震","Zhèn","The Arousing"],["艮","Gèn","Keeping Still"],["渐","Jiàn","Development"],["归妹","Guī Mèi","The Marrying Maiden"],["丰","Fēng","Abundance"],["旅","Lǚ","The Wanderer"],["巽","Xùn","The Gentle"],["兑","Duì","The Joyous"],["涣","Huàn","Dispersion"],["节","Jié","Limitation"],["中孚","Zhōng Fú","Inner Truth"],["小过","Xiǎo Guò","Small Exceeding"],["既济","Jì Jì","After Completion"],["未济","Wèi Jì","Before Completion"]];
+const TRI={"111":"qian","110":"dui","101":"li","100":"zhen","011":"xun","010":"kan","001":"gen","000":"kun"};
+const TRI_N={qian:["乾","天","Heaven"],dui:["兑","泽","Lake"],li:["离","火","Fire"],zhen:["震","雷","Thunder"],xun:["巽","风","Wind"],kan:["坎","水","Water"],gen:["艮","山","Mountain"],kun:["坤","地","Earth"]};
+const ORDER=["qian","zhen","kan","gen","kun","xun","li","dui"];
+const KW=[[1,25,6,33,12,44,13,10],[34,51,40,62,16,32,55,54],[5,3,29,39,8,48,63,60],[26,27,4,52,23,18,22,41],[11,24,7,15,2,46,36,19],[9,42,59,53,20,57,37,61],[14,21,64,56,35,50,30,38],[43,17,47,31,45,28,49,58]];
+function hexInfo(lines){const lo=TRI[lines.slice(0,3).join("")],up=TRI[lines.slice(3).join("")],n=KW[ORDER.indexOf(up)][ORDER.indexOf(lo)];return{n,lines,lo,up,zh:HEX[n][0],py:HEX[n][1],en:HEX[n][2]}}
+const fullName=h=>h.up===h.lo?`${h.zh}为${TRI_N[h.up][1]}`:`${TRI_N[h.up][1]}${TRI_N[h.lo][1]}${h.zh}`;
+const VAL={6:["老阴","old yin","×",0,true],7:["少阳","young yang","",1,false],8:["少阴","young yin","",0,false],9:["老阳","old yang","○",1,true]};
+const CN=["一","二","三","四","五","六"];
+
+const STEMS="甲乙丙丁戊己庚辛壬癸",BRANCHES="子丑寅卯辰巳午未申酉戌亥",gz=i=>STEMS[i%10]+BRANCHES[i%12];
+function ganzhi(d){const y=d.getFullYear(),m=d.getMonth()+1,day=d.getDate();
+  const diff=Math.round((Date.UTC(y,m-1,day)-Date.UTC(1949,9,1))/864e5),dayIdx=((diff%60)+60)%60;
+  const starts=[[1,6,1],[2,4,2],[3,6,3],[4,5,4],[5,6,5],[6,6,6],[7,7,7],[8,8,8],[9,8,9],[10,8,10],[11,7,11],[12,7,0]];
+  let br=0;for(const [mm,dd,b] of starts) if(m>mm||(m===mm&&day>=dd)) br=b;
+  const gy=(m<2||(m===2&&day<4))?y-1:y,yIdx=(((gy-4)%60)+60)%60,mStem=((yIdx%10)*2+2+((br-2+12)%12))%10;
+  let mIdx=0;for(let i=0;i<60;i++) if(i%10===mStem&&i%12===br){mIdx=i;break}
+  return{year:gz(yIdx)+"年",month:gz(mIdx)+"月",day:gz(dayIdx)+"日"}}
+
+const $=id=>document.getElementById(id);
+const store={get(k,d){try{const v=localStorage.getItem("rainyTemple."+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("rainyTemple."+k,JSON.stringify(v))}catch(e){}}};
+const S={lang:store.get("lang","en"),key:store.get("key",""),model:store.get("model","claude-sonnet-4-5"),chat:[],question:"",tosses:[],primary:null,changed:null,nuclear:null,moving:[],castAt:null,readingText:"",followed:false,visitId:null};
+const T_={en:{open:"Sit. The rain won't stop for a while. Tell me what brings you here, and we will find your question together.",noKey:"Without a key I stay quiet. Write your question below: one situation, one time frame.",lede1k:"Talk with the master first. A real master won't cast until the question is specific: one situation, one time frame.",lede1n:"Without a key the master stays quiet. Write your question yourself: one situation, one time frame.",inLabel:"Tell the master",inLabelN:"Your question",send:"Send",sendN:"Use this question",lede4k:"The master will read the judgment and the moving lines against the day you cast.",lede4n:"Add your Anthropic key (top right) for the master to read this hexagram. The figures above are yours to keep either way."},
+ zh:{open:"坐吧，雨一时停不了。说说是什么事让你来的，我们一起把问题问清楚。",noKey:"没有密钥，我不说话。在下面写下你的问题：一件事，一个时间范围。",lede1k:"先和老师聊聊。真正的老师不会马上起卦：问题要具体，一件事，一个时间范围。",lede1n:"没有密钥，老师不会说话。自己写下问题：一件事，一个时间范围。",inLabel:"告诉老师",inLabelN:"你的问题",send:"发送",sendN:"就问这个",lede4k:"老师会结合起卦的日子，读卦辞和动爻。",lede4n:"在右上角添加 Anthropic 密钥，老师才会为你解卦。上面的卦象可以先留着。"}};
+const L=()=>T_[S.lang];
+const smooth=()=>Temple.reduce?"auto":"smooth";
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function status(id,text,err){const e=$(id);e.textContent=text;e.hidden=!text;e.classList.toggle("err",!!err)}
+
+/* On claude.ai the master speaks through the viewer's own Claude (no key); elsewhere, through the visitor's key. */
+let SAMPLE=null;
+const hasMaster=()=>!!SAMPLE||!!S.key;
+(async()=>{try{if(window.claude&&claude.use){SAMPLE=await claude.use("sample");if(SAMPLE)refreshKey()}}catch(e){}})();
+async function callClaude({system,messages,maxTokens=1200,onText}){
+  if(SAMPLE){
+    const input=messages.map((m,i)=>i===0?{role:"user",content:system+"\n\n---\n\n"+m.content}:m);
+    try{const r=await SAMPLE(input,{cache:false,onText:onText?({text})=>onText(text):undefined});return r.text}
+    catch(e){throw new Error(e&&e.code==="not_granted"?"Claude wasn't allowed for this page. Reload and choose Allow when asked.":e&&e.code==="rate_limited"?"too many questions at once. Wait a moment and try again.":(e&&e.message)||"Claude couldn't answer.")}
+  }
+  let res;try{res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":S.key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:S.model,max_tokens:maxTokens,system,messages,stream:true})})}catch(e){throw new Error("couldn't reach Anthropic from this page. Previews and some embedded viewers block outside connections; open the page from your website or a local copy and it will work.")}
+  if(res.status===401){$("settings").hidden=false;$("keyIn").value="";$("keyIn").focus();throw new Error("Anthropic didn't accept this key. Paste a fresh key from console.anthropic.com in the Key panel above, then try again.")}
+  if(!res.ok){let msg="Error "+res.status;try{const j=await res.json();if(j.error&&j.error.message)msg=j.error.message}catch(e){}throw new Error(msg)}
+  const reader=res.body.getReader(),dec=new TextDecoder();let buf="",full="";
+  for(;;){const {done,value}=await reader.read();if(done)break;buf+=dec.decode(value,{stream:true});let i;
+    while((i=buf.indexOf("\n"))>=0){const line=buf.slice(0,i).trim();buf=buf.slice(i+1);if(!line.startsWith("data:"))continue;let j;try{j=JSON.parse(line.slice(5).trim())}catch(e){continue}
+      if(j.type==="content_block_delta"&&j.delta&&j.delta.type==="text_delta"){full+=j.delta.text;onText&&onText(full)}else if(j.type==="error")throw new Error(j.error&&j.error.message||"Stream error")}}
+  return full}
+const langName=()=>S.lang==="zh"?"Simplified Chinese":"English";
+const FRAME_SYS=()=>`You are an old I Ching master (易学老师) in a quiet mountain temple on a rainy afternoon. A visitor has come for a reading. Right now your only job is what a real master does before casting: help them shape ONE clear, specific question.
+Ask at most two short questions, one at a time, warm and spare, like an old teacher, not a therapist. Steer away from vague questions ("what does my future hold") toward one concrete situation, ideally with a time frame. Do not interpret anything yet and do not cast.
+You MUST finish with the question line as soon as the question is clear, and no later than your second reply. Then write one short sentence and, on its own final line, exactly:
+QUESTION: <the refined question, in the visitor's own terms, in ${langName()}>
+Reply in ${langName()}. No markdown, no lists. Under 70 words.`;
+const HEADS={en:["The situation","The moving lines","Where it is heading","Timing","Counsel"],zh:["本卦","动爻","变卦","应期","建议"]};
+const READ_SYS=()=>`You are an old I Ching master (易学老师) in a mountain temple on a rainy afternoon. A visitor has just cast three coins six times. Give the reading the way a real master would. Combine 义理 (the Judgment, the line texts and their meaning) with a light touch of 六爻 practice: the month and day of casting, the 世 and 应 lines, and when things may happen. Be warm, spare and concrete. Speak to their actual question, not in generalities. Quote a short classical line in Chinese only when you are sure of its exact wording, then gloss it in a few words.
+
+Format exactly, with nothing before the first line:
+VERDICT: <one direct sentence answering the question, under 22 words>
+## ${HEADS[S.lang][0]}
+## ${HEADS[S.lang][1]}
+## ${HEADS[S.lang][2]}
+## ${HEADS[S.lang][3]}
+## ${HEADS[S.lang][4]}
+Under each heading write 2–4 sentences of plain prose: no bullet points, no bold, no further headings. Read the moving lines in order from the bottom. If there are none, say the situation is settled, read the Judgment, and under "${HEADS[S.lang][2]}" say there is no change. If the timing is uncertain, say so plainly. Reply in ${langName()}.`;
+
+/* 01 framing: the master speaks in a bubble, you answer in the pill */
+$("backBtn").innerHTML=Temple.icon.back;$("sendBtn").innerHTML=Temple.icon.send;$("followBtn").innerHTML=Temple.icon.send;
+let blinkT=null;
+function face(blink){$("face").innerHTML=Temple.master(blink)}
+function blinkLoop(){clearTimeout(blinkT);blinkT=setTimeout(()=>{face(true);setTimeout(()=>{face(false);blinkLoop()},160)},R(2500,5200))}
+face(false);blinkLoop();
+const strip=t=>t.replace(/\*\*/g,"").replace(/(?:^|\n)\s*(QUESTION|Question|问题|問題)\s*[:：].*$/m,"").trim();
+function renderChat(){
+  const M=S.lang==="zh"?"老师":"Master",Y=S.lang==="zh"?"你":"You";
+  const masters=S.chat.filter(m=>m.role==="assistant");
+  const latest=masters.length?strip(masters[masters.length-1].content):(hasMaster()?L().open:L().noKey);
+  $("say").textContent=latest;
+  const lastIdx=S.chat.map(m=>m.role).lastIndexOf("assistant");
+  const items=S.chat.filter((m,i)=>i!==lastIdx);
+  $("chat").innerHTML=items.map(m=>`<div class="reveal-in"><b>${m.role==="user"?Y:M}</b><span>${esc(m.role==="assistant"?strip(m.content):m.content)}</span></div>`).join("");
+}
+function setFramingCopy(){const k=hasMaster();
+  $("directBtn").hidden=!k;
+  $("chatIn").placeholder=k?(S.lang==="zh"?"说说是什么事……":"Tell the master…"):(S.lang==="zh"?"写下你的问题：一件事，一个时间范围":"Write your question: one situation, one time frame");
+  $("s4lede").textContent=k?L().lede4k:L().lede4n;renderChat()}
+function proposeQuestion(q){S.question=q.trim();if(!S.question)return;$("qtext").textContent="“"+S.question+"”";$("qcard").hidden=false;$("qcard").classList.add("reveal-in");$("warn").hidden=true;sfx.paper(.35,.05);
+  setTimeout(()=>$("qcard").scrollIntoView({behavior:smooth(),block:"nearest"}),60)}
+const ready=()=>$("sendBtn").classList.toggle("ready",!!$("chatIn").value.trim());
+$("chatIn").addEventListener("input",ready);
+async function send(){const text=$("chatIn").value.trim();if(!text)return;
+  if(!hasMaster()){$("chatIn").value="";ready();proposeQuestion(text);return}
+  S.chat.push({role:"user",content:text});$("chatIn").value="";ready();renderChat();$("sendBtn").disabled=true;$("scene").classList.add("thinking");status("s1status","");
+  try{const asked=S.chat.filter(m=>m.role==="assistant").length;
+    const nudge=asked>=1?"\n\n(Master: this is your last turn before casting. Do not ask anything more. Give one short sentence, then the QUESTION: line.)":"";
+    const msgs=S.chat.map((m,i)=>i===S.chat.length-1?{role:"user",content:m.content+nudge}:m);
+    const reply=await callClaude({system:FRAME_SYS(),messages:msgs,maxTokens:400});S.chat.push({role:"assistant",content:reply});renderChat();
+    const m=reply.replace(/\*\*/g,"").match(/(?:^|\n)\s*(?:QUESTION|Question|问题|問題)\s*[:：]\s*(.+)/);
+    if(m)proposeQuestion(m[1].trim());
+    else if(asked>=1){const firstUser=S.chat.find(x=>x.role==="user").content;proposeQuestion(firstUser)}}
+  catch(e){S.chat.pop();renderChat();status("s1status","The master couldn't answer: "+e.message,true)}
+  $("scene").classList.remove("thinking");$("sendBtn").disabled=false}
+$("sendBtn").onclick=send;
+$("chatIn").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}});
+$("directBtn").onclick=()=>{const t=$("chatIn").value.trim();if(t){$("chatIn").value="";ready();proposeQuestion(t)}else{$("chatIn").focus();$("chatIn").placeholder=S.lang==="zh"?"在这里写下你的问题，再点一次":"Write your question here, then tap again"}};
+$("keepTalking").onclick=()=>{$("qcard").hidden=true;$("chatIn").focus()};
+const norm=s=>s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,""),today=()=>new Date().toISOString().slice(0,10);
+$("castWith").onclick=()=>{
+  const edited=$("qtext").textContent.replace(/^[“"]|[”"]$/g,"").trim();if(edited)S.question=edited;
+  if(store.get("visits",[]).some(v=>v.date===today()&&norm(v.q)===norm(S.question))){$("warn").hidden=false;$("warn").classList.add("reveal-in");return}
+  $("castWith").disabled=true;$("keepTalking").hidden=true;startCasting()};
+
+/* 02 casting: coins on the table */
+let tosser=null,holdStart=0;
+function buildLines(){$("lines").innerHTML=Array.from({length:6},(_,i)=>`<div class="line" id="ln${i}"><div class="ghost"></div><span class="tag"></span></div>`).join("")}
+function startCasting(){
+  setStep(2);
+  S.tosses=[];buildLines();$("count").textContent="1 / 6";$("hint").textContent="Press and hold to shake the coins. Let go to toss.";$("castroom").style.cursor="";
+  $("s2").hidden=false;$("s2").classList.add("reveal-in");
+  requestAnimationFrame(()=>{
+    if(!tosser) tosser=new Temple.Tosser($("mat"),{count:3,w:72,h:72,thickness:4,edge:Temple.coinEdge,front:()=>Temple.coin(true),back:()=>Temple.coin(false),startFaces:[0,1,0],
+      onImpact:h=>{sfx.thud(.3+h*.5,"wood");sfx.clink(.25+h*.5,R(.9,1.08))},onWobble:v=>{sfx.clink(v,R(.95,1.1));sfx.thud(.08,"wood")},onRattle:()=>sfx.clink(R(.18,.3),R(.85,1.05))});
+    else tosser.build();
+  });
+  $("s2").scrollIntoView({behavior:smooth(),block:"start"});
+}
+function beginShake(){if(!tosser||S.tosses.length>=6||$("s2").hidden)return;if(tosser.gather()){holdStart=performance.now();$("hint").textContent="Keep the question in mind…";Temple.buzz(10)}}
+async function release(){
+  if(!tosser||tosser.state!=="shaking")return;
+  const short=performance.now()-holdStart<450;
+  const faces=[Temple.rbit(),Temple.rbit(),Temple.rbit()];Temple.buzz(18);
+  await tosser.toss(faces);
+  const sum=faces.reduce((s,f)=>s+(f?3:2),0);S.tosses.push({faces,sum});const n=S.tosses.length,v=VAL[sum];
+  const el=$("ln"+(n-1));el.innerHTML=Temple.brush(v[3],128,9,n*131+sum)+`<span class="tag"><b>${v[2]||"&nbsp;"}</b><span class="zh">${CN[n-1]} · ${v[0]}</span></span>`;
+  Temple.draw(el.querySelector("svg"));requestAnimationFrame(()=>el.classList.add("drawn"));sfx.brush();
+  $("hint").textContent=`${faces.map(f=>f?"背":"字").join(" ")} = ${sum} · ${v[0]} ${v[1]}${v[4]?" · moving":""}${short?" — next time, shake a little longer":""}`;
+  $("count").textContent=n<6?`${n+1} / 6`:"6 / 6";
+  if(n===6){$("castroom").style.cursor="default";setTimeout(finishCast,Temple.reduce?200:1500)}
+  else setTimeout(()=>{if(tosser.state==="idle"&&S.tosses.length===n)$("hint").textContent="Gather the coins again. Press and hold."},2400);
+}
+Temple.hold($("castroom"),beginShake,release);
+Temple.onShake(beginShake,release);
+/* moment + 03 structure */
+function figure(h,moving,w=96,hh=7){return `<div class="fig">`+h.lines.map((b,i)=>`<div class="ln">${Temple.brush(b,w,hh,(h.n*13+i*7)|0,"drawn")}<span class="mk">${moving&&moving.includes(i+1)?(b?"○":"×"):""}</span></div>`).join("")+`</div>`}
+function finishCast(){
+  const lines=S.tosses.map(t=>VAL[t.sum][3]);
+  S.moving=S.tosses.map((t,i)=>VAL[t.sum][4]?i+1:0).filter(Boolean);
+  S.primary=hexInfo(lines);
+  S.changed=S.moving.length?hexInfo(S.tosses.map(t=>t.sum===6?1:t.sum===9?0:VAL[t.sum][3])):null;
+  S.nuclear=hexInfo([lines[1],lines[2],lines[3],lines[2],lines[3],lines[4]]);
+  S.castAt=new Date();
+  const p=S.primary,c=S.changed;
+  $("mLines").innerHTML=lines.map((b,i)=>Temple.brush(b,200,12,i*97+5)).join("");
+  $("mName").textContent=p.zh;$("mSub").textContent=`${fullName(p)} · ${p.py} · ${p.en}`;
+  $("mSub2").textContent=c?`Moving ${S.moving.length>1?"lines":"line"} ${S.moving.join(", ")} → ${c.zh} ${c.en}`:"No moving lines. The situation is settled.";
+  $("moment").classList.add("on");document.body.style.overflow="hidden";sfx.bowl();
+  [...$("mLines").children].forEach((s,i)=>setTimeout(()=>{s.classList.add("drawn");sfx.brush()},Temple.reduce?0:700+i*330));
+  setTimeout(()=>$("moment").classList.add("named"),Temple.reduce?0:700+6*330+300);
+  const g=ganzhi(S.castAt);
+  $("s3title").textContent=c?`${p.zh} ${p.en} → ${c.zh} ${c.en}`:`${p.zh} ${p.en}, unchanging`;
+  $("s3lede").textContent=S.moving.length?`Moving ${S.moving.length===1?"line":"lines"}: ${S.moving.join(", ")}, counted from the bottom. These are where the change is.`:"No moving lines. The situation is settled, and the reading rests on the Judgment of this hexagram alone.";
+  $("meta").innerHTML=[["Question",esc(S.question),""],["Cast",`${g.year} ${g.month} ${g.day}`,"serif"],["Date",S.castAt.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}),""]].map(([k,v,cl])=>`<div><div class="k">${k}</div><div class="v ${cl}">${v}</div></div>`).join("");
+  const cell=(num,role,h,mv)=>h?`<div class="cell t-card"><span class="role">${num} · ${role}</span>${figure(h,mv)}<div class="zhn">${h.zh}</div><h3>${h.n}. ${h.py} — ${h.en}</h3><p>${fullName(h)} · ${TRI_N[h.up][2]} over ${TRI_N[h.lo][2]}</p></div>`
+    :`<div class="cell t-card none"><span class="role">${num} · ${role}</span><p style="margin-top:28px">No moving lines, so there is no changed hexagram.</p></div>`;
+  $("trio").innerHTML=cell("01","本卦 Primary",p,S.moving)+cell("02","互卦 Nuclear",S.nuclear)+cell("03","变卦 Changed",c);
+  $("s3").hidden=false;$("s4").hidden=false;$("readRow").hidden=!hasMaster();
+  $("reading").innerHTML="";$("follow").hidden=true;$("answer").innerHTML="";S.followed=false;S.readingText="";
+  S.visitId=Date.now();saveVisit({});setStep(3);
+}
+$("mGo").onclick=()=>{setStep(4);$("moment").classList.remove("on","named");document.body.style.overflow="";$("s3").scrollIntoView({behavior:"auto"})};
+
+/* 04 reading */
+function castSummary(){const g=ganzhi(S.castAt),p=S.primary,c=S.changed,n=S.nuclear;
+  const name=h=>`#${h.n} ${h.zh} ${h.py} (${h.en}), ${fullName(h)}: ${TRI_N[h.up][2]} over ${TRI_N[h.lo][2]}`;
+  return `Question: ${S.question}
+Cast at (solar calendar, approximate): ${g.year} ${g.month} ${g.day}
+Coin tosses, bottom line first:
+${S.tosses.map((t,i)=>`Line ${i+1}: ${t.sum} (${VAL[t.sum][0]} ${VAL[t.sum][1]})`).join("\n")}
+Primary hexagram 本卦: ${name(p)}
+Moving lines: ${S.moving.length?S.moving.join(", "):"none"}
+Changed hexagram 变卦: ${c?name(c):"none (no moving lines)"}
+Nuclear hexagram 互卦: ${name(n)}`}
+function renderReading(text,el){const lines=text.split("\n");let html="",sec=null,buf=[];
+  const flush=()=>{const body=buf.join(" ").trim();if(sec!==null)html+=`<div class="rsec"><p class="eyebrow">${esc(sec)}</p>${body?`<p>${esc(body)}</p>`:""}</div>`;else if(body)html+=`<div class="rsec"><p>${esc(body)}</p></div>`;buf=[]};
+  for(const raw of lines){const l=raw.trim(),v=l.match(/^(?:VERDICT|结论|判断)\s*[:：]\s*(.*)$/);
+    if(v){html+=`<div class="verdict">${esc(v[1])}</div>`;continue}
+    const h=l.match(/^#{1,3}\s*(.+)$/);if(h){flush();sec=h[1].replace(/\*/g,"");continue}
+    if(l)buf.push(l.replace(/\*\*/g,""))}
+  flush();el.innerHTML=html}
+$("readBtn").onclick=async()=>{if(!hasMaster())return;$("readBtn").disabled=true;status("s4status",S.lang==="zh"?"老师在看卦……":"The master is studying the lines…");
+  try{const full=await callClaude({system:READ_SYS(),messages:[{role:"user",content:castSummary()}],maxTokens:1600,onText:t=>{status("s4status","");renderReading(t,$("reading"))}});
+    S.readingText=full;renderReading(full,$("reading"));$("readRow").hidden=true;$("follow").hidden=false;
+    const vm=full.match(/^(?:VERDICT|结论|判断)\s*[:：]\s*(.*)$/m);saveVisit({verdict:vm?vm[1]:"",reading:full})}
+  catch(e){status("s4status","The master couldn't read: "+e.message,true);$("readBtn").disabled=false}};
+$("followBtn").onclick=async()=>{const q=$("followIn").value.trim();if(!q||S.followed)return;$("followBtn").disabled=true;$("answer").textContent="…";
+  try{const ans=await callClaude({system:READ_SYS()+"\n\nNow the visitor asks one follow-up about this reading. Answer in 2–5 sentences of plain prose: no headings, no VERDICT line.",messages:[{role:"user",content:castSummary()},{role:"assistant",content:S.readingText},{role:"user",content:q}],maxTokens:600,onText:t=>{$("answer").textContent=t}});
+    S.followed=true;$("followIn").disabled=true;$("followBtn").hidden=true;
+    $("answer").innerHTML=`<p class="eyebrow" style="margin:0 0 8px">${esc(q)}</p><p style="margin:0">${esc(ans.replace(/\*\*/g,""))}</p>`;saveVisit({follow:{q,a:ans}})}
+  catch(e){$("answer").textContent="The master couldn't answer: "+e.message;$("followBtn").disabled=false}};
+$("newVisit").onclick=()=>{setStep(1);Object.assign(S,{chat:[],question:"",tosses:[],primary:null,changed:null,nuclear:null,moving:[],readingText:"",followed:false,visitId:null});
+  ["s2","s3","s4","qcard","warn","follow"].forEach(id=>$(id).hidden=true);$("castWith").disabled=false;$("keepTalking").hidden=false;
+  $("readBtn").disabled=false;$("followIn").disabled=false;$("followIn").value="";$("followBtn").disabled=false;$("followBtn").hidden=false;
+  status("s4status","");status("s1status","");setFramingCopy();$("s1").scrollIntoView({behavior:smooth()})};
+
+/* past visits */
+function saveVisit(extra){const visits=store.get("visits",[]);let v=visits.find(x=>x.id===S.visitId);
+  if(!v){v={id:S.visitId,date:today(),q:S.question,p:S.primary.n,c:S.changed?S.changed.n:null,moving:S.moving,lang:S.lang};visits.unshift(v)}
+  Object.assign(v,extra);store.set("visits",visits.slice(0,60));renderPast()}
+function renderPast(){const visits=store.get("visits",[]),t=$("pastTable");
+  if(!visits.length){t.innerHTML=`<p class="empty">No visits yet. Your readings will rest here, in this browser only.</p>`;return}
+  t.innerHTML=`<div class="prow head"><span>Date</span><span>Question</span><span>Hexagram</span></div>`+visits.map(v=>`<div class="prow" data-id="${v.id}"><span class="d">${v.date}</span><span class="q">${esc(v.q)}</span><span class="h">${HEX[v.p][0]}${v.c?" → "+HEX[v.c][0]:""}</span></div><div class="detail" id="d${v.id}" hidden></div>`).join("")+`<div class="row"><button class="t-link quiet" id="clearPast">Clear past visits</button></div>`;
+  t.querySelectorAll(".prow[data-id]").forEach(r=>r.onclick=()=>{const v=visits.find(x=>String(x.id)===r.dataset.id),d=$("d"+v.id);d.hidden=!d.hidden;if(d.hidden)return;
+    if(v.reading){renderReading(v.reading,d);if(v.follow)d.insertAdjacentHTML("beforeend",`<div class="rsec"><p class="eyebrow">${esc(v.follow.q)}</p><p>${esc(v.follow.a)}</p></div>`)}
+    else d.innerHTML=`<p class="caption" style="margin:0">${HEX[v.p][0]} ${HEX[v.p][2]}${v.c?" → "+HEX[v.c][0]+" "+HEX[v.c][2]:""}${v.moving&&v.moving.length?" · moving "+v.moving.join(", "):""}. No reading was given.</p>`});
+  $("clearPast").onclick=()=>{if(confirm("Clear all past visits from this browser?")){store.set("visits",[]);renderPast()}}}
+
+/* settings & language */
+$("keyBtn").onclick=()=>{$("settings").hidden=!$("settings").hidden;$("keyIn").value=S.key;$("modelIn").value=S.model};
+$("saveKey").onclick=()=>{S.key=$("keyIn").value.replace(/[\s"'“”‘’]/g,"");S.model=$("modelIn").value.trim()||"claude-sonnet-4-5";store.set("key",S.key);store.set("model",S.model);$("settings").hidden=true;refreshKey()};
+$("clearKey").onclick=()=>{S.key="";store.set("key","");$("keyIn").value="";$("settings").hidden=true;refreshKey()};
+function refreshKey(){$("keyBtn").hidden=!!SAMPLE;$("keyBtn").textContent=S.key?"Key · set":"Add key";$("keyBtn").classList.toggle("on",!S.key);setFramingCopy();if(S.primary)$("readRow").hidden=!hasMaster()||!!S.readingText}
+function refreshLang(){$("langBtn").innerHTML=S.lang==="zh"?`<span style="color:var(--faint)">EN</span> · <span style="color:var(--ink)">中文</span>`:`<span style="color:var(--ink)">EN</span> · <span style="color:var(--faint)">中文</span>`;setFramingCopy()}
+$("langBtn").onclick=()=>{S.lang=S.lang==="en"?"zh":"en";store.set("lang",S.lang);refreshLang()};
+
+function setStep(n){document.querySelectorAll("#stepper li").forEach(li=>{const k=+li.dataset.s;li.classList.toggle("on",k===n);li.classList.toggle("done",k<n)})}
+setStep(1);
+Temple.soundButton($("soundBtn"));Temple.rain();
+refreshLang();refreshKey();renderPast();
+</script>
+</body>
+</html>
