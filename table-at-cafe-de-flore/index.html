@@ -8,177 +8,256 @@
 <meta property="og:title" content="Table at Café de Flore">
 <meta property="og:description" content="An imagined conversation with Camus, Beauvoir, Satie and friends, powered by Claude.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 <style>
 :root {
-  --bg:#ffffff; --surface:#f7f7f6; --band:#f3f2ef; --object:#e9e9e8; --hair:#e6e6e4;
-  --ink:#111111; --ink-2:#3d3d3d; --muted:#6e6e6e; --faint:#a6a6a6; --on-ink:#ffffff;
+  --bg:#ffffff; --stage:#f7f7f6; --card:#ffffff; --line:#ececea; --line-2:#dcdcda;
+  --ink:#151515; --ink-2:#3b3b3b; --muted:#7a7a7a; --faint:#adadad;
+  --blue:#2357e8; --blue-soft:#f2f5ff; --blue-line:#2357e8;
+  --tip:#2b2b2b; --on-tip:#ffffff;
+  --table:#efeae5; --table-edge:#e2dbd3; --obj-line:#3a3530;
   --font:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Noto Sans SC",sans-serif;
-  --shadow-circle:0 6px 14px -6px rgba(0,0,0,.25);
-  --text-col:620px; --page:1120px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg:#0f0f0f; --surface:#171717; --band:#141413; --object:#1d1d1d; --hair:#2a2a2a;
-    --ink:#f2f2f2; --ink-2:#d0d0d0; --muted:#9a9a9a; --faint:#646464; --on-ink:#0f0f0f;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg:#0f0f0f; --surface:#171717; --band:#141413; --object:#1d1d1d; --hair:#2a2a2a;
-  --ink:#f2f2f2; --ink-2:#d0d0d0; --muted:#9a9a9a; --faint:#646464; --on-ink:#0f0f0f;
-  color-scheme:dark;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
 }
 * { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--muted); font-family:var(--font);
-  font-size:15px; line-height:1.75; -webkit-font-smoothing:antialiased; }
-.wrap { max-width:var(--page); margin:0 auto; padding-inline:clamp(16px,5vw,64px); padding-block:clamp(48px,9vw,112px) 64px; }
-.eyebrow { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); font-weight:500; margin:0 0 18px; }
-h1 { font-size:clamp(22px,2.4vw,30px); font-weight:500; color:var(--ink); letter-spacing:-.01em; margin:0; line-height:1.3; text-wrap:balance; }
-.lede { max-width:var(--text-col); margin:16px 0 0; }
-button { font:inherit; cursor:pointer; }
-button:focus-visible, textarea:focus-visible { outline:1px solid var(--ink); outline-offset:3px; }
+html, body { background:var(--bg); }
+body { margin:0; color:var(--ink-2); font-family:var(--font); font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+button { font:inherit; cursor:pointer; color:inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+[hidden] { display:none !important; }
 
-/* guests */
-.guests { display:grid; grid-template-columns:repeat(8,1fr); gap:clamp(20px,3vw,40px) 16px; margin-top:clamp(56px,8vw,96px); }
-.guest { background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:14px; color:var(--muted); text-align:center; }
-.face { width:84px; height:84px; border-radius:50%; background:var(--object); color:var(--ink-2);
-  display:grid; place-items:center; box-shadow:var(--shadow-circle); transition:transform .25s ease-out, box-shadow .25s ease-out; }
-.face svg { width:92%; height:92%; margin-top:8%; }
-.composer textarea::placeholder { color:var(--faint); }
-.guest:hover .face { transform:translateY(-2px); }
-.guest[aria-pressed="true"] .face { box-shadow:0 0 0 3px var(--bg), 0 0 0 4px var(--ink), var(--shadow-circle); }
-.guest[disabled] { cursor:default; opacity:.35; }
-.gname { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); font-weight:500; line-height:1.4; }
-.grole { font-size:12px; color:var(--faint); line-height:1.4; margin-top:-8px; }
-.seatbar { margin-top:clamp(56px,8vw,96px); display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; border-top:1px solid var(--hair); padding-top:24px; }
-.count { font-size:13px; font-variant-numeric:tabular-nums; }
-.pill { background:var(--ink); color:var(--on-ink); border:0; border-radius:10px; padding:10px 18px; font-size:13px; font-weight:500; }
-.pill[disabled] { opacity:.25; cursor:default; }
-.textbtn { background:none; border:0; padding:0; font-size:13px; color:var(--ink); }
-.textbtn:hover { text-decoration:underline; text-underline-offset:3px; }
-.textbtn[hidden] { display:none; }
+.round { width:40px; height:40px; border-radius:50%; border:1px solid var(--line-2); background:var(--card); display:grid; place-items:center;
+  color:var(--ink-2); text-decoration:none; font-size:16px; transition:transform .2s var(--ease), box-shadow .2s; flex:none; }
+.round:hover { transform:translateX(-2px); box-shadow:0 4px 14px -6px rgba(0,0,0,.2); }
+.btn { border:0; border-radius:999px; background:var(--blue); color:#fff; padding:11px 26px; font-size:14px; font-weight:500;
+  display:inline-flex; align-items:center; gap:8px; box-shadow:0 8px 20px -10px rgba(35,87,232,.7); transition:transform .25s var(--spring), opacity .2s, box-shadow .2s; }
+.btn:hover:not([disabled]) { transform:translateY(-1px); box-shadow:0 12px 24px -10px rgba(35,87,232,.75); }
+.btn:active:not([disabled]) { transform:scale(.97); }
+.btn[disabled] { opacity:.3; cursor:default; box-shadow:none; }
+.btn .arr { transition:transform .3s var(--ease); }
+.btn:hover:not([disabled]) .arr { transform:translateX(3px); }
+.link { background:none; border:0; padding:4px 0; font-size:13px; color:var(--muted); transition:color .2s; }
+.link:hover { color:var(--ink); }
+
+/* ── picker ── */
+.pick { max-width:1000px; margin:0 auto; padding:clamp(24px,5vw,56px) clamp(16px,4vw,40px) 48px; }
+.pickhead { display:flex; align-items:center; gap:16px; }
+.pickhead h1 { margin:0; font-size:clamp(17px,2vw,20px); font-weight:500; color:var(--ink); letter-spacing:-.005em; }
+.sub { margin:10px 0 0 56px; color:var(--muted); font-size:13px; }
+.grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:clamp(28px,4vw,44px); list-style:none; padding:0; }
+.card { position:relative; width:100%; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 12px 18px;
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+  transition:border-color .25s, background .25s, box-shadow .3s var(--ease), transform .3s var(--ease); }
+.card:hover:not([disabled]) { box-shadow:0 14px 30px -18px rgba(0,0,0,.25); transform:translateY(-2px); }
+.card .pt { width:min(132px,80%); aspect-ratio:1; transition:transform .45s var(--spring); }
+.card .pt svg { width:100%; height:100%; display:block; }
+.card:hover:not([disabled]) .pt { transform:rotate(-3deg) scale(1.03); }
+.card .nm { margin-top:10px; font-size:14px; font-weight:500; color:var(--muted); transition:color .2s; }
+.card .tg { margin-top:2px; font-size:12px; color:var(--faint); line-height:1.45; }
+.card[aria-pressed="true"] { border-color:var(--blue-line); background:var(--blue-soft); box-shadow:inset 0 0 0 .5px var(--blue-line); }
+.card[aria-pressed="true"] .nm { color:var(--ink); font-weight:600; }
+.card[aria-pressed="true"] .tg { color:var(--ink-2); }
+.card .chk { position:absolute; top:10px; right:10px; width:22px; height:22px; border-radius:50%; background:var(--blue); color:#fff;
+  font-size:11px; font-weight:600; display:grid; place-items:center; transform:scale(0); transition:transform .35s var(--spring); }
+.card[aria-pressed="true"] .chk { transform:scale(1); }
+.card[disabled] { cursor:not-allowed; opacity:.55; }
+.pickfoot { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:28px; flex-wrap:wrap; }
+.chairs { display:flex; align-items:center; gap:10px; color:var(--muted); font-size:13px; }
+.chair { width:34px; height:34px; border-radius:50%; border:1px dashed var(--line-2); overflow:hidden; background:var(--card); }
+.chair.on { border:1px solid var(--line); animation:pop .45s var(--spring); }
+.chair svg { width:100%; height:100%; display:block; }
+
+/* ── the table scene ── */
+.scene { position:relative; height:clamp(600px,82vh,780px); background:var(--stage); overflow:hidden; isolation:isolate; }
+.scene > .round { position:absolute; top:20px; left:20px; z-index:5; }
+.place { position:absolute; top:24px; right:24px; font-size:12px; color:var(--faint); z-index:5; }
+.floor { position:absolute; left:-30%; right:-30%; bottom:-10%; height:70%; z-index:-1;
+  background-image:linear-gradient(#e2e2df 1px, transparent 1px), linear-gradient(90deg, #e2e2df 1px, transparent 1px);
+  background-size:72px 72px; transform:perspective(520px) rotateX(62deg); transform-origin:50% 100%;
+  -webkit-mask-image:linear-gradient(to top, #000 30%, transparent 92%); mask-image:linear-gradient(to top, #000 30%, transparent 92%); }
+
+.seated { position:absolute; top:clamp(48px,9%,76px); left:0; right:0; display:flex; justify-content:center; gap:clamp(28px,7vw,88px); z-index:3; }
+.seat { background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:6px; position:relative; }
+.av { width:84px; height:84px; border-radius:50%; background:var(--card); border:1px solid var(--line-2); overflow:hidden;
+  box-shadow:0 10px 24px -14px rgba(0,0,0,.35); transition:transform .45s var(--spring), box-shadow .3s, border-color .3s, opacity .3s; }
+.av svg { width:100%; height:100%; display:block; }
+.seat .sn { font-size:12px; color:var(--muted); transition:color .2s; }
+.seat:hover .av { transform:translateY(-2px); }
+.seat[aria-pressed="true"] .av { border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-soft), 0 0 0 4px var(--blue), 0 10px 24px -14px rgba(0,0,0,.35); }
+.seat[aria-pressed="true"] .sn { color:var(--blue); font-weight:500; }
+.seated.live .seat:not(.speaking) .av { opacity:.55; transform:scale(.94); }
+.seated.live .seat.speaking .av { transform:translateY(-4px) scale(1.08); }
+.seated.live .seat.speaking .sn { color:var(--ink); font-weight:500; }
+.dots { position:absolute; top:-30px; left:50%; transform:translateX(-50%) scale(.6); opacity:0; background:var(--card); border:1px solid var(--line-2);
+  border-radius:12px; padding:6px 10px; display:flex; gap:4px; transition:opacity .25s, transform .35s var(--spring); pointer-events:none; }
+.dots::after { content:""; position:absolute; bottom:-5px; left:50%; width:8px; height:8px; background:var(--card); border-right:1px solid var(--line-2); border-bottom:1px solid var(--line-2); transform:translateX(-50%) rotate(45deg); }
+.dots i { width:4px; height:4px; border-radius:50%; background:var(--muted); animation:bounce 1.1s ease-in-out infinite; }
+.dots i:nth-child(2) { animation-delay:.15s; } .dots i:nth-child(3) { animation-delay:.3s; }
+.seat.thinking .dots { opacity:1; transform:translateX(-50%) scale(1); }
+
+/* speech card: this round of the conversation */
+.speech { position:absolute; left:50%; top:calc(clamp(48px,9%,76px) + 128px); transform:translateX(-50%); width:min(560px, calc(100% - 32px));
+  max-height:calc(100% - clamp(48px,9%,76px) - 128px - 150px); display:flex; flex-direction:column; z-index:4;
+  background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow:0 18px 40px -24px rgba(0,0,0,.35);
+  animation:card-in .45s var(--spring) both; }
+.speech::before { content:""; position:absolute; top:-7px; left:var(--tx,50%); width:12px; height:12px; background:var(--card);
+  border-left:1px solid var(--line); border-top:1px solid var(--line); transform:translateX(-50%) rotate(45deg); transition:left .45s var(--ease); }
+.speech .inner { overflow:auto; padding:16px 20px 18px; scroll-behavior:smooth; overscroll-behavior:contain; }
+.line + .line { margin-top:14px; }
+.line .w { font-size:12px; font-weight:600; color:var(--ink); }
+.line .t { font-size:15px; color:var(--ink-2); white-space:pre-wrap; animation:fade .4s var(--ease) both; }
+.line.cur .t::after { content:""; display:inline-block; width:2px; height:1em; margin-left:2px; vertical-align:-.15em; background:var(--blue); animation:blink 1s steps(2) infinite; }
+.welcome p { margin:0; font-size:14px; color:var(--muted); }
+.line.err .t { color:#c4402f; font-size:14px; }
+.chips { display:flex; flex-direction:column; align-items:flex-start; gap:8px; margin-top:12px; }
+.chips button { border:1px solid var(--line); background:var(--stage); border-radius:999px; padding:7px 14px; font-size:13px; color:var(--ink-2); text-align:left;
+  transition:border-color .2s, background .2s, transform .25s var(--spring); }
+.chips button:hover { border-color:var(--blue); background:var(--blue-soft); color:var(--ink); transform:translateX(2px); }
+.keycard label { display:block; font-size:13px; font-weight:500; color:var(--ink); }
+.keyrow { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+.keyrow input { flex:1 1 200px; min-width:0; border:1px solid var(--line-2); border-radius:10px; padding:10px 12px; font:inherit; font-size:13px; font-family:ui-monospace,Menlo,monospace; background:var(--bg); color:var(--ink); }
+.keyrow input:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-soft); }
+.keyrow .btn { padding:10px 18px; }
+.keyhelp { font-size:12px; color:var(--muted); margin:10px 0 0; line-height:1.55; }
+.keyhelp a { color:var(--blue); text-decoration:none; }
+
+.bubble { position:absolute; z-index:4; background:var(--card); border:1.5px solid #2a2420; border-radius:22px; padding:14px 18px 15px;
+  font-size:16px; line-height:1.55; color:var(--ink); cursor:pointer;
+  box-shadow:0 3px 0 rgba(42,36,32,.10), 0 22px 40px -26px rgba(0,0,0,.4);
+  transform-origin:var(--tx,50%) -10px; animation:bubble-in .42s var(--spring) both; }
+.bubble::before { content:""; position:absolute; top:-8.5px; left:var(--tx,50%); width:14px; height:14px; background:var(--card);
+  border-left:1.5px solid #2a2420; border-top:1.5px solid #2a2420; transform:translateX(-50%) rotate(45deg); border-top-left-radius:3px; }
+.bubble.out { animation:bubble-out .2s ease-in forwards; }
+.bt { white-space:pre-wrap; text-wrap:pretty; max-height:var(--bmax,240px); overflow:auto; overscroll-behavior:contain; }
+.bt.typing::after { content:""; display:inline-block; width:2px; height:1em; margin-left:2px; vertical-align:-.15em; background:var(--blue); animation:blink 1s steps(2) infinite; }
+@keyframes bubble-in { 0% { opacity:0; transform:scale(.4); } 60% { opacity:1; transform:scale(1.03); } 100% { transform:none; } }
+@keyframes bubble-out { to { opacity:0; transform:scale(.85) translateY(-6px); } }
+@media (max-width:520px) { .bubble { font-size:15px; } }
 
 /* table */
-.tablehead { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; }
-.seated { display:flex; gap:20px; margin-top:40px; flex-wrap:wrap; }
-.seat { background:none; border:0; padding:0; display:flex; flex-direction:column; align-items:center; gap:8px; }
-.seat .face { width:56px; height:56px; }
-.seat .gname { font-size:9px; }
-.seat[aria-pressed="true"] .face { box-shadow:0 0 0 3px var(--bg), 0 0 0 4px var(--ink), var(--shadow-circle); }
-.hint { font-size:12px; color:var(--faint); margin-top:14px; min-height:1.5em; }
+.tbl { position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:min(1000px,150%); height:auto; z-index:1; }
+.tbl .cup { transform-box:fill-box; transform-origin:50% 100%; animation:cup-in .6s var(--spring) both; }
+.steam path { stroke-dasharray:4 6; animation:steam 3s linear infinite; }
 
-.log { max-width:var(--text-col); margin-top:clamp(48px,7vw,80px); display:flex; flex-direction:column; gap:32px; }
-.msg { display:grid; grid-template-columns:40px 1fr; gap:16px; animation:in .3s ease-out; }
-.msg .face { width:40px; height:40px; box-shadow:none; }
-.msg .who { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); font-weight:500; line-height:1.4; margin-bottom:4px; }
-.msg .txt { color:var(--ink-2); white-space:pre-wrap; }
-.msg.you .face { background:var(--ink); color:var(--on-ink); font-size:10px; letter-spacing:.1em; font-weight:500; }
-.msg.you .txt { color:var(--muted); }
-.thinking { font-size:12px; color:var(--faint); }
-.thinking[hidden] { display:none; }
-.empty { font-size:13px; color:var(--faint); max-width:var(--text-col); }
-.starters { display:flex; flex-direction:column; gap:10px; margin-top:16px; align-items:flex-start; }
-.starters button { background:var(--surface); border:0; border-radius:10px; padding:8px 14px; font-size:13px; color:var(--ink-2); text-align:left; }
-.starters button:hover { color:var(--ink); }
+/* your line as a dark tip, and the composer on the table's edge */
+.composer { position:absolute; left:50%; bottom:clamp(36px,8%,64px); transform:translateX(-50%); width:min(620px, calc(100% - 32px)); z-index:4; }
+.youtip { position:absolute; bottom:calc(100% + 12px); left:50%; transform:translateX(-50%); max-width:100%; width:max-content;
+  background:var(--tip); color:var(--on-tip); font-size:12.5px; line-height:1.5; padding:8px 14px; border-radius:10px;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; animation:tip-in .4s var(--spring) both; }
+.youtip-wrap { position:absolute; bottom:calc(100% + 12px); left:0; right:0; display:flex; justify-content:center; pointer-events:none; }
+.youtip-wrap .youtip { position:relative; bottom:auto; left:auto; transform:none; }
+.youtip-wrap::after { content:""; position:absolute; bottom:-5px; left:50%; width:10px; height:10px; background:var(--tip); transform:translateX(-50%) rotate(45deg); }
+.field { display:flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--line-2); border-radius:14px; padding:6px 6px 6px 16px;
+  box-shadow:0 14px 30px -20px rgba(0,0,0,.35); transition:border-color .2s, box-shadow .2s; }
+.field:focus-within { border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-soft), 0 14px 30px -20px rgba(0,0,0,.35); }
+.field input { flex:1; min-width:0; border:0; background:transparent; font:inherit; font-size:14px; color:var(--ink); padding:9px 0; }
+.field input::placeholder { color:var(--faint); }
+.field input:focus { outline:none; }
+.iconbtn { width:38px; height:38px; border-radius:50%; border:0; display:grid; place-items:center; background:var(--stage); color:var(--muted); flex:none;
+  transition:background .2s, color .2s, transform .25s var(--spring); }
+.iconbtn svg { width:17px; height:17px; }
+.iconbtn:hover:not([disabled]) { color:var(--ink); }
+.iconbtn.send.ready { background:var(--blue); color:#fff; }
+.iconbtn.send.ready:hover { transform:scale(1.06); }
+.iconbtn[disabled] { opacity:.5; cursor:default; }
+#mic[aria-pressed="true"] { background:#fde8e6; color:#d23a2c; animation:pulse 1.4s ease-in-out infinite; }
 
-.composer { max-width:var(--text-col); margin-top:56px; }
-.composer label { display:block; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); font-weight:500; }
-.composer textarea { width:100%; border:0; border-bottom:1px solid var(--hair); background:transparent; color:var(--ink);
-  font:inherit; font-size:15px; padding:10px 0; resize:none; min-height:48px; }
-.composer textarea:focus { outline:none; border-bottom-color:var(--ink); }
-.actions { display:flex; gap:20px; align-items:center; margin-top:16px; flex-wrap:wrap; }
-.note { font-size:12px; color:var(--faint); margin-top:12px; min-height:1.5em; }
-.foot { margin-top:clamp(64px,9vw,120px); font-size:12px; color:var(--faint); max-width:var(--text-col); }
+/* under the scene */
+.under { max-width:620px; margin:0 auto; padding:16px 16px 0; display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap; }
+.under select { font:inherit; font-size:13px; color:var(--muted); background:transparent; border:0; cursor:pointer; }
+.note { max-width:620px; margin:6px auto 0; padding:0 16px; text-align:center; font-size:13px; color:#c4402f; min-height:1.6em; }
+.log { max-width:620px; margin:28px auto 0; padding:0 16px; }
+.log h2 { font-size:12px; font-weight:500; color:var(--faint); margin:0 0 14px; letter-spacing:.02em; }
+.row { display:grid; grid-template-columns:32px 1fr; gap:12px; padding:12px 0; border-top:1px solid var(--line); animation:fade .4s var(--ease) both; }
+.row .mini { width:32px; height:32px; border-radius:50%; overflow:hidden; border:1px solid var(--line); background:var(--card); }
+.row .mini svg { width:100%; height:100%; display:block; }
+.row.you .mini { background:var(--ink); color:#fff; font-size:10px; font-weight:600; display:grid; place-items:center; border:0; }
+.row .w { font-size:12px; font-weight:600; color:var(--ink); }
+.row .t { font-size:14px; color:var(--ink-2); white-space:pre-wrap; }
+.row.you .t { color:var(--muted); }
+.foot { max-width:620px; margin:56px auto 40px; padding:0 16px; font-size:12px; color:var(--faint); text-align:center; }
 
-@keyframes in { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
-@media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
-@media (max-width:820px) { .guests { grid-template-columns:repeat(4,1fr); } }
-@media (max-width:420px) { .guests .face { width:64px; height:64px; } .gname { font-size:9px; letter-spacing:.1em; } }
-[hidden] { display:none !important; }
-.back { display:inline-block; font-size:13px; color:var(--muted); text-decoration:none; margin-bottom:clamp(40px,6vw,72px); }
-.back:hover { color:var(--ink); }
-.voice { display:flex; align-items:center; gap:10px; }
-.voice select { font:inherit; font-size:12px; color:var(--muted); background:transparent; border:0; border-bottom:1px solid var(--hair); padding:2px 0; }
-#mic[aria-pressed="true"] { color:var(--muted); }
-.keypanel { max-width:var(--text-col); margin-top:56px; padding:24px; background:var(--surface); border-radius:8px; }
-.keypanel label { display:block; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); font-weight:500; }
-.keyrow { display:flex; gap:12px; align-items:center; margin-top:8px; flex-wrap:wrap; }
-.keyrow input { flex:1 1 220px; min-width:0; border:0; border-bottom:1px solid var(--hair); background:transparent; color:var(--ink); font:inherit; font-size:14px; padding:8px 0; }
-.keyrow input:focus { outline:none; border-bottom-color:var(--ink); }
-.keyhelp { font-size:12px; color:var(--muted); margin:14px 0 0; line-height:1.6; }
-.keyhelp a { color:var(--ink); }
-.keylink { font-size:12px; color:var(--faint); margin-top:8px; }
+@keyframes pop { 0% { transform:scale(.5); opacity:0; } 100% { transform:none; opacity:1; } }
+@keyframes bounce { 0%,60%,100% { transform:translateY(0); opacity:.5; } 30% { transform:translateY(-3px); opacity:1; } }
+@keyframes blink { 50% { opacity:0; } }
+@keyframes fade { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+@keyframes card-in { from { opacity:0; transform:translateX(-50%) translateY(10px) scale(.97); } to { opacity:1; transform:translateX(-50%); } }
+@keyframes tip-in { from { opacity:0; transform:translateY(6px) scale(.96); } to { opacity:1; transform:none; } }
+@keyframes cup-in { from { opacity:0; transform:translateY(-14px); } to { opacity:1; transform:none; } }
+@keyframes seat-in { from { opacity:0; transform:translateY(12px) scale(.9); } to { opacity:1; transform:none; } }
+@keyframes steam { to { stroke-dashoffset:-20; } }
+@keyframes pulse { 0%,100% { box-shadow:0 0 0 0 rgba(210,58,44,.35); } 50% { box-shadow:0 0 0 6px rgba(210,58,44,0); } }
+.seat.enter { animation:seat-in .6s var(--spring) both; animation-delay:calc(var(--i) * 110ms + 120ms); }
+::view-transition-group(*) { animation-duration:.6s; animation-timing-function:var(--ease); }
+
+@media (max-width:820px) { .grid { grid-template-columns:repeat(2,1fr); gap:10px; } .sub { margin-left:0; } }
+@media (max-width:520px) {
+  .scene { height:clamp(620px,88vh,760px); }
+  .place { display:none; }
+  .seated { top:72px; gap:24px; }
+  .av { width:64px; height:64px; }
+  .speech { top:182px; max-height:calc(100% - 182px - 140px); }
+  .speech .inner { padding:14px 16px 16px; }
+  .line .t { font-size:14px; }
+  .tbl { width:125%; bottom:40px; }
+  .composer { bottom:28px; }
+  .pickfoot .btn { margin-left:auto; }
+  .card .tg { font-size:11px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
 </style>
-
 </head>
 <body>
-<main class="wrap">
-  <a class="back" href="../">← Emily Wang</a>
-  <section id="pick">
-    <p class="eyebrow">Café de Flore · 172 Boulevard Saint-Germain</p>
-    <h1>Who's joining your table?</h1>
-    <p class="lede">Pick up to three guests. Bring them a question and they'll answer you, and each other, the way their writing suggests they might.</p>
 
-    <div class="guests" id="guests"></div>
+<section id="pick" class="pick">
+  <div class="pickhead">
+    <a class="round" href="../" aria-label="Back to Emily Wang">←</a>
+    <h1>Choose up to three guests for your table</h1>
+  </div>
+  <p class="sub">Café de Flore · 172 Boulevard Saint-Germain. They'll answer you, and each other, the way their work suggests they might.</p>
+  <ul class="grid" id="guests"></ul>
+  <div class="pickfoot">
+    <div class="chairs"><span id="chairs" style="display:flex;gap:8px"></span><span id="count"></span></div>
+    <button class="btn" id="sit" disabled>Take a seat <span class="arr">→</span></button>
+  </div>
+</section>
 
-    <div class="seatbar">
-      <span class="count" id="count">0 of 3 chairs taken</span>
-      <button class="pill" id="sit" disabled>Take a seat →</button>
-    </div>
-  </section>
-
-  <section id="table" hidden>
-    <div class="tablehead">
-      <div>
-        <p class="eyebrow">Table 3 · Terrace</p>
-        <h1 id="tabletitle">Your table</h1>
-      </div>
-      <button class="textbtn" id="leave">← Change guests</button>
-    </div>
+<section id="table" hidden>
+  <div class="scene">
+    <button class="round" id="leave" aria-label="Change guests">←</button>
+    <span class="place">Table 3 · Terrasse</span>
+    <div class="floor"></div>
     <div class="seated" id="seated"></div>
-    <p class="hint" id="hint">Tap a guest to speak to them alone. Otherwise the whole table answers.</p>
-
-    <div class="log" id="log" aria-live="polite">
-      <div class="empty" id="empty">
-        The waiter has brought the coffee. Say something to start, or try one of these:
-        <div class="starters" id="starters"></div>
+    <div class="speech" id="speech"><div class="inner" id="speechin"></div></div>
+    <div class="bubble" id="bubble" hidden title="Tap to skip ahead"><div class="bt" id="bubbletext"></div></div>
+    <svg class="tbl" id="tbl" viewBox="0 0 1000 400" aria-hidden="true"></svg>
+    <div class="composer" id="composer">
+      <div class="youtip-wrap" id="youtipwrap" hidden><div class="youtip" id="youtip"></div></div>
+      <div class="field">
+        <input id="say" autocomplete="off" placeholder="Say anything…" aria-label="Say something">
+        <button class="iconbtn" type="button" id="mic" aria-pressed="false" aria-label="Speak" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+        <button class="iconbtn send" type="button" id="send" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/></svg></button>
       </div>
     </div>
-    <p class="thinking" id="thinking" hidden>…</p>
+  </div>
 
-    <form class="keypanel" id="keypanel" hidden>
-      <label for="apikey">Your Anthropic API key</label>
-      <div class="keyrow">
-        <input id="apikey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…">
-        <button class="pill" type="submit">Save key</button>
-      </div>
-      <p class="keyhelp">The guests speak through Claude, using your own key. It stays in this browser and is sent only to Anthropic, never to this website. A conversation costs about a cent. <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Get a key →</a></p>
-    </form>
+  <div class="under">
+    <button class="link" type="button" id="more">Let them keep talking</button>
+    <button class="link" type="button" id="stop" hidden>Stop</button>
+    <select id="lang" aria-label="Speaking language" hidden>
+      <option value="en-US">Speak English</option>
+      <option value="fr-FR">Parler français</option>
+      <option value="zh-CN">说中文</option>
+    </select>
+    <button class="link" type="button" id="keylink" hidden>Change API key</button>
+  </div>
+  <p class="note" id="note"></p>
 
-    <form class="composer" id="composer">
-      <label for="say">Say something</label>
-      <textarea id="say" rows="2" placeholder="Is it possible to be happy and still take life seriously?"></textarea>
-      <div class="actions">
-        <button class="pill" type="submit" id="send">Send</button>
-        <button class="textbtn" type="button" id="more">Let them keep talking</button>
-        <button class="textbtn" type="button" id="stop" hidden>Stop</button>
-        <span class="voice" id="voice" hidden>
-          <button class="textbtn" type="button" id="mic" aria-pressed="false">Speak</button>
-          <select id="lang" aria-label="Speaking language">
-            <option value="en-US">English</option>
-            <option value="fr-FR">Français</option>
-            <option value="zh-CN">中文</option>
-          </select>
-        </span>
-      </div>
-      <p class="note" id="note"></p>
-      <button class="textbtn keylink" type="button" id="keylink" hidden>Change API key</button>
-    </form>
-  </section>
+  <div class="log" id="log" hidden><h2>Conversation</h2><div id="rows"></div></div>
+</section>
 
-  <p class="foot">Imagined conversations, powered by Claude. The guests speak in the spirit of their work, but their lines here are invented. None of it is a real quote.</p>
-</main>
+<p class="foot">Imagined conversations, powered by Claude. The guests speak in the spirit of their work, but their lines here are invented. None of it is a real quote.</p>
 
 <script>
 // Two ways to reach Claude:
@@ -188,18 +267,6 @@ const PROXY_URL = '';
 const MODEL = 'claude-sonnet-5';
 const KEY_STORE = 'cafe-de-flore-key';
 
-const S = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
-const eyes = (y=33,l=27,r=37) => `<circle cx="${l}" cy="${y}" r="1" fill="currentColor"/><circle cx="${r}" cy="${y}" r="1" fill="currentColor"/>`;
-const PORTRAITS = {
-  camus: `<svg viewBox="0 0 64 64" ${S}><ellipse cx="32" cy="34" rx="12" ry="14"/><path d="M20 29Q19 16 33 16Q45 17 44 28"/><path d="M22 23Q30 18 41 21"/>${eyes()}<path d="M29 41Q32 43 35 41"/><path d="M35 44L46 42"/><path d="M47 40Q49 37 47 34"/><path d="M14 62L23 49L32 58L41 49L50 62"/></svg>`,
-  sartre: `<svg viewBox="0 0 64 64" ${S}><ellipse cx="32" cy="35" rx="12" ry="14"/><path d="M20 30Q20 18 32 18Q44 18 44 30"/><circle cx="26.5" cy="33" r="4.6"/><circle cx="37.5" cy="33" r="4.6"/><path d="M31 33L33 33"/><path d="M30 43Q34 44 37 43L43 46"/><path d="M42 45L46 45L46 50L42 50Z"/><path d="M20 62L32 54L44 62"/></svg>`,
-  beauvoir: `<svg viewBox="0 0 64 64" ${S}><ellipse cx="32" cy="36" rx="11" ry="13"/><path d="M19 32Q15 13 32 12Q49 13 45 32"/><path d="M20 25Q32 19 44 25"/><path d="M21 30Q32 23 43 29"/>${eyes(35,28,36)}<path d="M29.5 42Q32 43.5 34.5 42"/><path d="M20 62Q24 52 32 51Q40 52 44 62"/></svg>`,
-  cezanne: `<svg viewBox="0 0 64 64" ${S}><path d="M20 34Q19 16 32 16Q45 16 44 34"/><path d="M20 30Q17 31 19 36M44 30Q47 31 45 36"/>${eyes(31,27,37)}<path d="M26 38Q32 35 38 38"/><path d="M20 36Q20 56 32 58Q44 56 44 36"/><path d="M27 46L28 52M32 44L32 54M37 46L36 52"/></svg>`,
-  satie: `<svg viewBox="0 0 64 64" ${S}><ellipse cx="32" cy="36" rx="11" ry="13"/><path d="M17 25L47 25"/><path d="M22 25Q22 12 32 12Q42 12 42 25"/><circle cx="27.5" cy="34" r="3"/><circle cx="36.5" cy="34" r="3"/><path d="M30.5 34L33.5 34"/><path d="M28 41Q32 40 36 41"/><path d="M29.5 45Q32 53 34.5 45"/><path d="M20 62L32 54L44 62"/></svg>`,
-  kusama: `<svg viewBox="0 0 64 64" ${S}><path d="M18 46Q16 18 32 16Q48 18 46 46"/><path d="M21 29L43 29"/><path d="M22 29Q21 40 23 46M42 29Q43 40 41 46"/>${eyes(35,28,36)}<path d="M29 42Q32 44 35 42"/><path d="M20 62Q24 52 32 51Q40 52 44 62"/><circle cx="26" cy="58" r="1.4" fill="currentColor"/><circle cx="32" cy="56" r="1.4" fill="currentColor"/><circle cx="38" cy="58" r="1.4" fill="currentColor"/><circle cx="29" cy="61" r="1.4" fill="currentColor"/><circle cx="35" cy="61" r="1.4" fill="currentColor"/></svg>`,
-  ernaux: `<svg viewBox="0 0 64 64" ${S}><ellipse cx="32" cy="36" rx="11" ry="13"/><path d="M20 44Q17 20 32 18Q46 19 44 44"/><path d="M22 30Q30 22 43 27"/>${eyes(35,28,36)}<path d="M29.5 42Q32 43 34.5 42"/><path d="M20 62Q23 53 32 52Q41 53 44 62"/><path d="M26 53L32 60L38 53"/></svg>`,
-  sanmao: `<svg viewBox="0 0 64 64" ${S}><ellipse cx="32" cy="35" rx="11" ry="13"/><path d="M32 18L32 23"/><path d="M32 18Q18 18 18 34Q18 46 16 54M32 18Q46 18 46 34Q46 46 48 54"/><path d="M32 20Q24 22 21.5 32M32 20Q40 22 42.5 32"/>${eyes(35,28,36)}<path d="M29 42Q32 44 35 42"/><circle cx="20.5" cy="41" r="1.8"/><circle cx="43.5" cy="41" r="1.8"/><path d="M24 56Q32 62 40 56"/><circle cx="32" cy="60" r="1.3" fill="currentColor"/></svg>`
-};
 
 const GUESTS = [
   { id:'camus', name:'Albert Camus', short:'Camus', role:'Novelist', persona:
@@ -234,59 +301,6 @@ let ctl = null;
 
 const $ = id => document.getElementById(id);
 
-function renderPicker() {
-  const box = $('guests');
-  box.innerHTML = '';
-  for (const g of GUESTS) {
-    const on = chosen.includes(g.id);
-    const b = document.createElement('button');
-    b.className = 'guest';
-    b.setAttribute('aria-pressed', on);
-    b.disabled = !on && chosen.length >= 3;
-    b.innerHTML = `<span class="face">${PORTRAITS[g.id]}</span><span class="gname">${g.name}</span><span class="grole">${g.role}</span>`;
-    b.onclick = () => {
-      chosen = on ? chosen.filter(x => x !== g.id) : [...chosen, g.id];
-      renderPicker();
-    };
-    box.append(b);
-  }
-  $('count').textContent = `${chosen.length} of 3 chairs taken`;
-  $('sit').disabled = chosen.length === 0;
-}
-
-function renderSeated() {
-  const box = $('seated');
-  box.innerHTML = '';
-  for (const id of chosen) {
-    const g = byId[id];
-    const b = document.createElement('button');
-    b.className = 'seat';
-    b.setAttribute('aria-pressed', addressing === id);
-    b.innerHTML = `<span class="face">${PORTRAITS[id]}</span><span class="gname">${g.short}</span>`;
-    b.onclick = () => { addressing = addressing === id ? null : id; renderSeated(); };
-    box.append(b);
-  }
-  const names = chosen.map(id => byId[id].short);
-  $('tabletitle').textContent = names.length > 1 ? names.slice(0,-1).join(', ') + ' & ' + names.at(-1) : names[0];
-  $('hint').textContent = addressing
-    ? `Speaking to ${byId[addressing].short}. The others will mostly listen.`
-    : 'Tap a guest to speak to them alone. Otherwise the whole table answers.';
-  $('more').hidden = chosen.length < 2 || !!ctl;
-}
-
-function addMsg(who, text) {
-  $('empty').hidden = true;
-  const el = document.createElement('div');
-  el.className = 'msg' + (who === 'you' ? ' you' : '');
-  const face = who === 'you' ? 'You' : PORTRAITS[who];
-  const name = who === 'you' ? 'You' : byId[who].name;
-  el.innerHTML = `<span class="face">${face}</span><div><div class="who"></div><div class="txt"></div></div>`;
-  el.querySelector('.who').textContent = name;
-  el.querySelector('.txt').textContent = text;
-  $('log').append(el);
-  el.scrollIntoView({ block:'nearest', behavior:'smooth' });
-  return el;
-}
 
 function buildPrompt({ mode, chosen, transcript, addressing }) {
   const guests = chosen.map(id => `- id "${id}": ${byId[id].persona}`).join('\n');
@@ -297,7 +311,7 @@ function buildPrompt({ mode, chosen, transcript, addressing }) {
   } else if (addressing) {
     task = `The visitor spoke directly to ${byId[addressing].name}. ${byId[addressing].short} answers first and at most length. Another guest may add one brief remark afterwards, or none.`;
   } else {
-    task = 'Reply to the visitor\'s latest message. 2 to 4 turns total. Not everyone must speak; let guests react to each other, agree, push back, tease.';
+    task = 'Reply to the visitor\'s latest message the way a real table talks: ONE guest answers first (whoever would have the most to say). Then 1 to 3 short turns where others respond to what was just said, not separately to the visitor: they agree, push back, tease, ask each other. Not everyone must speak.';
   }
   return `You are staging an imagined conversation at a table at the Café de Flore in Paris, in a timeless evening where these guests can all sit together (anachronisms may be acknowledged lightly). The visitor is a present-day person.
 
@@ -349,27 +363,408 @@ function parseTurns(text, valid) {
   return turns.map(t => ({ who: t.who, text: t.text.replace(/\s+$/,'').replace(/^[\s*]+/,'').replace(/^["“]|["”]$/g,'') })).filter(t => t.text);
 }
 
+// Flat colour portraits, one signature trait each.
+const INK = '#2a2420';
+const LN = `stroke="${INK}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
+const P = {
+  neck: s => `<path d="M43 68 L43 80 L57 80 L57 68Z" fill="${s}"/>`,
+  body: c => `<path d="M14 100 Q18 79 50 77 Q82 79 86 100Z" fill="${c}"/>`,
+  face: (s, rx=19, ry=23) => `<ellipse cx="31" cy="54" rx="4" ry="6" fill="${s}"/><ellipse cx="69" cy="54" rx="4" ry="6" fill="${s}"/><ellipse cx="50" cy="51" rx="${rx}" ry="${ry}" fill="${s}"/>`,
+  eyes: (y=50, d=8, r=1.9) => `<circle cx="${50-d}" cy="${y}" r="${r}" fill="${INK}"/><circle cx="${50+d}" cy="${y}" r="${r}" fill="${INK}"/>`,
+  cheeks: (y=59) => `<circle cx="38" cy="${y}" r="3.6" fill="#ee8f80" opacity=".45"/><circle cx="62" cy="${y}" r="3.6" fill="#ee8f80" opacity=".45"/>`,
+  nose: (y=50) => `<path d="M50 ${y} Q46.5 ${y+8} 50.5 ${y+9}" ${LN}/>`,
+  mouth: (y=65, w=5, c=INK) => `<path d="M${50-w} ${y} Q50 ${y+3} ${50+w} ${y-.5}" stroke="${c}" stroke-width="1.9" stroke-linecap="round" fill="none"/>`,
+};
+const svg = inner => `<svg viewBox="0 0 100 100" aria-hidden="true">${inner}</svg>`;
+
+const PORTRAITS = {
+  camus: svg(`
+    ${P.body('#cdb68e')}<path d="M36 79 L50 96 L64 79" fill="#f4efe6"/><path d="M36 79 L44 100 M64 79 L56 100" ${LN} opacity=".5"/>
+    ${P.neck('#ebb995')}${P.face('#f0c29d')}
+    <path d="M30 47 Q27 22 52 21 Q73 22 70 45 Q67 32 55 30 Q41 30 30 47Z" fill="#2b2622"/>
+    <path d="M38 44 L46 43 M54 43 L62 44" ${LN}/>
+    ${P.eyes(50)}${P.nose(50)}${P.cheeks()}${P.mouth(66)}
+    <path d="M55 66 L67 63" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="67.5" cy="62.8" r="1.4" fill="#f07a3a"/>
+    <path d="M69 59 Q72 55 69 51 Q66 47 70 43" stroke="#b9b4ad" stroke-width="1.4" fill="none" stroke-linecap="round"/>`),
+  sartre: svg(`
+    ${P.body('#3b4354')}<path d="M42 78 L50 92 L58 78" fill="#f4efe6"/>
+    ${P.neck('#ecc4a0')}${P.face('#f3cfae', 19, 22)}
+    <path d="M31 44 Q31 26 50 25 Q69 26 69 44 Q63 33 50 33 Q38 33 31 44Z" fill="#7a6655"/>
+    <circle cx="41.5" cy="51" r="7" fill="#fff" fill-opacity=".35" stroke="${INK}" stroke-width="2.6"/><circle cx="58.5" cy="51" r="7" fill="#fff" fill-opacity=".35" stroke="${INK}" stroke-width="2.6"/>
+    <path d="M48.5 50 Q50 48.5 51.5 50" ${LN} stroke-width="2.2"/>
+    ${P.eyes(51, 8.5, 1.7)}${P.cheeks(61)}${P.mouth(66, 4)}
+    <path d="M54 66 Q62 70 67 68" stroke="#6b4a2e" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M65 61 L72 61 L71 70 Q68 72 66 70Z" fill="#6b4a2e"/>`),
+  beauvoir: svg(`
+    ${P.body('#e8dcc6')}<path d="M38 78 Q50 88 62 78" ${LN} opacity=".45"/>
+    ${P.neck('#efc9ae')}${P.face('#f5d3bb', 18, 22)}
+    <path d="M30 42 Q29 33 34 28" stroke="#3a2a22" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M70 42 Q71 33 66 28" stroke="#3a2a22" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M28 40 Q22 15 50 13 Q78 15 72 40 Q64 29 50 29 Q36 29 28 40Z" fill="#2f6f73"/>
+    <path d="M33 30 Q48 20 66 26 M38 22 Q52 17 63 20" stroke="#225558" stroke-width="2" fill="none" stroke-linecap="round"/>
+    ${P.eyes(50, 7.5)}<path d="M38 44.5 L46 44 M54 44 L62 44.5" ${LN}/>${P.nose(50)}${P.cheeks()}${P.mouth(65, 4.5, '#b4433f')}
+    <circle cx="31" cy="62" r="1.8" fill="#d9a52b"/><circle cx="69" cy="62" r="1.8" fill="#d9a52b"/>`),
+  cezanne: svg(`
+    ${P.body('#5b4737')}
+    ${P.neck('#dda783')}${P.face('#e7b18c', 19, 24)}
+    <path d="M31 48 Q29 40 33 36 M69 48 Q71 40 67 36" stroke="#b9b6ae" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M30 54 Q29 90 50 92 Q71 90 70 54 Q63 66 50 65 Q37 66 30 54Z" fill="#b2afa7"/>
+    <path d="M40 61 Q50 57 60 61 Q55 64 50 62 Q45 64 40 61Z" fill="#9c988f"/>
+    <path d="M44 74 L45 82 M50 72 L50 85 M56 74 L55 82" stroke="#8e8a82" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M37 42 Q42 39 47 42 M53 42 Q58 39 63 42" ${LN} stroke-width="2.4"/>
+    ${P.eyes(48)}${P.nose(47)}
+    <path d="M38 30 Q44 27 50 28" stroke="#d29c78" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".7"/>`),
+  satie: svg(`
+    ${P.body('#8e8d96')}<path d="M42 78 L50 86 L58 78Z" fill="#fff"/><path d="M48 83 L52 83 L53 96 L50 99 L47 96Z" fill="${INK}"/>
+    ${P.neck('#e9c5a8')}${P.face('#f1cfb4', 18, 22)}
+    <path d="M34 31 Q34 11 50 11 Q66 11 66 31Z" fill="#1d1b1a"/><ellipse cx="50" cy="31" rx="26" ry="4.5" fill="#1d1b1a"/>
+    <path d="M34 28 Q50 25 66 28" stroke="#4a4644" stroke-width="2" fill="none"/>
+    <circle cx="43" cy="51" r="4.6" fill="#fff" fill-opacity=".4" stroke="${INK}" stroke-width="1.6"/><circle cx="57" cy="51" r="4.6" fill="#fff" fill-opacity=".4" stroke="${INK}" stroke-width="1.6"/><path d="M47.6 51 L52.4 51" ${LN} stroke-width="1.4"/>
+    ${P.eyes(51, 7, 1.5)}
+    <path d="M43 62 Q50 58 57 62 Q50 64 43 62Z" fill="#6a5c50"/>
+    <path d="M45 69 Q50 82 55 69 Q50 72 45 69Z" fill="#6a5c50"/>`),
+  kusama: svg(`
+    ${P.body('#e2231a')}
+    ${[[30,88],[44,84],[58,84],[72,89],[37,96],[51,93],[65,96],[24,97],[78,98]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="2.6" fill="#fff"/>`).join('')}
+    <path d="M27 74 Q21 25 50 21 Q79 25 73 74Z" fill="#e2231a"/>
+    ${P.neck('#f0d0bd')}
+    <ellipse cx="50" cy="52" rx="18" ry="22" fill="#f7dccb"/>
+    <path d="M30 45 L30 37 Q33 25 50 24 Q67 25 70 37 L70 45Z" fill="#e2231a"/>
+    ${P.eyes(52, 7.5, 2.4)}${P.nose(53)}${P.cheeks(61)}${P.mouth(66, 4.5, '#c81e16')}`),
+  ernaux: svg(`
+    ${P.body('#2f3e5c')}<path d="M38 78 Q50 86 62 78" stroke="#46577a" stroke-width="3" fill="none"/>
+    <path d="M28 66 Q24 28 50 25 Q76 28 72 66 Q66 64 66 56 L34 56 Q34 64 28 66Z" fill="#d9caa6"/>
+    ${P.neck('#ecc9b3')}<ellipse cx="50" cy="52" rx="18" ry="22" fill="#f4d6c2"/>
+    <path d="M31 46 Q33 27 52 27 Q68 28 69 42 Q60 35 46 37 Q37 39 31 46Z" fill="#d9caa6"/>
+    ${P.eyes(52, 7.5)}${P.nose(51)}${P.cheeks(61)}${P.mouth(66, 4)}`),
+  sanmao: svg(`
+    <path d="M27 94 Q20 40 32 28 Q50 15 68 28 Q80 40 73 94Z" fill="#1f1a17"/>
+    ${P.body('#f2ece0')}
+    <path d="M30 82 Q50 92 70 82 L66 90 Q50 98 34 90Z" fill="#c8643b"/><path d="M58 88 L64 100 L56 100Z" fill="#c8643b"/>
+    ${P.neck('#d99a72')}<ellipse cx="50" cy="52" rx="18" ry="22" fill="#e3a77f"/>
+    <path d="M50 29 Q37 30 32 48 Q30 36 38 30 Q44 26 50 27 Q56 26 62 30 Q70 36 68 48 Q63 30 50 29Z" fill="#1f1a17"/>
+    <path d="M50 27 L50 33" stroke="#e3a77f" stroke-width="1.2"/>
+    ${P.eyes(52, 7.5)}<path d="M39 47 L46 46.5 M54 46.5 L61 47" ${LN}/>${P.nose(52)}${P.cheeks(61)}${P.mouth(66, 5)}
+    <circle cx="31" cy="64" r="4" fill="none" stroke="#d9a52b" stroke-width="1.8"/><circle cx="69" cy="64" r="4" fill="none" stroke="#d9a52b" stroke-width="1.8"/>`),
+};
+const TAGLINE = {
+  camus:'The absurd, the sun, the sea', sartre:'Condemned to be free', beauvoir:'Freedom, always situated', cezanne:'Look harder at the apple',
+  satie:'Music, like furniture', kusama:'Dots, infinity, more dots', ernaux:'The personal is collective', sanmao:'Home is wherever I wander'
+};
+
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let speaking = null;
+let stopListening = () => {};
+let roundEls = [];
+
+function transition(fn) {
+  if (document.startViewTransition && !reduceMotion) document.startViewTransition(fn);
+  else fn();
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+/* ── picker ── */
+function renderPicker() {
+  const box = $('guests');
+  box.innerHTML = '';
+  for (const g of GUESTS) {
+    const idx = chosen.indexOf(g.id), on = idx > -1;
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.className = 'card';
+    b.setAttribute('aria-pressed', on);
+    b.disabled = !on && chosen.length >= 3;
+    b.innerHTML = `<span class="chk" aria-hidden="true">${on ? idx + 1 : ''}</span><span class="pt">${PORTRAITS[g.id]}</span><span class="nm">${esc(g.name)}</span><span class="tg">${TAGLINE[g.id]}</span>`;
+    if (on) b.querySelector('.pt').style.viewTransitionName = 'g-' + g.id;
+    b.onclick = () => { chosen = on ? chosen.filter(x => x !== g.id) : [...chosen, g.id]; renderPicker(); };
+    li.append(b); box.append(li);
+  }
+  const ch = $('chairs');
+  ch.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const c = document.createElement('span');
+    c.className = 'chair' + (chosen[i] ? ' on' : '');
+    if (chosen[i]) c.innerHTML = PORTRAITS[chosen[i]];
+    ch.append(c);
+  }
+  $('count').textContent = `${chosen.length} of 3 chairs`;
+  $('sit').disabled = chosen.length === 0;
+}
+
+/* ── the table drawing ── */
+const OL = 'stroke="#3a3530" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"';
+function cup(x, y, i) {
+  return `<g transform="translate(${x} ${y}) scale(1.15)"><g class="cup" style="animation-delay:${300 + i * 120}ms">
+    <ellipse cx="0" cy="0" rx="27" ry="7.5" fill="#fff" ${OL}/>
+    <path d="M17 -16 Q27 -16 25 -9 Q23 -4 15 -6" fill="none" ${OL}/>
+    <path d="M-16 -22 L16 -22 Q15 -2 0 -2 Q-15 -2 -16 -22Z" fill="#fff" ${OL}/>
+    <path d="M-15.3 -14 L15.3 -14 L14.6 -10 L-14.6 -10Z" fill="#1f6b4f"/>
+    <ellipse cx="0" cy="-22" rx="16" ry="4" fill="#7a4a2a" ${OL}/>
+    <g class="steam" fill="none" stroke="#c9c4bd" stroke-width="1.6" stroke-linecap="round"><path d="M-5 -30 Q-9 -38 -5 -46 Q-1 -54 -5 -62"/><path d="M5 -30 Q1 -38 5 -46 Q9 -54 5 -62" style="animation-delay:-1.5s"/></g>
+  </g></g>`;
+}
+function drawTable() {
+  const n = chosen.length;
+  const spots = n === 1 ? [[500,165]] : n === 2 ? [[420,165],[580,165]] : [[330,170],[500,160],[670,170]];
+  $('tbl').innerHTML = `
+    <ellipse cx="500" cy="392" rx="470" ry="12" fill="#000" opacity=".05"/>
+    <rect x="78" y="318" width="30" height="82" fill="var(--table-edge)"/><rect x="892" y="318" width="30" height="82" fill="var(--table-edge)"/>
+    <path d="M200 70 L800 70 L960 296 L40 296Z" fill="var(--table)"/>
+    <rect x="40" y="296" width="920" height="26" fill="var(--table-edge)"/>
+    <!-- croissant -->
+    <g transform="translate(215 236)"><ellipse rx="56" ry="15" fill="#fff" ${OL}/><ellipse rx="40" ry="9" fill="none" stroke="#e6e1db" stroke-width="1.4"/>
+      <path d="M-38 -4 Q-30 -24 0 -26 Q30 -24 38 -4 Q30 -10 22 -8 Q10 -16 0 -16 Q-10 -16 -22 -8 Q-30 -10 -38 -4Z" fill="#e3a656" ${OL}/>
+      <path d="M-20 -9 Q-16 -18 -12 -20 M0 -16 L0 -26 M20 -9 Q16 -18 12 -20" fill="none" stroke="#b9772f" stroke-width="1.4" stroke-linecap="round"/></g>
+    <!-- a flower, for Flore -->
+    <g transform="translate(800 175)"><path d="M-10 0 Q-12 -22 -5 -30 L5 -30 Q12 -22 10 0Z" fill="#e3f0f4" ${OL}/><ellipse cy="0" rx="10" ry="3" fill="#d2e6ec" ${OL}/>
+      <path d="M0 -30 Q-2 -48 3 -62" fill="none" stroke="#4f8a5b" stroke-width="2" stroke-linecap="round"/><path d="M1 -46 Q10 -52 14 -46 Q8 -42 1 -46Z" fill="#6aa676"/>
+      <g transform="translate(3 -66)"><circle r="7" cx="-6" cy="0" fill="#e2231a"/><circle r="7" cx="6" cy="0" fill="#e2231a"/><circle r="7" cx="0" cy="-6" fill="#e2231a"/><circle r="7" cx="0" cy="6" fill="#e2231a"/><circle r="4" fill="#f5c84b"/></g></g>
+    <!-- notebook + pencil -->
+    <g transform="translate(735 250) rotate(-8)"><path d="M-46 -20 L42 -24 L52 18 L-40 22Z" fill="#2f3e5c" ${OL}/><path d="M-42 -24 L40 -28 L48 12 L-36 16Z" fill="#fff" ${OL}/>
+      <path d="M-30 -14 L28 -17 M-28 -6 L30 -9 M-26 2 L22 0" stroke="#d9d4cd" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M-20 30 L56 -2" stroke="#e8b931" stroke-width="5" stroke-linecap="round"/><path d="M56 -2 L62 -4" stroke="#3a3530" stroke-width="3" stroke-linecap="round"/></g>
+    <!-- sugar -->
+    <g transform="translate(390 262)"><rect x="-14" y="-12" width="12" height="12" rx="1.5" fill="#fff" ${OL}/><rect x="2" y="-10" width="12" height="12" rx="1.5" fill="#fff" ${OL} transform="rotate(10)"/></g>
+    ${spots.map(([x,y], i) => cup(x, y, i)).join('')}`;
+}
+
+/* ── seated guests ── */
+function renderSeated(first) {
+  const box = $('seated');
+  box.innerHTML = '';
+  box.classList.toggle('live', !!speaking);
+  chosen.forEach((id, i) => {
+    const g = byId[id];
+    const b = document.createElement('button');
+    b.className = 'seat' + (speaking === id ? ' speaking' : '') + (first ? ' enter' : '');
+    b.dataset.id = id;
+    b.style.setProperty('--i', i);
+    b.setAttribute('aria-pressed', addressing === id);
+    b.setAttribute('aria-label', addressing === id ? `Speaking to ${g.short} only. Tap to talk to the whole table.` : `Speak to ${g.short} alone`);
+    b.innerHTML = `<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="av">${PORTRAITS[id]}</span><span class="sn">${g.short}</span>`;
+    b.querySelector('.av').style.viewTransitionName = 'g-' + id;
+    b.onclick = () => {
+      addressing = addressing === id ? null : id;
+      renderSeated();
+      $('say').placeholder = addressing ? `Say something to ${byId[addressing].short}…` : 'Say anything…';
+      $('say').focus();
+    };
+    box.append(b);
+  });
+  $('more').hidden = chosen.length < 2 || !!ctl;
+}
+function setThinking(ids) {
+  for (const el of $('seated').children) el.classList.toggle('thinking', ids.includes(el.dataset.id));
+}
+function setSpeaking(id) {
+  speaking = id;
+  $('seated').classList.toggle('live', !!id);
+  for (const el of $('seated').children) el.classList.toggle('speaking', el.dataset.id === id);
+  pointTail(id);
+}
+function pointTail(id) {
+  const card = $('speech');
+  const seat = id && [...$('seated').children].find(el => el.dataset.id === id);
+  if (!seat) { card.style.setProperty('--tx', '50%'); return; }
+  const a = seat.querySelector('.av').getBoundingClientRect(), c = card.getBoundingClientRect();
+  const x = Math.max(24, Math.min(c.width - 24, a.left + a.width / 2 - c.left));
+  card.style.setProperty('--tx', x + 'px');
+}
+
+/* ── the speech card ── */
+function restartCard() { const c = $('speech'); c.hidden = false; $('bubble').hidden = true; c.style.animation = 'none'; c.offsetHeight; c.style.animation = ''; }
+function showWelcome() {
+  $('speech').hidden = false; $('bubble').hidden = true;
+  const inner = $('speechin');
+  inner.innerHTML = `<div class="welcome"><p>The waiter has brought the coffee. Ask the table anything, or start with one of these:</p><div class="chips"></div></div>`;
+  for (const s of STARTERS) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = s;
+    b.onclick = () => { $('say').value = s; doSend(); };
+    inner.querySelector('.chips').append(b);
+  }
+  pointTail(null);
+}
+function showKey() {
+  $('speech').hidden = false; $('bubble').hidden = true;
+  const inner = $('speechin');
+  inner.innerHTML = `<div class="keycard" id="keypanel">
+    <label for="apikey">Before they can speak, add your Anthropic API key</label>
+    <div class="keyrow"><input id="apikey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…"><button class="btn" type="button" id="savekey">Save</button></div>
+    <p class="keyhelp">The guests speak through Claude, using your own key. It stays in this browser and is sent only to Anthropic, never to this website. A conversation costs about a cent. <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Get a key →</a></p>
+  </div>`;
+  $('keylink').hidden = true;
+  pointTail(null);
+  // Plain click/Enter handlers, no <form>: some embedded previews block form submission.
+  $('apikey').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); onSaveKey(); } });
+  $('savekey').onclick = () => onSaveKey();
+  function onSaveKey() {
+    if (!saveKeyFromCard()) { $('apikey').focus(); return; }
+    // If a message was waiting for the key, send it now.
+    if ($('say').value.trim()) doSend();
+    else { transcript.length ? showSaved() : showWelcome(); $('say').focus(); }
+  };
+  setTimeout(() => $('apikey')?.focus({ preventScroll:true }), 50);
+}
+function saveKeyFromCard() {
+  const v = $('apikey')?.value.trim();
+  if (!v) return false;
+  memKey = v;
+  try { localStorage.setItem(KEY_STORE, v); } catch {}
+  $('note').textContent = '';
+  $('keylink').hidden = !!PROXY_URL;
+  restartCard();
+  return true;
+}
+function showSaved() {
+  $('speech').hidden = false; $('bubble').hidden = true;
+  $('speechin').innerHTML = `<div class="welcome"><p>Key saved. The table is listening.</p></div>`;
+  pointTail(null);
+}
+function showError(msg, keepLines) {
+  const el = document.createElement('div');
+  el.className = 'line err';
+  el.innerHTML = `<div class="t"></div>`;
+  el.querySelector('.t').textContent = msg;
+  if (!keepLines) { $('speechin').innerHTML = ''; restartCard(); pointTail(null); }
+  $('speechin').append(el);
+  scrollCard();
+}
+function addLine(who, text) {
+  const el = document.createElement('div');
+  el.className = 'line cur';
+  el.innerHTML = `<div class="w"></div><div class="t"></div>`;
+  el.querySelector('.w').textContent = byId[who].name;
+  el.querySelector('.t').textContent = text;
+  roundEls.forEach(r => r.classList.remove('cur'));
+  $('speechin').append(el);
+  return el;
+}
+function scrollCard() { const i = $('speechin'); i.scrollTop = i.scrollHeight; }
+
+/* ── transcript under the scene ── */
+function addRow(who, text) {
+  $('log').hidden = false;
+  const el = document.createElement('div');
+  el.className = 'row' + (who === 'you' ? ' you' : '');
+  el.innerHTML = `<span class="mini">${who === 'you' ? 'You' : PORTRAITS[who]}</span><div><div class="w"></div><div class="t"></div></div>`;
+  el.querySelector('.w').textContent = who === 'you' ? 'You' : byId[who].name;
+  el.querySelector('.t').textContent = text;
+  $('rows').append(el);
+  return el;
+}
+
+/* ── a round of conversation: fetched as one reply, performed one speaker at a time ── */
+const CJK = /[぀-ヿ㐀-鿿가-힯]/;
+function charDelay(ch) {
+  if (/[.!?。！？…]/.test(ch)) return 340;
+  if (/[,;:，、；：—]/.test(ch)) return 170;
+  if (CJK.test(ch)) return 80;
+  return 28;
+}
+function placeBubble(who) {
+  const b = $('bubble'), scene = b.parentElement;
+  const seat = [...$('seated').children].find(el => el.dataset.id === who);
+  if (!seat) return;
+  const s = scene.getBoundingClientRect(), r = seat.getBoundingClientRect(), a = seat.querySelector('.av').getBoundingClientRect();
+  const w = Math.min(440, s.width - 32);
+  const cx = a.left + a.width / 2 - s.left;
+  const left = Math.max(16, Math.min(s.width - w - 16, cx - w / 2));
+  b.style.width = w + 'px';
+  b.style.left = left + 'px';
+  const top = r.bottom - s.top + 16;
+  b.style.top = top + 'px';
+  // keep the bubble clear of the input on the table's edge
+  b.style.setProperty('--bmax', Math.max(96, $('composer').getBoundingClientRect().top - s.top - top - 90) + 'px');
+  b.style.setProperty('--tx', Math.max(26, Math.min(w - 26, cx - left)) + 'px');
+}
+function openBubble(who) {
+  const b = $('bubble');
+  $('speech').hidden = true;
+  b.classList.remove('out');
+  b.hidden = false;
+  b.dataset.who = who;
+  $('bubbletext').textContent = '';
+  $('bubbletext').classList.add('typing');
+  placeBubble(who);
+  b.style.animation = 'none'; b.offsetHeight; b.style.animation = '';
+}
+function closeBubble() {
+  const b = $('bubble');
+  if (b.hidden) return Promise.resolve();
+  b.classList.add('out');
+  return new Promise(r => setTimeout(() => { b.hidden = true; b.classList.remove('out'); r(); }, reduceMotion ? 0 : 200));
+}
+
+async function playRound(round) {
+  // Two kinds of waiting: for more text from the network, and for time to pass.
+  const waitData = () => new Promise(r => { round.dataWake = r; });
+  const sleep = ms => new Promise(r => {
+    if (round.ff || round.stopped || round.skipTurn) return r();
+    const t = setTimeout(() => { round.skipWake = null; r(); }, ms);
+    round.skipWake = () => { clearTimeout(t); r(); };
+  });
+  let i = 0;
+  while (!round.stopped) {
+    if (i >= round.turns.length) { if (round.done) break; await waitData(); continue; }
+    const who = round.turns[i].who;
+    round.skipTurn = false;
+    // a beat while they gather their thoughts
+    setThinking([who]);
+    await sleep(i === 0 ? 450 : 650 + Math.random() * 550);
+    if (round.stopped) break;
+    setThinking([]);
+    setSpeaking(who);
+    openBubble(who);
+    let shown = 0;
+    while (!round.stopped) {
+      const text = round.turns[i].text;
+      const complete = i < round.turns.length - 1 || round.done;
+      if (round.ff || round.skipTurn) { shown = text.length; $('bubbletext').textContent = text; if (complete) break; await waitData(); continue; }
+      if (shown < text.length) {
+        const ch = text[shown++];
+        $('bubbletext').textContent = text.slice(0, shown);
+        const inner = $('bubbletext'); inner.scrollTop = inner.scrollHeight;
+        await sleep(charDelay(ch));
+      } else if (complete) break;
+      else await waitData();
+    }
+    const t = round.turns[i];
+    $('bubbletext').classList.remove('typing');
+    if (round.stopped) { if (shown) addRow(t.who, t.text.slice(0, shown) + (shown < t.text.length ? '…' : '')); break; }
+    $('bubbletext').textContent = t.text;
+    addRow(t.who, t.text);
+    round.played = i + 1;
+    // let it sit long enough to read, then hand over
+    round.skipTurn = false;
+    const more = i < round.turns.length - 1 || !round.done;
+    await sleep(Math.min(3200, 1100 + t.text.length * 14));
+    if (more && !round.stopped) { setSpeaking(null); await closeBubble(); }
+    i++;
+  }
+}
+
 async function converse(mode) {
   const note = $('note');
   note.textContent = '';
-  const th = $('thinking');
-  th.hidden = false;
-  th.textContent = 'Pulling up a chair…';
-  if (!PROXY_URL && !getKey()) { th.hidden = true; showKeyPanel(true); note.textContent = 'Add your Anthropic API key first, then send again.'; return; }
-  ctl = new AbortController();
-  $('send').disabled = true; $('stop').hidden = false; $('more').hidden = true;
-  th.textContent = (addressing && mode !== 'more' ? byId[addressing].short + ' is thinking…' : 'The table is thinking…');
-  const valid = new Set(chosen);
-  const els = [];
-  let turns = [];
-  const render = text => {
-    turns = parseTurns(text, valid);
-    turns.forEach((t, i) => {
-      if (!els[i]) { els[i] = addMsg(t.who, t.text); th.textContent = '…'; }
-      else els[i].querySelector('.txt').textContent = t.text;
-    });
+  if (!PROXY_URL && !getKey()) { restartCard(); showKey(); return; }
+  // Our own stop switch instead of AbortController: some embedded previews relay fetch
+  // through postMessage, which can't carry an AbortSignal.
+  const round = ctl = {
+    stopped:false, ff:false, skipTurn:false, done:false, turns:[], played:0, reader:null, dataWake:null, skipWake:null,
+    pokeData() { const w = this.dataWake; this.dataWake = null; w && w(); },
+    pokeSkip() { const w = this.skipWake; this.skipWake = null; w && w(); },
+    abort() { this.stopped = true; try { this.reader?.cancel(); } catch {} this.pokeData(); this.pokeSkip(); },
+    fastForward() { this.ff = true; this.pokeData(); this.pokeSkip(); },
+    skip() { this.skipTurn = true; this.pokeData(); this.pokeSkip(); },
   };
+  round.finished = new Promise(r => { round.resolve = r; });
+  $('stop').hidden = false; $('more').hidden = true;
+  $('speech').hidden = true;
+  await closeBubble();
+  setThinking(addressing && mode !== 'more' ? [addressing] : chosen);
+  const valid = new Set(chosen);
+  const player = playRound(round);
   let full = '';
+  const render = text => { round.turns = parseTurns(text, valid); round.pokeData(); };
   try {
     let res;
     if (PROXY_URL) {
@@ -377,7 +772,6 @@ async function converse(mode) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ guests: chosen, transcript: transcript.slice(-40), mode, addressing }),
-        signal: ctl.signal,
       });
     } else {
       // Straight from the visitor's browser to Anthropic, with their own key.
@@ -395,7 +789,6 @@ async function converse(mode) {
           stream: true,
           messages: [{ role: 'user', content: buildPrompt({ mode, chosen, transcript: transcript.slice(-40), addressing }) }],
         }),
-        signal: ctl.signal,
       });
     }
     if (!res.ok) {
@@ -405,109 +798,123 @@ async function converse(mode) {
       if (/credit balance/i.test(msg)) code = 'no_credit';
       if (res.status === 529) code = 'overloaded';
       if (res.status === 429 && !PROXY_URL) code = 'rate_limited';
-      if (code === 'bad_key') showKeyPanel(true);
-      throw { code };
+      if (code === 'bad_key') { restartCard(); showKey(); $('keypanel').querySelector('label').textContent = 'That key didn\'t work. Check it, or paste a new one.'; }
+      throw { code, detail: msg };
     }
-    // Read the server-sent events and pick out the text as it arrives.
-    const reader = res.body.getReader();
-    const dec = new TextDecoder();
-    let buf = '';
-    for (;;) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      buf += dec.decode(value, { stream: true });
-      const events = buf.split('\n\n');
-      buf = events.pop();
+    if (round.stopped) throw { name:'AbortError' };
+    const handle = events => {
       for (const ev of events) {
         const data = ev.split('\n').filter(l => l.startsWith('data:')).map(l => l.slice(5).trim()).join('');
         if (!data) continue;
         let o; try { o = JSON.parse(data); } catch { continue; }
         if (o.type === 'content_block_delta' && o.delta?.type === 'text_delta') { full += o.delta.text; render(full); }
-        if (o.type === 'error') throw { code: 'upstream_error' };
+        if (o.type === 'error') throw { code: 'upstream_error', detail: o.error?.message };
       }
+    };
+    if (res.body && res.body.getReader) {
+      const reader = round.reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let buf = '';
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done || round.stopped) break;
+        buf += dec.decode(value, { stream: true });
+        const events = buf.split('\n\n');
+        buf = events.pop();
+        handle(events);
+      }
+      if (buf && !round.stopped) handle([buf]);
+    } else {
+      // No streaming available here: read it all at once.
+      handle((await res.text()).split('\n\n'));
     }
     render(full);
-    if (!turns.length) { console.log('[cafe] unparsed reply:', full); note.textContent = 'The guests answered, but the page couldn\'t read their reply. Try sending again.'; }
+    if (!round.turns.length && !round.stopped) { console.log('[cafe] unparsed reply:', full); showError('The guests answered, but the page couldn\'t read their reply. Try sending again.'); }
   } catch (e) {
-    if (e?.name === 'AbortError') {}
-    else {
+    if (e?.name !== 'AbortError' && !round.stopped) {
       console.log('[cafe] error:', e);
-      const code = e?.code || (e instanceof TypeError ? 'network' : 'unknown');
-      note.textContent = COPY[code] || `The conversation was interrupted (${code}). Try sending again.`;
+      const code = (typeof e?.code === 'string' && e.code) || (e instanceof TypeError ? 'network' : (e?.name || 'unknown'));
+      if (!e?.detail && e?.message) e.detail = e.message;
+      const msg = COPY[code] || `The conversation was interrupted (${code}${e?.detail ? ': ' + e.detail : ''}). Try sending again.`;
+      note.textContent = msg;
+      if (code !== 'bad_key') { if (!round.turns.length) showError(msg); }
     }
   } finally {
-    for (const t of turns) transcript.push(t);
-    ctl = null;
-    th.hidden = true;
-    $('send').disabled = false; $('stop').hidden = true;
-    renderSeated();
+    round.done = true;
+    round.pokeData();
+    await player;
+    // What the guests actually got to say goes into the shared memory of the table.
+    const said = round.stopped ? round.turns.slice(0, Math.max(round.played, 0)) : round.turns;
+    for (const t of said) transcript.push(t);
+    if (ctl === round) ctl = null;
+    setThinking([]);
+    setSpeaking(null);
+    $('stop').hidden = true;
+    $('more').hidden = chosen.length < 2;
+    round.resolve();
   }
 }
 
-$('sit').onclick = () => {
+/* ── wiring ── */
+$('sit').onclick = () => transition(() => {
   $('pick').hidden = true; $('table').hidden = false;
-  addressing = null;
-  renderSeated();
-  showKeyPanel(!getKey());
+  addressing = null; transcript = []; $('rows').innerHTML = ''; $('log').hidden = true; $('youtipwrap').hidden = true;
+  renderSeated(true);
+  drawTable();
+  restartCard();
+  getKey() || PROXY_URL ? showWelcome() : showKey();
+  $('keylink').hidden = PROXY_URL || !getKey();
   window.scrollTo({ top:0 });
-};
+});
 $('leave').onclick = () => {
   ctl?.abort();
-  $('table').hidden = true; $('pick').hidden = false;
-  renderPicker();
+  $('bubble').hidden = true;
+  transition(() => { $('seated').innerHTML = ''; $('table').hidden = true; $('pick').hidden = false; renderPicker(); });
 };
-$('composer').onsubmit = e => {
-  e.preventDefault();
+$('send').onclick = () => doSend();
+$('say').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); doSend(); } });
+async function doSend() {
+  stopListening();
   const v = $('say').value.trim();
-  if (!v || ctl) return;
-  $('say').value = '';
-  const note = addressing ? `(to ${byId[addressing].short}) ` : '';
-  transcript.push({ who:'you', text: note + v });
-  addMsg('you', v);
+  if (!v) return;
+  if (ctl) { ctl.fastForward(); await ctl.finished; }
+  if (!PROXY_URL && !getKey()) {
+    // A key typed in the card but not saved yet counts: save it and carry on.
+    if (!saveKeyFromCard()) {
+      if (!$('keypanel')) { restartCard(); showKey(); }
+      $('keypanel').querySelector('label').textContent = 'Add your Anthropic API key, and your message will be sent right after.';
+      $('apikey').focus();
+      return;
+    }
+  }
+  $('say').value = ''; syncSend();
+  const tag = addressing ? `(to ${byId[addressing].short}) ` : '';
+  transcript.push({ who:'you', text: tag + v });
+  addRow('you', (addressing ? `To ${byId[addressing].short}: ` : '') + v);
+  const tip = $('youtip');
+  tip.textContent = v;
+  $('youtipwrap').hidden = false;
+  tip.style.animation = 'none'; tip.offsetHeight; tip.style.animation = '';
   converse('say');
 };
-$('say').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); $('composer').requestSubmit(); }
-});
-$('more').onclick = () => { if (!ctl && transcript.length) converse('more'); else if (!transcript.length) $('note').textContent = 'Start the conversation first.'; };
+const syncSend = () => $('send').classList.toggle('ready', !!$('say').value.trim());
+$('say').addEventListener('input', syncSend);
+$('more').onclick = async () => { if (ctl) return; if (transcript.length) { $('youtipwrap').hidden = true; converse('more'); } else if (!transcript.length) $('note').textContent = 'Start the conversation first.'; };
 $('stop').onclick = () => ctl?.abort();
-
-for (const s of STARTERS) {
-  const b = document.createElement('button');
-  b.type = 'button'; b.textContent = s;
-  b.onclick = () => { $('say').value = s; $('composer').requestSubmit(); };
-  $('starters').append(b);
-}
+addEventListener('resize', () => { pointTail(speaking); if (!$('bubble').hidden) placeBubble($('bubble').dataset.who); });
+$('bubble').onclick = () => ctl?.skip();
 
 renderPicker();
-
 
 // API key, kept only in this visitor's browser.
 function getKey() { try { return localStorage.getItem(KEY_STORE) || memKey; } catch { return memKey; } }
 let memKey = '';
-function showKeyPanel(open) {
-  if (PROXY_URL) { $('keypanel').hidden = true; $('keylink').hidden = true; return; }
-  $('keypanel').hidden = !open;
-  $('keylink').hidden = open || !getKey();
-  if (open) $('apikey').focus();
-}
-$('keypanel').onsubmit = e => {
-  e.preventDefault();
-  const v = $('apikey').value.trim();
-  if (!v) return;
-  memKey = v;
-  try { localStorage.setItem(KEY_STORE, v); } catch {}
-  $('apikey').value = '';
-  $('note').textContent = 'Key saved in this browser. Say something to the table.';
-  showKeyPanel(false);
-  $('say').focus();
-};
-$('keylink').onclick = () => { memKey = ''; try { localStorage.removeItem(KEY_STORE); } catch {} showKeyPanel(true); };
+$('keylink').onclick = () => { memKey = ''; try { localStorage.removeItem(KEY_STORE); } catch {} restartCard(); showKey(); };
 
 // Voice input (browsers with speech recognition: Chrome, Edge, Safari).
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SR) {
-  $('voice').hidden = false;
+  $('mic').hidden = false; $('lang').hidden = false;
   const nav = (navigator.language || 'en').toLowerCase();
   $('lang').value = nav.startsWith('zh') ? 'zh-CN' : nav.startsWith('fr') ? 'fr-FR' : 'en-US';
   let rec = null;
@@ -521,15 +928,15 @@ if (SR) {
     rec.onresult = e => {
       let t = '';
       for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
-      $('say').value = base + t;
+      $('say').value = base + t; syncSend();
     };
     rec.onerror = e => { if (e.error === 'not-allowed') $('note').textContent = 'Microphone access was blocked. Allow it in your browser to speak.'; };
-    rec.onend = () => { rec = null; $('mic').textContent = 'Speak'; $('mic').setAttribute('aria-pressed', 'false'); $('say').focus(); };
+    rec.onend = () => { rec = null; $('mic').setAttribute('aria-pressed', 'false'); $('say').placeholder = addressing ? `Say something to ${byId[addressing].short}…` : 'Say anything…'; $('say').focus(); };
     try { rec.start(); } catch { rec = null; return; }
-    $('mic').textContent = 'Listening… tap to stop';
     $('mic').setAttribute('aria-pressed', 'true');
+    $('say').placeholder = 'Listening… tap the mic to stop';
   };
-  $('composer').addEventListener('submit', () => { if (rec) rec.stop(); });
+  stopListening = () => { if (rec) rec.stop(); };
 }
 </script>
 </body>
