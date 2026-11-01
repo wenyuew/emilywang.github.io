@@ -108,7 +108,33 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
 .tags{margin-top:8px;font-size:11px;gap:2px 10px}
 @media (max-width:980px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 18px}.card p{-webkit-line-clamp:2;font-size:12.5px}.tags{display:none}}
-</style>
+
+    /* project groups */
+    .group .eyebrow{margin-bottom:6px}
+    .group-desc{margin:0 0 28px;font-size:13px;color:var(--muted);max-width:40em}
+    .grid.feature{grid-template-columns:minmax(0,1fr)}
+    .grid.feature .card{display:grid;grid-template-columns:minmax(160px,240px) minmax(0,1fr);column-gap:36px;align-items:start}
+    .grid.feature .card>.art{grid-row:1 / span 6;margin:0}
+    .grid.feature .card>*:not(.art){grid-column:2}
+    .grid.feature .card p{-webkit-line-clamp:unset;display:block;max-width:44em}
+    .grid.feature .ladder{display:flex}
+    .grid.feature .try{justify-self:start}
+    @media (max-width:720px){.grid.feature .card{grid-template-columns:1fr}.grid.feature .card>.art{grid-row:auto;margin-bottom:8px;width:160px;aspect-ratio:1/1}.grid.feature .card>*:not(.art){grid-column:1}.grid.feature .art.photo img{width:100%}}
+    
+    /* sliding rows */
+    .group{position:relative}
+    .group .grid:not(.feature){display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc((100% - 3*28px)/4);gap:28px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:6px;scrollbar-width:none}
+    .group .grid:not(.feature)::-webkit-scrollbar{display:none}
+    .group .grid:not(.feature)>.card{scroll-snap-align:start}
+    .slide-nav{position:absolute;right:0;top:24px;display:flex;gap:8px}
+    .slide-nav button{all:unset;cursor:pointer;width:32px;height:32px;border-radius:50%;border:1px solid var(--rule);display:grid;place-items:center;font-size:14px;color:var(--ink);transition:opacity .2s,border-color .2s}
+    .slide-nav button:hover{border-color:var(--ink)}
+    .slide-nav button[disabled]{opacity:.3;cursor:default}
+    .slide-count{font-size:11px;color:var(--faint);align-self:center;margin-right:4px;font-variant-numeric:tabular-nums}
+    @media (max-width:980px){.group .grid:not(.feature){grid-auto-columns:calc((100% - 2*24px)/3);gap:24px}}
+    @media (max-width:720px){.group .grid:not(.feature){grid-auto-columns:62%;gap:16px}.slide-nav{display:none}}
+    @media (prefers-reduced-motion:reduce){.group .grid:not(.feature){scroll-behavior:auto}}
+    </style>
 
 </head>
 <body>
@@ -125,20 +151,13 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
     <div class="glow" aria-hidden="true"></div>
   </header>
 
-  <section id="work">
-    <h2 class="eyebrow">Selected work</h2>
-    <div class="grid">
-
-      <!-- I Ching -->
-      <article class="card">
-        <div class="art photo" aria-hidden="true"><img src="icons/pearl.png" alt="" loading="lazy"></div>
-        <h3>I Ching Radio</h3>
-        <p>Ask what's on your mind. It tosses three coins six times, reads the hexagram you land on from all 64 and their 384 changing lines, then writes you three songs from the reading.</p>
-        <a class="try" href="i-ching/" target="_blank" rel="noopener">Try it live →</a>
-        <div class="tags"><span>AI Product</span><span>Consumer</span><span>Chinese astrology</span></div>
-      </article>
-
-      <!-- Vantage -->
+  <div id="work"></div>
+  <section id="production-grade" class="group">
+        <h2 class="eyebrow">Production-grade</h2>
+        <p class="group-desc">Built for real users and real consequences, with guardrails, evals and tracing.</p>
+        <div class="grid feature">
+    
+          <!-- Vantage -->
       <article class="card linked">
         <div class="art photo" aria-hidden="true"><img src="icons/cloud.png" alt="" loading="lazy"></div>
         <h3>Vantage</h3>
@@ -149,6 +168,94 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
         <a class="try" href="vantage/" target="_blank" rel="noopener">Read the weekly PRD →</a>
         <div class="tags"><span>Agentic AI</span><span>B2B</span><span>Payroll</span></div>
       </article>
+    
+        </div>
+      </section>
+
+  <section id="everyday-tools" class="group">
+        <h2 class="eyebrow">Everyday tools</h2>
+        <p class="group-desc">Small tools I made because I needed them.</p>
+        <div class="grid">
+    
+          <!-- Flowy -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/dolphin.png" alt="" loading="lazy"></div>
+        <h3>Flowy</h3>
+  <p>Watch YouTube in the language you're learning. The video's transcript sits next to your own language, line by line, and every word you save keeps the sentence it came from.</p>
+  <a class="try" href="flowy/" target="_blank" rel="noopener">Try it →</a>
+        <div class="tags"><span>Language learning</span><span>Consumer</span></div>
+      </article>
+
+      <!-- Quocci Cucci -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/quocci-cucci.png" alt="" loading="lazy"></div>
+        <h3>Quocci Cucci</h3>
+        <p>For YouTube videos too long to watch. It pulls out the best quotes with timestamps, so one click takes you to the moment, and answers your questions about the video.</p>
+        <a class="try" href="quocci-cucci/" target="_blank" rel="noopener">Get the extension →</a>
+        <div class="tags"><span>Chrome extension</span><span>AI</span><span>YouTube</span></div>
+      </article>
+
+      <!-- Xtract -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/xtract.png" alt="" loading="lazy"></div>
+        <h3>Xtract</h3>
+        <p>For everything you saved on X and never went back to. Mark where to start and stop on your bookmarks, and it writes one line for every post in between, grouped by topic, person or your own categories.</p>
+        <a class="try" href="xtract/" target="_blank" rel="noopener">Get the extension →</a>
+        <div class="tags"><span>Chrome extension</span><span>AI</span><span>Reading</span></div>
+      </article>
+
+      <!-- coucou -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/coucou.png" alt="" loading="lazy"></div>
+        <h3>coucou</h3>
+        <p>A journal for the language you're learning. Write or speak about your day in any language, then read and hear it in French, Japanese or eight more, answer a daily prompt, and keep the words you want.</p>
+        <a class="try" href="coucou/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>Language learning</span><span>AI</span><span>Voice</span></div>
+      </article>
+
+      <!-- Mockmate -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/mockmate.png" alt="" loading="lazy"></div>
+        <h3>Mockmate</h3>
+        <p>One or two sentences about what Mockmate does.</p>
+        <a class="try" href="mockmate/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>Tag</span><span>Tag</span></div>
+      </article>
+
+      <!-- Minimalistic UI Slide Builder -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/flower.png" alt="" loading="lazy"></div>
+        <h3>Minimalistic UI Slide Builder</h3>
+        <p>A Claude skill that turns any content into a quiet, gallery-style interface: articles, case studies, app screens, AI screens. It stays black, white and grey until you show it a picture, then borrows the picture's colors.</p>
+        <a class="try" href="minimalistic-ui/" target="_blank" rel="noopener">See what it builds →</a>
+        <div class="tags"><span>Claude skill</span><span>Design system</span><span>Open source</span></div>
+      </article>
+
+      <!-- Manifest Maxxxing -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/manifest-maxxxing.png" alt="" loading="lazy"></div>
+        <h3>Manifest Maxxxing</h3>
+        <p>One or two sentences about what Manifest Maxxxing does.</p>
+        <a class="try" href="manifest-maxxxing/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>Tag</span><span>Tag</span></div>
+      </article>
+    
+        </div>
+      </section>
+
+  <section id="wonder" class="group">
+        <h2 class="eyebrow">Wonder &amp; side quests</h2>
+        <p class="group-desc">Things I built just because I was curious.</p>
+        <div class="grid">
+    
+          <!-- I Ching -->
+      <article class="card">
+        <div class="art photo" aria-hidden="true"><img src="icons/pearl.png" alt="" loading="lazy"></div>
+        <h3>I Ching Radio</h3>
+        <p>Ask what's on your mind. It tosses three coins six times, reads the hexagram you land on from all 64 and their 384 changing lines, then writes you three songs from the reading.</p>
+        <a class="try" href="i-ching/" target="_blank" rel="noopener">Try it live →</a>
+        <div class="tags"><span>AI Product</span><span>Consumer</span><span>Chinese astrology</span></div>
+      </article>
 
       <!-- Fairyland -->
       <article class="card">
@@ -157,15 +264,6 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
         <p>Ten Japanese folktales, pinned to the places they come from. Tap a story on the map and read it as ten short pages, written for a five-year-old.</p>
         <a class="try" href="fairyland/" target="_blank" rel="noopener">Try it live →</a>
         <div class="tags"><span>Interactive map</span><span>Kids</span><span>Storytelling</span></div>
-      </article>
-
-      <!-- Flowy -->
-      <article class="card">
-        <div class="art photo" aria-hidden="true"><img src="icons/dolphin.png" alt="" loading="lazy"></div>
-        <h3>Flowy</h3>
-  <p>Watch YouTube in the language you're learning. The video's transcript sits next to your own language, line by line, and every word you save keeps the sentence it came from.</p>
-  <a class="try" href="flowy/" target="_blank" rel="noopener">Try it →</a>
-        <div class="tags"><span>Language learning</span><span>Consumer</span></div>
       </article>
 
       <!-- TikTok scripts -->
@@ -195,60 +293,6 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
         <div class="tags"><span>Interactive map</span><span>Consumer</span><span>Culture &amp; history</span></div>
       </article>
 
-      <!-- Minimalistic UI Slide Builder -->
-      <article class="card">
-        <div class="art photo" aria-hidden="true"><img src="icons/flower.png" alt="" loading="lazy"></div>
-        <h3>Minimalistic UI Slide Builder</h3>
-        <p>A Claude skill that turns any content into a quiet, gallery-style interface: articles, case studies, app screens, AI screens. It stays black, white and grey until you show it a picture, then borrows the picture's colors.</p>
-        <a class="try" href="minimalistic-ui/" target="_blank" rel="noopener">See what it builds →</a>
-        <div class="tags"><span>Claude skill</span><span>Design system</span><span>Open source</span></div>
-      </article>
-
-      <!-- Mockmate -->
-      <article class="card">
-        <div class="art photo" aria-hidden="true"><img src="icons/mockmate.png" alt="" loading="lazy"></div>
-        <h3>Mockmate</h3>
-        <p>One or two sentences about what Mockmate does.</p>
-        <a class="try" href="mockmate/" target="_blank" rel="noopener">Try it live →</a>
-        <div class="tags"><span>Tag</span><span>Tag</span></div>
-      </article>
-
-      <!-- Manifest Maxxxing -->
-      <article class="card">
-        <div class="art photo" aria-hidden="true"><img src="icons/manifest-maxxxing.png" alt="" loading="lazy"></div>
-        <h3>Manifest Maxxxing</h3>
-        <p>One or two sentences about what Manifest Maxxxing does.</p>
-        <a class="try" href="manifest-maxxxing/" target="_blank" rel="noopener">Try it live →</a>
-        <div class="tags"><span>Tag</span><span>Tag</span></div>
-      </article>
-
-      <!-- coucou -->
-      <article class="card">
-        <div class="art photo" aria-hidden="true"><img src="icons/coucou.png" alt="" loading="lazy"></div>
-        <h3>coucou</h3>
-        <p>A journal for the language you're learning. Write or speak about your day in any language, then read and hear it in French, Japanese or eight more, answer a daily prompt, and keep the words you want.</p>
-        <a class="try" href="coucou/" target="_blank" rel="noopener">Try it live →</a>
-        <div class="tags"><span>Language learning</span><span>AI</span><span>Voice</span></div>
-      </article>
-
-      <!-- Xtract -->
-      <article class="card">
-        <div class="art photo" aria-hidden="true"><img src="icons/xtract.png" alt="" loading="lazy"></div>
-        <h3>Xtract</h3>
-        <p>For everything you saved on X and never went back to. Mark where to start and stop on your bookmarks, and it writes one line for every post in between, grouped by topic, person or your own categories.</p>
-        <a class="try" href="xtract/" target="_blank" rel="noopener">Get the extension →</a>
-        <div class="tags"><span>Chrome extension</span><span>AI</span><span>Reading</span></div>
-      </article>
-
-      <!-- Quocci Cucci -->
-      <article class="card">
-        <div class="art photo" aria-hidden="true"><img src="icons/quocci-cucci.png" alt="" loading="lazy"></div>
-        <h3>Quocci Cucci</h3>
-        <p>For YouTube videos too long to watch. It pulls out the best quotes with timestamps, so one click takes you to the moment, and answers your questions about the video.</p>
-        <a class="try" href="quocci-cucci/" target="_blank" rel="noopener">Get the extension →</a>
-        <div class="tags"><span>Chrome extension</span><span>AI</span><span>YouTube</span></div>
-      </article>
-
       <!-- A Rainy Day in the Temple -->
       <article class="card">
         <div class="art photo" aria-hidden="true"><img src="icons/a-rainy-day-in-the-temple.png" alt="" loading="lazy"></div>
@@ -257,9 +301,9 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
         <a class="try" href="a-rainy-day-in-the-temple/" target="_blank" rel="noopener">Try it live →</a>
         <div class="tags"><span>Web app</span><span>AI</span><span>Ritual</span></div>
       </article>
-
-    </div>
-  </section>
+    
+        </div>
+      </section>
 
   <section class="about" id="about">
     <h2 class="eyebrow">About</h2>
@@ -272,5 +316,21 @@ footer{padding-block:28px 40px;border-top:1px solid var(--rule);font-size:12.5px
   <footer><span>© 2026 Emily Wang</span><span>Built with AI, one step at a time.</span></footer>
 </div>
 
-</body>
+
+    <script>
+    /* sliding rows: arrows + count */
+    document.querySelectorAll(".group .grid:not(.feature)").forEach(function(row){
+      var sec=row.closest(".group"), n=row.children.length; if(n<2) return;
+      var nav=document.createElement("div"); nav.className="slide-nav";
+      nav.innerHTML='<span class="slide-count">'+n+' projects</span><button aria-label="Previous">&larr;</button><button aria-label="Next">&rarr;</button>';
+      sec.appendChild(nav);
+      var b=nav.querySelectorAll("button");
+      function step(){ var c=row.children[0]; return c ? c.getBoundingClientRect().width+parseFloat(getComputedStyle(row).columnGap||0) : row.clientWidth; }
+      function upd(){ b[0].disabled=row.scrollLeft<4; b[1].disabled=row.scrollLeft+row.clientWidth>=row.scrollWidth-4; }
+      b[0].onclick=function(){ row.scrollBy({left:-step()}); };
+      b[1].onclick=function(){ row.scrollBy({left:step()}); };
+      row.addEventListener("scroll",upd,{passive:true}); addEventListener("resize",upd); upd();
+    });
+    </script>
+    </body>
 </html>
